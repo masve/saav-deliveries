@@ -9,6 +9,8 @@
   <link href='https://fonts.googleapis.com/css?family=Open+Sans:400,700' rel='stylesheet' type='text/css'>
   <link rel="stylesheet" href="styles/cayman.css">
 
+  <link rel="stylesheet" href="styles/styles.css">
+
   <script type="text/javascript" src="bower_components/d3/d3.min.js"></script>
   <script type="text/javascript" src="bower_components/lodash/lodash.js"></script>
   <script type="text/javascript" src="bower_components/jquery/dist/jquery.min.js"></script>
@@ -71,7 +73,10 @@
       </ul>
     </blockquote>
 
-    <link rel="stylesheet" href="styles/ass2a.css">
+    <p>
+      Below you'll find the simple svg implementation derived from the above description.
+      <span class="small-font">Please note that partying hard for too long may cause dizziness.</span>
+    </p>
 
     <svg id="ass2asvg" width="600" height="200">
       <rect x="30" y="60" width="80" height="80" fill="purple" stroke="grey" stroke-width="2" fill-opacity="1"/>
@@ -81,75 +86,294 @@
       <rect x="150" y="20" width="80" height="80" fill="red" fill="purple" stroke="grey" stroke-width="2" fill-opacity="0.2"/>
     </svg>
 
-    <button id="ass2apartybtn">PARTY!!!</button>
+    <button id="ass2apartybtn" class="btn btncolor">PARTY!!!</button>
 
+    <link rel="stylesheet" href="styles/ass2a.css">
     <script>
+    (function(document) {
+      'use strict';
+
+      let dataset = [ 5, 10, 15, 20, 25 ];
+      let party = false;
+
+      d3.select("#ass2asvg").selectAll("p")
+      .data(dataset)
+      .enter()
+      .append("p")
+      .text(function(d) {
+        return "I can count up to " + d;
+      })
+      .style("color", d => d > 15 ? "red" : "black")
+
+      d3.select("#ass2apartybtn")
+      .on('click', e => {
+        if (!party) {
+          party = true;
+          d3.select("#ass2asvg").selectAll("rect")
+          .classed("ass2svg", party);
+        } else {
+          party = false;
+          d3.select("#ass2asvg").selectAll("rect")
+          .classed("ass2svg", party);
+        }
+      });
+    })();
+    </script>
+
+    <h2>Assignment 2B: One scatter plot and two datasets</h2>
+    <blockquote>
+      <p>
+        This scatter plot visualization should pull data from an associated CSV/JSON file (it's easiest to use Python to generate a nicely formatted file that contains only the data you need for the visualization). You should use appropriate dynamic scales (see chapter 7 of IDV). Additional requirements for the visualizations are listed below
+      </p>
+      <ul class="task-list">
+        <li>
+          Each point should correspond to a district
+        </li>
+        <li>
+          Points should be labeled
+        </li>
+        <li>
+          The radius of a point should be proportional to total number of crimes in that district
+        </li>
+        <li>
+          The xx-axis should correspond to total number of PROSTITUTION incidents
+        </li>
+        <li>
+          The yy-axis should correspond to total number of VEHICLE THEFT incidents
+        </li>
+        <li>
+          Click on something (your choice) to toggle between data from 2003 and 2015 - there must be a smooth transition.
+        </li>
+        <li>
+          Axes should not change but fit data from both years.
+        </li>
+      </ul>
+    </blockquote>
+
+    <form>
+      <select id="years" tabindex="1">
+      </select>
+    </form>
+    <svg id="vis1"></svg>
+
+    <blockquote>
+      <ul class="task-list">
+        <li>
+          Explain in your own words why you think I want the axes to be the same for both years? (Even though you know how to make axes adapt to the data values.)</li>
+        </ul>
+      </blockquote>
+
+      <script>
       (function(document) {
         'use strict';
 
-        let dataset = [ 5, 10, 15, 20, 25 ];
-        let party = false;
+        // Global variables
+        const w = 750;
+        const padding = 60;
+        const h = 375;
+        let csv;
+        let xScale, yScale, rScale, xAxis, yAxis, svg, blueScale, redScale;
 
-        d3.select("#ass2asvg").selectAll("p")
-        .data(dataset)
-        .enter()
-        .append("p")
-        .text(function(d) {
-          return "I can count up to " + d;
-        })
-        .style("color", d => d > 15 ? "red" : "black")
-
-        d3.select("#ass2apartybtn")
-        .on('click', e => {
-          if (!party) {
-            party = true;
-            d3.select("#ass2asvg").selectAll("rect")
-            .classed("ass2svg", party);
-          } else {
-            party = false;
-            d3.select("#ass2asvg").selectAll("rect")
-            .classed("ass2svg", party);
-          }
+        // Load in dataset
+        d3.csv('datasets/week_7_vis_1.csv', data => {
+          csv = data;
+          // Draw scatter to screen
+          displayVis1(data, '2003')
         });
-      })();
-    </script>
+
+        // Draws a scatter plot to the screen
+        function displayVis1(data, year) {
+          // Parse data to "strong" types
+          data.forEach(e => {
+            e.pro = parseInt(e.pro),
+            e.vet = parseInt(e.vet),
+            e.total = parseInt(e.total)
+          });
+
+          // Set x, y and r (radius) scales
+          xScale = d3.scale.linear().domain([
+            d3.min(data, d => d.pro),
+            d3.max(data, d => d.pro) + padding
+          ]).range([padding, w - padding * 2]);
+
+          yScale = d3.scale.linear().domain([
+            d3.min(data, d => d.vet),
+            d3.max(data, d => d.vet) + padding
+          ]).range([h - padding, padding]);
+
+          rScale = d3.scale.linear().domain([
+            d3.min(data, d => d.total),
+            d3.max(data, d => d.total)
+          ]).range([5, 25])
+
+          // Filter dataset for the default selected year
+          data = _.filter(data, d => d.year == '2003');
+
+          // Set color scales (Y = RED, X = BLUE)
+          redScale = d3.scale.linear().domain([
+            d3.min(data, d => d.vet),
+            d3.max(data, d => d.vet)
+          ]).range([40, 255]);
+
+          blueScale = d3.scale.linear().domain([
+            d3.min(data, d => d.pro),
+            d3.max(data, d => d.pro)
+          ]).range([40, 255]);
+
+          // Create svg
+          svg = d3.select('svg#vis1').attr({
+            'width': w + 100,
+            'height':h + 100
+          });
+
+          // Define the axes
+          xAxis = d3.svg.axis().scale(xScale).orient('bottom').ticks(15);
+          yAxis = d3.svg.axis().scale(yScale).orient('left').ticks(10);
+
+          // Draw the circles for the scatter plot
+          svg.selectAll("circle")
+          .data(data)
+          .enter()
+          .append("circle")
+          .attr({
+            'cx': d => xScale(d.pro) + padding,
+            'cy': d => yScale(d.vet),
+            'r': d => rScale(d.total),
+            'fill': d => 'rgba(' + '0' + ', '+Math.floor(redScale(d.vet))+','+ Math.floor(blueScale(d.pro)) + ',0.6)',
+            'stroke-width': 2,
+            'stroke': 'white',
+            'stroke-opacity': 0.6
+          });
+
+          // Add labels to each circle in the scatter plot
+          svg.selectAll("text")
+          .data(data)
+          .enter()
+          .append("text")
+          .text(d => d.dis)
+          .attr(
+            {
+              'x': d => xScale(d.pro) + 20 + padding,
+              'y': d => yScale(d.vet),
+              "font-family": "sans-serif",
+              "fill": "#6E6C71",
+              'font-size': '11px'
+            });
+
+            // Set Y and X axes and add labels to them
+            svg.append('g').attr({
+              'class':'axis',
+              'transform': "translate(" + padding +"," + (h - padding) + ")"
+            })
+            .style("fill", "#6E6C71")
+            .call(xAxis);
+
+            svg.append('g')
+            .attr({
+              'class':'axis',
+              'transform': "translate(" + (padding * 2) + ",0)"
+            })
+            .style("fill", "#6E6C71")
+            .call(yAxis);
+
+            svg.append("text")
+            .attr("transform", "translate(" + (w / 2) + " ," + (h + 10) + ")")
+            .style("text-anchor", "middle")
+            .style("font-size", "1em")
+            .style("fill", "#6E6C71")
+            .text("Prostitution");
+
+            svg.append("text")
+            .attr("transform", "rotate(-90)")
+            .attr("y", 0+padding/2)
+            .attr("x",0 - (h / 2))
+            .attr("dy", "1em")
+            .style("text-anchor", "middle")
+            .style("fill", "#6E6C71")
+            .text("Vehicle Theft");
+
+            // Add all available options (years) to the dropdown selector
+            d3.select('#years')
+            .selectAll('option')
+            .data(_.range(2003,2016))
+            .enter()
+            .append('option')
+            .attr({'value': d => d})
+            .text(d => d)
+            ;
+
+            // Dynamic handling of change in chosen year
+            d3.select('#years')
+            .on('change', function() {
+              let data = _.filter(csv, d => d.year == this.value);
+
+              // Handle circle transitions
+              d3.selectAll('circle')
+              .data(data)
+              .attr({
+                'fill': d => 'rgba(' + '0' + ', '+Math.floor(redScale(d.vet))+','+ Math.floor(blueScale(d.pro)) + ',0.6)',
+              })
+              .transition()
+              .duration(1000)
+              .ease("elastic")
+              .attr({
+                'cx': d => xScale(d.pro) + padding,
+                'cy': d => yScale(d.vet),
+                'r': d => rScale(d.total),
+              });
+
+              // Handle label transitions
+              svg.selectAll("text")
+              .data(data)
+              .transition()
+              .duration(1000)
+              .ease("elastic")
+              .text(d => d.dis)
+              .attr(
+                {
+                  'x': d => xScale(d.pro) + padding + 20,
+                  'y': d => yScale(d.vet),
+                  "font-family": "sans-serif",
+                  "fill": "#6E6C71",
+                  'font-size': '11px'
+                });
+              });
+            }
+          })();
+          </script>
 
 
+          <h2>Assignment 2C: One barchart and (at least) two datasets</h2>
+          <h2>Assignment 2D: Visualizing geodata</h2>
 
+        </section>
 
+        <section id="project" class="main-content">
+          <h1>Project Assignment A & B</h1>
+          <i>To be continued.</i>
+        </section>
 
-    <h2>Assignment 2B: One scatter plot and two datasets</h2>
-    <h2>Assignment 2C: One barchart and (at least) two datasets</h2>
-    <h2>Assignment 2D: Visualizing geodata</h2>
-
-  </section>
-
-  <section id="project" class="main-content">
-    <h1>Project Assignment A & B</h1>
-    <i>To be continued.</i>
-  </section>
-
-  <section id="info" class="main-content">
-    <footer class="site-footer">
-      <span class="site-footer-owner">For DTU course <a href="http://www.kurser.dtu.dk/courses/02806/default.aspx?menulanguage=en-GB">Social Data Analysis and Visualization</a> in relation to assignments described by <a href="https://github.com/suneman/socialdataanalysis2016/wiki/Assignments">suneman</a>.</span>
-      <span class="site-footer-credits">This page was generated by <a href="https://pages.github.com">GitHub Pages</a> using the <a href="https://github.com/jasonlong/cayman-theme">Cayman theme</a> by <a href="https://twitter.com/jasonlong">Jason Long</a>.</span>
-    </footer>
-  </section>
-  <script>
-  $(function() {
-    $('a[href*="#"]:not([href="#"])').click(function() {
-      if (location.pathname.replace(/^\//,'') == this.pathname.replace(/^\//,'') && location.hostname == this.hostname) {
-        var target = $(this.hash);
-        target = target.length ? target : $('[name=' + this.hash.slice(1) +']');
-        if (target.length) {
-          $('html, body').animate({
-            scrollTop: target.offset().top
-          }, 1000);
-          return false;
-        }
-      }
-    });
-  });
-  </script>
-</body>
-</html>
+        <section id="info" class="main-content">
+          <footer class="site-footer">
+            <span class="site-footer-owner">For DTU course <a href="http://www.kurser.dtu.dk/courses/02806/default.aspx?menulanguage=en-GB">Social Data Analysis and Visualization</a> in relation to assignments described by <a href="https://github.com/suneman/socialdataanalysis2016/wiki/Assignments">suneman</a>.</span>
+            <span class="site-footer-credits">This page was generated by <a href="https://pages.github.com">GitHub Pages</a> using the <a href="https://github.com/jasonlong/cayman-theme">Cayman theme</a> by <a href="https://twitter.com/jasonlong">Jason Long</a>.</span>
+          </footer>
+        </section>
+        <script>
+        $(function() {
+          $('a[href*="#"]:not([href="#"])').click(function() {
+            if (location.pathname.replace(/^\//,'') == this.pathname.replace(/^\//,'') && location.hostname == this.hostname) {
+              var target = $(this.hash);
+              target = target.length ? target : $('[name=' + this.hash.slice(1) +']');
+              if (target.length) {
+                $('html, body').animate({
+                  scrollTop: target.offset().top
+                }, 1000);
+                return false;
+              }
+            }
+          });
+        });
+        </script>
+      </body>
+      </html>
