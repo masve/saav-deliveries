@@ -12,6 +12,15 @@
   <script type="text/javascript" src="bower_components/d3/d3.min.js"></script>
   <script type="text/javascript" src="bower_components/lodash/lodash.js"></script>
   <script type="text/javascript" src="bower_components/jquery/dist/jquery.min.js"></script>
+
+  <script>
+    //Check for ES 6 support, and alert user if his browser does not support it.
+   (function(document) {
+      "use strict";
+      try { eval("var foo = (x)=>x+1"); }
+      catch (e) { alert('This page uses modern javascript, that your browser does not support.\nPlease use a modern browser to display this properly.') }
+   })();
+  </script>
 </head>
 <body>
   <span id="browser-sync-binding"></span>
@@ -21,7 +30,7 @@
     <h2 class="project-tagline">[COOL TAG-LINE GOES HERE]</h2>
     <a href="https://github.com/masve/saav-deliveries" class="btn">View on GitHub</a>
     <a href="ass2.html" class="btn">Assignment 2</a>
-    <a href="#project" class="btn">Project Assignment A & B</a>
+    <a href="#project" class="btn">Project Assignment A &amp; B</a>
   </section>
 
   <section id="intro" class="main-content">
@@ -120,12 +129,189 @@
 
     <h2>Assignment 2B: One scatter plot and two datasets</h2>
     <h2>Assignment 2C: One barchart and (at least) two datasets</h2>
-    <h2>Assignment 2D: Visualizing geodata</h2>
 
+    <h2>Assignment 2D: Visualizing geodata</h2>
+    <section>
+      <div>
+        <blockquote>
+          For this final sub-assignment we will visualize your results from the KK-means exercise from week 5.
+          <ul>
+            <li>We try our luck with an geospatial visualization displaying results for K=2,…,6. The overall idea is each value of KK has an associated view (you should be able to toggle between these) where each of the KK centroids is shown as a large colored dot (you choose the color scheme), and all GPS points belonging to that centroid are colored using a related RGB value. My plot looks like this.</li>
+            <li>Also please add a link to your IPython notebook containing only the solution to the KK-means exercise from week 5 so we can check it out, if necessary.</li>
+          </ul>
+        </blockquote>
+
+
+
+
+        <p>
+          Below we visualize prostituions in San Francisco. The data visulization shows each an evey of crime of this type from 2003 to 2015.
+
+          The data set is divided in buckets, that are defined by the K-nearest neighbors. Additionally we also show the centroids, that are the center of the given bucket.
+          The datasets used in this visuliaztion can be found <a href="">here</a>
+        </p>
+      </div>
+
+
+      <p>Here you can choose the differnet sizes of <b>K</b></p>
+      <button data-k="2" class="btn btn-color">K2</button>
+      <button data-k="3" class="btn btn-color">K3</button>
+      <button data-k="4" class="btn btn-color">K4</button>
+      <button data-k="5" class="btn btn-color">K5</button>
+      <button data-k="6" class="btn btn-color">K6</button>
+
+      <svg id="ass2d"></svg>
+
+      <script>
+      (function(document) {
+        'use strict';
+
+        //We defined some magic sizes
+        const h = 800;
+        const w = 600;
+
+        //We define some colors that we like, that we use use in our buckets
+        const colorMap = {
+          0: 'green',
+          1: 'blue',
+          2: 'red',
+          3: 'yellow',
+          4: 'orange',
+          5: 'purple'
+        }
+        //Set the size of our svg
+        const svg = d3.select('svg#ass2d').attr({
+          'height': h + 100,
+          'width': w + 100
+        });
+
+        //Create a mercator project, with the center just over San Francisco bay
+        const projection = d3.geo.mercator()
+                           .center([-122.4442, 37.7652])
+                           .translate([w/2, h/2])
+                           .scale([200000]);
+
+         const path = d3.geo.path()
+                       .projection(projection);
+
+        const group1 = svg.append('g');
+        const group2 = svg.append('g');
+        const group3 = svg.append('g');
+
+        //We defined the color of the districts, when not hovered
+        const districtColor = 'rgb(129,145,152)'
+
+        //Define some variable that we can place our data, into so that we do not need to read the file again
+        let centers;
+
+        d3.json('datasets/2d/sf_pd_districts.geojson', distict => {
+
+            group1.selectAll("path")
+                 .data(distict.features)
+                 .enter()
+                 .append("path")
+                 .attr({
+                  "d": path,
+                  'fill': districtColor,
+                  'stroke-width': 2,
+                  stroke: "white"
+                 })
+                 .on('mouseover', function() {
+                   // Added hover effect
+                   d3.select(this)
+                   .attr('fill', districtColor)
+                   .transition()
+                    .attr('fill', 'rgb(200,200,200)')
+                 })
+                 .on('mouseout', function() {
+                   //Remove the hover effect
+                   d3.select(this).transition()
+                     .attr('fill', districtColor)
+                 })
+                 .append('title')
+                 .text(e => e.properties['DISTRICT']); // Add tool tip, containg district name
+
+
+            //Read the cvs file containing all the crimes
+            d3.csv('datasets/2d/week_8_vis_1.csv', crimes => {
+              //Draw all the crimes (this is requires heavy load)
+              group2.selectAll("circle")
+                .data(crimes)
+                .enter()
+                .append('circle')
+                .attr({
+                  cx: e => projection([e.X, e.Y])[0],
+                  cy: e => projection([e.X, e.Y])[1],
+                  r: 2,
+                  fill: e => colorMap[e.K3]
+                })
+                .style('pointer-events', 'none');// Avoid eating the pointer events
+            });
+            // Load the file containg all the centoids
+            d3.json('datasets/2d/centers_week8.json', c => {
+              // Store the cetroids for lates use.
+              centers = c;
+              //Draw the default centoid
+              group3.selectAll('circle')
+                .data(centers['3'])
+                .enter()
+                .append('circle')
+                .attr({
+                  cx: e => projection(e)[0],
+                  cy: e => projection(e)[1],
+                  r: 10,
+                  fill: (e,i) => colorMap[i],
+                  stroke: 'white',
+                  'stroke-width': 3
+                })
+                .style('pointer-events', 'none')
+            });
+
+        })
+
+        // Add event listenere to the buttons.
+        d3.select('body').selectAll('button').on('click', function () {
+          //Update the color
+          group2.selectAll("circle")
+            .attr({
+              fill: e => colorMap[e['K' + this.attributes['data-k'].value]]
+            }).style('pointer-events', 'none');
+
+            group3.selectAll('circle').remove(); // The data sets does not contain the same amount of data points, so we remove the old ones.
+
+            const c = centers[this.attributes['data-k'].value];
+            //Drwa the new centoids
+            group3.selectAll('circle')
+              .data(c)
+              .enter()
+              .append('circle')
+              .attr({
+                cx: e => projection(e)[0],
+                cy: e => projection(e)[1],
+                r: 0,
+                fill: (e,i) => colorMap[i],
+                stroke: 'white',
+                'stroke-width': 3
+              })
+              .style('pointer-events', 'none')
+              .transition()
+              .ease('linear')
+              .delay( (d, i) => i / c.length * 800)
+              .attr( {
+                r: 10 // With some fanzy transitions
+              });
+
+        });
+
+        })();
+
+
+      </script>
+    </section>
   </section>
 
   <section id="project" class="main-content">
-    <h1>Project Assignment A & B</h1>
+    <h1>Project Assignment A &amp; B</h1>
     <i>To be continued.</i>
   </section>
 
