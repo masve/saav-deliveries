@@ -1,0 +1,10 @@
+{
+  "name": "d3assigments",
+  "version": "0.0.1",
+  "dependencies": {
+    "d3": "~3.5.16",
+    "lodash": "~4.6.1",
+    "jquery": "~2.2.1"
+  },
+  "private": true
+}
