@@ -31,7 +31,7 @@
     <h1 class="project-name">Social Data Analysis 2016</h1>
     <h2 class="project-tagline">[COOL TAG-LINE GOES HERE]</h2>
     <a href="https://github.com/masve/saav-deliveries" class="btn">View on GitHub</a>
-    <a href="ass2.html" class="btn">Assignment 2</a>
+    <a href="#assignment2" class="btn">Assignment 2</a>
     <a href="#project" class="btn">Project Assignment A &amp; B</a>
   </section>
 
@@ -351,7 +351,6 @@
           })();
           </script>
 
-
           <h2>Assignment 2C: One barchart and (at least) two datasets</h2>
           <h2>Assignment 2D: Visualizing geodata</h2>
 
@@ -378,11 +377,11 @@
 
 
             <p>Here you can choose the differnet sizes of <b>K</b></p>
-            <button data-k="2" class="btn btncolor" style="width:16.666%">K2</button>
-            <button data-k="3" class="btn btncolor" style="width:16.666%">K3</button>
-            <button data-k="4" class="btn btncolor" style="width:16.666%">K4</button>
-            <button data-k="5" class="btn btncolor" style="width:16.666%">K5</button>
-            <button data-k="6" class="btn btncolor" style="width:16.666%">K6</button>
+            <button id="ass2dbtn" data-k="2" class="btn btncolor" style="width:16.666%">K2</button>
+            <button id="ass2dbtn" data-k="3" class="btn btncolor" style="width:16.666%">K3</button>
+            <button id="ass2dbtn" data-k="4" class="btn btncolor" style="width:16.666%">K4</button>
+            <button id="ass2dbtn" data-k="5" class="btn btncolor" style="width:16.666%">K5</button>
+            <button id="ass2dbtn" data-k="6" class="btn btncolor" style="width:16.666%">K6</button>
 
             <svg id="ass2d"></svg>
 
@@ -494,7 +493,7 @@
               })
 
               // Add event listenere to the buttons.
-              d3.select('body').selectAll('button').on('click', function () {
+              d3.select('body').selectAll('#ass2dbtn').on('click', function () {
                 //Update the color
                 group2.selectAll("circle")
                   .attr({
