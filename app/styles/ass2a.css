@@ -1,0 +1,19 @@
+
+
+  @keyframes rectspin {
+    0% {
+      transform: rotate(0deg) scale(1) scaleX(1) scaleY(1);
+    }
+    50% {
+      transform: rotate(180deg) scale(0.3) scaleX(1.5) scaleY(0.2);
+      fill-opacity: 0.1
+    }
+    100% {
+      transform: rotate(360deg) scale(1) scaleX(1) scaleY(1);
+    }
+  }
+
+  rect.ass2svg {
+    animation: rectspin 1s infinite linear;
+    transform-origin: center;
+  }
