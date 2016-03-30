@@ -1,8 +1,11 @@
 var gulp = require('gulp'),
     webserver = require('gulp-webserver'),
     browserSync = require('browser-sync'),
-    historyApiFallback = require('connect-history-api-fallback');
-    reload = browserSync.reload;
+    historyApiFallback = require('connect-history-api-fallback'),
+    reload = browserSync.reload,
+    ghPages = require('gulp-gh-pages');
+
+
 
 // Watch files for changes & reload
 gulp.task('serve', function() {
@@ -28,4 +31,9 @@ gulp.task('serve', function() {
   gulp.watch(['app/styles/**/*.css'], [reload]);
   gulp.watch(['app/scripts/**/*.js'], reload);
   gulp.watch(['app/images/**/*'], reload);
+});
+
+// Deploy to GitHub pages gh-pages branch
+gulp.task('deploy', function() {
+  return gulp.src('app/**/*').pipe(ghPages());
 });
