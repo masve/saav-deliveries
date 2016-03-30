@@ -2,7 +2,7 @@
 <html lang="en-us">
 <head>
   <meta charset="UTF-8">
-  <title>Social Data Analysis 2016</title>
+  <title>Social Data Analysis and Visualization 2016</title>
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <meta name="theme-color" content="#157878">
   <link rel="stylesheet" href="styles/normalize.css">
@@ -16,19 +16,19 @@
   <script type="text/javascript" src="bower_components/jquery/dist/jquery.min.js"></script>
 
   <script>
-    //Check for ES 6 support, and alert user if his browser does not support it.
-   (function(document) {
-      "use strict";
-      try { eval("var foo = (x)=>x+1"); }
-      catch (e) { alert('This page uses modern javascript, that your browser does not support.\nPlease use a modern browser to display this properly.') }
-   })();
+  //Check for ES 6 support, and alert user if his browser does not support it.
+  (function(document) {
+    "use strict";
+    try { eval("var foo = (x)=>x+1"); }
+    catch (e) { alert('This page uses modern javascript, that your browser does not support.\nPlease use a modern browser to display this properly.') }
+  })();
   </script>
 </head>
 <body>
   <span id="browser-sync-binding"></span>
 
   <section class="page-header">
-    <h1 class="project-name">Social Data Analysis 2016</h1>
+    <h1 class="project-name">Social Data Analysis and Visualization 2016</h1>
     <h2 class="project-tagline">[COOL TAG-LINE GOES HERE]</h2>
     <a href="https://github.com/masve/saav-deliveries" class="btn">View on GitHub</a>
     <a href="#assignment2" class="btn">Assignment 2</a>
@@ -159,6 +159,13 @@
       </ul>
     </blockquote>
 
+    <p>
+      Below you'll find the scatter plot visualized as described above.
+    </p>
+    <p>
+      Some interesting notes to take a way is much progress has been made in regard to both vehicle theft and prostitution from 2003 to 2015. For example, the Mission district has experienced a rise in prostitution which peaked in 2009, at a relative low point in prostitution and vehicle theft crimes for every other district.
+    </p>
+    Use the dropdown below to switch between <b>years</b>:
     <form>
       <select id="years" tabindex="1">
       </select>
@@ -171,7 +178,12 @@
           Explain in your own words why you think I want the axes to be the same for both years? (Even though you know how to make axes adapt to the data values.)</li>
         </ul>
       </blockquote>
-
+      <p>
+        It really depends on what we want to compare. If we want the relative <i>distance</i> between each district for a given year, we maybe would like to fit the axes. However, it is implied we want to compare two different years. Therefore it makes sense to show how big a change that have occurred during period. This would be hidden with fitting axes.
+      </p>
+      <p>
+        Even though the X and Y's do tell the actual number of crimes of each type, it becomes difficult from a visualization point-of-view to determine the absolute change.
+      </p>
       <script>
       (function(document) {
         'use strict';
@@ -184,7 +196,7 @@
         let xScale, yScale, rScale, xAxis, yAxis, svg, blueScale, redScale;
 
         // Load in dataset
-        d3.csv('datasets/2b//week_7_vis_1.csv', data => {
+        d3.csv('datasets/2b/week_7_vis_1.csv', data => {
           csv = data;
           // Draw scatter to screen
           displayVis1(data, '2003')
@@ -266,7 +278,7 @@
               'y': d => yScale(d.vet),
               "font-family": "sans-serif",
               "fill": "#6E6C71",
-              'font-size': '11px'
+              'font-size': '11px',
             });
 
             // Set Y and X axes and add labels to them
@@ -368,30 +380,33 @@
 
 
               <p>
-                Below we visualize prostituions in San Francisco. The data visulization shows each an evey of crime of this type from 2003 to 2015.
+                Below we visualize prostitutions in San Francisco. The data visulization shows every crime of this type from 2003 to 2015.
 
-                The data set is divided in buckets, that are defined by the K-nearest neighbors. Additionally we also show the centroids, that are the center of the given bucket.
-                The datasets used in this visuliaztion can be found <a href="http://nbviewer.jupyter.org/github/masve/saav-deliveries/blob/ass2/app/notebooks/2d.ipynb" target="_blank">here</a>
+                The dataset is divided in clusters, that are defined by the K-nearest neighbors. Additionally we also show the centroids, that are the center of the given cluster.
+                The datasets used in this visualization can be found <a href="http://nbviewer.jupyter.org/github/masve/saav-deliveries/blob/ass2/app/notebooks/2d.ipynb" target="_blank">here</a>.
               </p>
             </div>
 
+            <div class="center">
+              <svg id="ass2d"></svg>
+            </div>
 
-            <p>Here you can choose the differnet sizes of <b>K</b></p>
+            <p>Here you can choose the different sizes of <b>K</b></p>
             <button id="ass2dbtn" data-k="2" class="btn btncolor" style="width:16.666%">K2</button>
             <button id="ass2dbtn" data-k="3" class="btn btncolor" style="width:16.666%">K3</button>
             <button id="ass2dbtn" data-k="4" class="btn btncolor" style="width:16.666%">K4</button>
             <button id="ass2dbtn" data-k="5" class="btn btncolor" style="width:16.666%">K5</button>
             <button id="ass2dbtn" data-k="6" class="btn btncolor" style="width:16.666%">K6</button>
 
-            <svg id="ass2d"></svg>
-
             <script>
             (function(document) {
               'use strict';
 
-              //We defined some magic sizes
-              const h = 800;
-              const w = 600;
+              //We define some magic sizes
+              const h = 530;
+              const w = 530;
+              let scale = 200000;
+              let offset = [w/2, h/2];
 
               //We define some colors that we like, that we use use in our buckets
               const colorMap = {
@@ -409,86 +424,108 @@
               });
 
               //Create a mercator project, with the center just over San Francisco bay
-              const projection = d3.geo.mercator()
-                                 .center([-122.4442, 37.7652])
-                                 .translate([w/2, h/2])
-                                 .scale([200000]);
+              // let projection = d3.geo.mercator()
+              // .center([-122.4442, 37.7742])
+              // .translate(offset)
+              // .scale(scale);
+              let projection;
 
-               const path = d3.geo.path()
-                             .projection(projection);
+              // let path = d3.geo.path()
+              // .projection(projection);
+              let path;
 
               const group1 = svg.append('g');
               const group2 = svg.append('g');
               const group3 = svg.append('g');
 
-              //We defined the color of the districts, when not hovered
+              //We define the color of the districts, when not hovered
               const districtColor = 'rgb(129,145,152)'
 
               //Define some variable that we can place our data, into so that we do not need to read the file again
               let centers;
 
-              d3.json('datasets/2d/sf_pd_districts.geojson', distict => {
+              d3.json('datasets/2d/sf_pd_districts.geojson', json => {
+                //Create a mercator project, with the center just over San Francisco bay
+                let center = d3.geo.centroid(json)
+                projection = d3.geo.mercator().scale(scale).center(center).translate(offset);
 
-                  group1.selectAll("path")
-                       .data(distict.features)
-                       .enter()
-                       .append("path")
-                       .attr({
-                        "d": path,
-                        'fill': districtColor,
-                        'stroke-width': 2,
-                        stroke: "white"
-                       })
-                       .on('mouseover', function() {
-                         // Added hover effect
-                         d3.select(this)
-                         .attr('fill', districtColor)
-                         .transition()
-                          .attr('fill', 'rgb(200,200,200)')
-                       })
-                       .on('mouseout', function() {
-                         //Remove the hover effect
-                         d3.select(this).transition()
-                           .attr('fill', districtColor)
-                       })
-                       .append('title')
-                       .text(e => e.properties['DISTRICT']); // Add tool tip, containg district name
+                // create the path
+                path = d3.geo.path().projection(projection);
+
+                // using the path determine the bounds of the current map and use
+                // these to determine better values for the scale and translation
+                // debugger;
+                let bounds  = path.bounds(json);
+                let hscale  = scale*w / (bounds[1][0] - bounds[0][0]);
+                let vscale  = scale*h / (bounds[1][1] - bounds[0][1]);
+                scale   = (hscale < vscale) ? hscale : vscale;
+                offset  = [w - (bounds[0][0] + bounds[1][0])/2,
+                h - (bounds[0][1] + bounds[1][1])/2];
+
+                // new projection
+                projection = d3.geo.mercator().scale(scale).center(center).translate(offset);
+                path = path.projection(projection);
+
+                group1.selectAll("path")
+                .data(json.features)
+                .enter()
+                .append("path")
+                .attr({
+                  "d": path,
+                  'fill': districtColor,
+                  'stroke-width': 2,
+                  stroke: "white"
+                })
+                .on('mouseover', function() {
+                  // Added hover effect
+                  d3.select(this)
+                  .attr('fill', districtColor)
+                  .transition()
+                  .attr('fill', 'rgb(200,200,200)')
+                })
+                .on('mouseout', function() {
+                  //Remove the hover effect
+                  d3.select(this).transition()
+                  .attr('fill', districtColor)
+                })
+                .append('title')
+                .text(e => e.properties['DISTRICT']); // Add tool tip, containg district name
 
 
-                  //Read the cvs file containing all the crimes
-                  d3.csv('datasets/2d/week_8_vis_1.csv', crimes => {
-                    //Draw all the crimes (this is requires heavy load)
-                    group2.selectAll("circle")
-                      .data(crimes)
-                      .enter()
-                      .append('circle')
-                      .attr({
-                        cx: e => projection([e.X, e.Y])[0],
-                        cy: e => projection([e.X, e.Y])[1],
-                        r: 2,
-                        fill: e => colorMap[e.K3]
-                      })
-                      .style('pointer-events', 'none');// Avoid eating the pointer events
-                  });
-                  // Load the file containg all the centoids
-                  d3.json('datasets/2d/centers_week8.json', c => {
-                    // Store the cetroids for lates use.
-                    centers = c;
-                    //Draw the default centoid
-                    group3.selectAll('circle')
-                      .data(centers['3'])
-                      .enter()
-                      .append('circle')
-                      .attr({
-                        cx: e => projection(e)[0],
-                        cy: e => projection(e)[1],
-                        r: 10,
-                        fill: (e,i) => colorMap[i],
-                        stroke: 'white',
-                        'stroke-width': 3
-                      })
-                      .style('pointer-events', 'none')
-                  });
+                //Read the cvs file containing all the crimes
+                d3.csv('datasets/2d/week_8_vis_1.csv', crimes => {
+                  //Draw all the crimes (this is requires heavy load)
+                  group2.selectAll("circle")
+                  .data(crimes)
+                  .enter()
+                  .append('circle')
+                  .attr({
+                    cx: e => projection([e.X, e.Y])[0],
+                    cy: e => projection([e.X, e.Y])[1],
+                    r: 2,
+                    fill: e => colorMap[e.K3]
+                  })
+                  .style('pointer-events', 'none');// Avoid eating the pointer events
+                });
+                // Load the file containg all the centoids
+                d3.json('datasets/2d/centers_week8.json', c => {
+                  // Store the cetroids for lates use.
+                  centers = c;
+                  //Draw the default centoid
+                  group3.selectAll('circle')
+                  .data(centers['3'])
+                  .enter()
+                  .append('circle')
+                  .attr({
+                    cx: e => projection(e)[0],
+                    cy: e => projection(e)[1],
+                    r: 10,
+                    fill: (e,i) => colorMap[i],
+                    stroke: 'white',
+                    'stroke-width': 3
+                  })
+                  .style('pointer-events', 'none')
+                });
 
               })
 
@@ -496,37 +533,37 @@
               d3.select('body').selectAll('#ass2dbtn').on('click', function () {
                 //Update the color
                 group2.selectAll("circle")
-                  .attr({
-                    fill: e => colorMap[e['K' + this.attributes['data-k'].value]]
-                  }).style('pointer-events', 'none');
+                .attr({
+                  fill: e => colorMap[e['K' + this.attributes['data-k'].value]]
+                }).style('pointer-events', 'none');
 
-                  group3.selectAll('circle').remove(); // The data sets does not contain the same amount of data points, so we remove the old ones.
+                group3.selectAll('circle').remove(); // The data sets does not contain the same amount of data points, so we remove the old ones.
 
-                  const c = centers[this.attributes['data-k'].value];
-                  //Drwa the new centoids
-                  group3.selectAll('circle')
-                    .data(c)
-                    .enter()
-                    .append('circle')
-                    .attr({
-                      cx: e => projection(e)[0],
-                      cy: e => projection(e)[1],
-                      r: 0,
-                      fill: (e,i) => colorMap[i],
-                      stroke: 'white',
-                      'stroke-width': 3
-                    })
-                    .style('pointer-events', 'none')
-                    .transition()
-                    .ease('linear')
-                    .delay( (d, i) => i / c.length * 800)
-                    .attr( {
-                      r: 10 // With some fanzy transitions
-                    });
+                const c = centers[this.attributes['data-k'].value];
+                //Drwa the new centoids
+                group3.selectAll('circle')
+                .data(c)
+                .enter()
+                .append('circle')
+                .attr({
+                  cx: e => projection(e)[0],
+                  cy: e => projection(e)[1],
+                  r: 0,
+                  fill: (e,i) => colorMap[i],
+                  stroke: 'white',
+                  'stroke-width': 3
+                })
+                .style('pointer-events', 'none')
+                .transition()
+                .ease('linear')
+                .delay( (d, i) => i / c.length * 800)
+                .attr( {
+                  r: 10 // With some fanzy transitions
+                });
 
               });
 
-              })();
+            })();
 
 
             </script>
