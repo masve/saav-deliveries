@@ -3,15 +3,9 @@ var gulp = require('gulp'),
     browserSync = require('browser-sync'),
     historyApiFallback = require('connect-history-api-fallback'),
     reload = browserSync.reload,
-    ghPages = require('gulp-gh-pages'),
-    path = require('path');
+    ghPages = require('gulp-gh-pages');
 
 
-var DIST = 'dist';
-
-var dist = function(subpath) {
-  return !subpath ? DIST : path.join(DIST, subpath);
-};
 
 // Watch files for changes & reload
 gulp.task('serve', function() {
@@ -41,6 +35,5 @@ gulp.task('serve', function() {
 
 // Deploy to GitHub pages gh-pages branch
 gulp.task('deploy', function() {
-  console.log('app/**/*');
   return gulp.src('app/**/*').pipe(ghPages());
 });
