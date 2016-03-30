@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="en-us">
+
 <head>
   <meta charset="UTF-8">
   <title>Social Data Analysis and Visualization 2016</title>
@@ -16,14 +17,18 @@
   <script type="text/javascript" src="bower_components/jquery/dist/jquery.min.js"></script>
 
   <script>
-  //Check for ES 6 support, and alert user if his browser does not support it.
-  (function(document) {
-    "use strict";
-    try { eval("var foo = (x)=>x+1"); }
-    catch (e) { alert('This page uses modern javascript, that your browser does not support.\nPlease use a modern browser to display this properly.') }
-  })();
+    //Check for ES 6 support, and alert user if his browser does not support it.
+    (function(document) {
+      "use strict";
+      try {
+        eval("var foo = (x)=>x+1");
+      } catch (e) {
+        alert('This page uses modern javascript, that your browser does not support.\nPlease use a modern browser to display this properly.')
+      }
+    })();
   </script>
 </head>
+
 <body>
   <span id="browser-sync-binding"></span>
 
@@ -88,51 +93,52 @@
     </p>
 
     <svg id="ass2asvg" width="600" height="200">
-      <rect x="30" y="60" width="80" height="80" fill="purple" stroke="grey" stroke-width="2" fill-opacity="1"/>
-      <rect x="60" y="50" width="80" height="80" fill="blue" fill="purple" stroke="grey" stroke-width="2" fill-opacity="0.8"/>
-      <rect x="90" y="40" width="80" height="80" fill="green" fill="purple" stroke="grey" stroke-width="2" fill-opacity="0.6"/>
-      <rect x="120" y="30" width="80" height="80" fill="yellow" fill="purple" stroke="grey" stroke-width="2" fill-opacity="0.4"/>
-      <rect x="150" y="20" width="80" height="80" fill="red" fill="purple" stroke="grey" stroke-width="2" fill-opacity="0.2"/>
+      <rect x="30" y="60" width="80" height="80" fill="purple" stroke="grey" stroke-width="2" fill-opacity="1" />
+      <rect x="60" y="50" width="80" height="80" fill="blue" fill="purple" stroke="grey" stroke-width="2" fill-opacity="0.8" />
+      <rect x="90" y="40" width="80" height="80" fill="green" fill="purple" stroke="grey" stroke-width="2" fill-opacity="0.6" />
+      <rect x="120" y="30" width="80" height="80" fill="yellow" fill="purple" stroke="grey" stroke-width="2" fill-opacity="0.4" />
+      <rect x="150" y="20" width="80" height="80" fill="red" fill="purple" stroke="grey" stroke-width="2" fill-opacity="0.2" />
     </svg>
 
     <button id="ass2apartybtn" class="btn btncolor">PARTY!!!</button>
 
     <link rel="stylesheet" href="styles/ass2a.css">
     <script>
-    (function(document) {
-      'use strict';
+      (function(document) {
+        'use strict';
 
-      let dataset = [ 5, 10, 15, 20, 25 ];
-      let party = false;
+        let dataset = [5, 10, 15, 20, 25];
+        let party = false;
 
-      d3.select("#ass2asvg").selectAll("p")
-      .data(dataset)
-      .enter()
-      .append("p")
-      .text(function(d) {
-        return "I can count up to " + d;
-      })
-      .style("color", d => d > 15 ? "red" : "black")
+        d3.select("#ass2asvg").selectAll("p")
+          .data(dataset)
+          .enter()
+          .append("p")
+          .text(function(d) {
+            return "I can count up to " + d;
+          })
+          .style("color", d => d > 15 ? "red" : "black")
 
-      d3.select("#ass2apartybtn")
-      .on('click', e => {
-        if (!party) {
-          party = true;
-          d3.select("#ass2asvg").selectAll("rect")
-          .classed("ass2svg", party);
-        } else {
-          party = false;
-          d3.select("#ass2asvg").selectAll("rect")
-          .classed("ass2svg", party);
-        }
-      });
-    })();
+        d3.select("#ass2apartybtn")
+          .on('click', e => {
+            if (!party) {
+              party = true;
+              d3.select("#ass2asvg").selectAll("rect")
+                .classed("ass2svg", party);
+            } else {
+              party = false;
+              d3.select("#ass2asvg").selectAll("rect")
+                .classed("ass2svg", party);
+            }
+          });
+      })();
     </script>
 
     <h2>Assignment 2B: One scatter plot and two datasets</h2>
     <blockquote>
       <p>
-        This scatter plot visualization should pull data from an associated CSV/JSON file (it's easiest to use Python to generate a nicely formatted file that contains only the data you need for the visualization). You should use appropriate dynamic scales (see chapter 7 of IDV). Additional requirements for the visualizations are listed below
+        This scatter plot visualization should pull data from an associated CSV/JSON file (it's easiest to use Python to generate a nicely formatted file that contains only the data you need for the visualization). You should use appropriate dynamic scales (see
+        chapter 7 of IDV). Additional requirements for the visualizations are listed below
       </p>
       <ul class="task-list">
         <li>
@@ -163,7 +169,8 @@
       Below you'll find the scatter plot visualized as described above.
     </p>
     <p>
-      Some interesting notes to take a way is much progress has been made in regard to both vehicle theft and prostitution from 2003 to 2015. For example, the Mission district has experienced a rise in prostitution which peaked in 2009, at a relative low point in prostitution and vehicle theft crimes for every other district.
+      Some interesting notes to take a way is much progress has been made in regard to both vehicle theft and prostitution from 2003 to 2015. For example, the Mission district has experienced a rise in prostitution which peaked in 2009, at a relative low point
+      in prostitution and vehicle theft crimes for every other district.
     </p>
     Use the dropdown below to switch between <b>years</b>:
     <form>
@@ -176,15 +183,16 @@
       <ul class="task-list">
         <li>
           Explain in your own words why you think I want the axes to be the same for both years? (Even though you know how to make axes adapt to the data values.)</li>
-        </ul>
-      </blockquote>
-      <p>
-        It really depends on what we want to compare. If we want the relative <i>distance</i> between each district for a given year, we maybe would like to fit the axes. However, it is implied we want to compare two different years. Therefore it makes sense to show how big a change that have occurred during period. This would be hidden with fitting axes.
-      </p>
-      <p>
-        Even though the X and Y's do tell the actual number of crimes of each type, it becomes difficult from a visualization point-of-view to determine the absolute change.
-      </p>
-      <script>
+      </ul>
+    </blockquote>
+    <p>
+      It really depends on what we want to compare. If we want the relative <i>distance</i> between each district for a given year, we maybe would like to fit the axes. However, it is implied we want to compare two different years. Therefore it makes
+      sense to show how big a change that have occurred during period. This would be hidden with fitting axes.
+    </p>
+    <p>
+      Even though the X and Y's do tell the actual number of crimes of each type, it becomes difficult from a visualization point-of-view to determine the absolute change.
+    </p>
+    <script>
       (function(document) {
         'use strict';
 
@@ -207,8 +215,8 @@
           // Parse data to "strong" types
           data.forEach(e => {
             e.pro = parseInt(e.pro),
-            e.vet = parseInt(e.vet),
-            e.total = parseInt(e.total)
+              e.vet = parseInt(e.vet),
+              e.total = parseInt(e.total)
           });
 
           // Set x, y and r (radius) scales
@@ -244,7 +252,7 @@
           // Create svg
           svg = d3.select('svg#vis1').attr({
             'width': w + 100,
-            'height':h + 100
+            'height': h + 100
           });
 
           // Define the axes
@@ -253,27 +261,26 @@
 
           // Draw the circles for the scatter plot
           svg.selectAll("circle")
-          .data(data)
-          .enter()
-          .append("circle")
-          .attr({
-            'cx': d => xScale(d.pro) + padding,
-            'cy': d => yScale(d.vet),
-            'r': d => rScale(d.total),
-            'fill': d => 'rgba(' + '0' + ', '+Math.floor(redScale(d.vet))+','+ Math.floor(blueScale(d.pro)) + ',0.6)',
-            'stroke-width': 2,
-            'stroke': 'white',
-            'stroke-opacity': 0.6
-          });
+            .data(data)
+            .enter()
+            .append("circle")
+            .attr({
+              'cx': d => xScale(d.pro) + padding,
+              'cy': d => yScale(d.vet),
+              'r': d => rScale(d.total),
+              'fill': d => 'rgba(' + '0' + ', ' + Math.floor(redScale(d.vet)) + ',' + Math.floor(blueScale(d.pro)) + ',0.6)',
+              'stroke-width': 2,
+              'stroke': 'white',
+              'stroke-opacity': 0.6
+            });
 
           // Add labels to each circle in the scatter plot
           svg.selectAll("text")
-          .data(data)
-          .enter()
-          .append("text")
-          .text(d => d.dis)
-          .attr(
-            {
+            .data(data)
+            .enter()
+            .append("text")
+            .text(d => d.dis)
+            .attr({
               'x': d => xScale(d.pro) + 20 + padding,
               'y': d => yScale(d.vet),
               "font-family": "sans-serif",
@@ -281,323 +288,322 @@
               'font-size': '11px',
             });
 
-            // Set Y and X axes and add labels to them
-            svg.append('g').attr({
-              'class':'axis',
-              'transform': "translate(" + padding +"," + (h - padding) + ")"
+          // Set Y and X axes and add labels to them
+          svg.append('g').attr({
+              'class': 'axis',
+              'transform': "translate(" + padding + "," + (h - padding) + ")"
             })
             .style("fill", "#6E6C71")
             .call(xAxis);
 
-            svg.append('g')
+          svg.append('g')
             .attr({
-              'class':'axis',
+              'class': 'axis',
               'transform': "translate(" + (padding * 2) + ",0)"
             })
             .style("fill", "#6E6C71")
             .call(yAxis);
 
-            svg.append("text")
+          svg.append("text")
             .attr("transform", "translate(" + (w / 2) + " ," + (h + 10) + ")")
             .style("text-anchor", "middle")
             .style("font-size", "1em")
             .style("fill", "#6E6C71")
             .text("Prostitution");
 
-            svg.append("text")
+          svg.append("text")
             .attr("transform", "rotate(-90)")
-            .attr("y", 0+padding/2)
-            .attr("x",0 - (h / 2))
+            .attr("y", 0 + padding / 2)
+            .attr("x", 0 - (h / 2))
             .attr("dy", "1em")
             .style("text-anchor", "middle")
             .style("fill", "#6E6C71")
             .text("Vehicle Theft");
 
-            // Add all available options (years) to the dropdown selector
-            d3.select('#years')
+          // Add all available options (years) to the dropdown selector
+          d3.select('#years')
             .selectAll('option')
-            .data(_.range(2003,2016))
+            .data(_.range(2003, 2016))
             .enter()
             .append('option')
-            .attr({'value': d => d})
-            .text(d => d)
-            ;
+            .attr({
+              'value': d => d
+            })
+            .text(d => d);
 
-            // Dynamic handling of change in chosen year
-            d3.select('#years')
+          // Dynamic handling of change in chosen year
+          d3.select('#years')
             .on('change', function() {
               let data = _.filter(csv, d => d.year == this.value);
 
               // Handle circle transitions
               d3.selectAll('circle')
-              .data(data)
-              .attr({
-                'fill': d => 'rgba(' + '0' + ', '+Math.floor(redScale(d.vet))+','+ Math.floor(blueScale(d.pro)) + ',0.6)',
-              })
-              .transition()
-              .duration(1000)
-              .ease("elastic")
-              .attr({
-                'cx': d => xScale(d.pro) + padding,
-                'cy': d => yScale(d.vet),
-                'r': d => rScale(d.total),
-              });
+                .data(data)
+                .attr({
+                  'fill': d => 'rgba(' + '0' + ', ' + Math.floor(redScale(d.vet)) + ',' + Math.floor(blueScale(d.pro)) + ',0.6)',
+                })
+                .transition()
+                .duration(1000)
+                .ease("elastic")
+                .attr({
+                  'cx': d => xScale(d.pro) + padding,
+                  'cy': d => yScale(d.vet),
+                  'r': d => rScale(d.total),
+                });
 
               // Handle label transitions
               svg.selectAll("text")
-              .data(data)
-              .transition()
-              .duration(1000)
-              .ease("elastic")
-              .text(d => d.dis)
-              .attr(
-                {
+                .data(data)
+                .transition()
+                .duration(1000)
+                .ease("elastic")
+                .text(d => d.dis)
+                .attr({
                   'x': d => xScale(d.pro) + padding + 20,
                   'y': d => yScale(d.vet),
                   "font-family": "sans-serif",
                   "fill": "#6E6C71",
                   'font-size': '11px'
                 });
-              });
+            });
+        }
+      })();
+    </script>
+
+    <h2>Assignment 2C: One barchart and (at least) two datasets</h2>
+    <h2>Assignment 2D: Visualizing geodata</h2>
+
+    <section>
+      <div>
+        <blockquote>
+          For this final sub-assignment we will visualize your results from the KK-means exercise from week 5.
+          <ul>
+            <li>We try our luck with an geospatial visualization displaying results for K=2,…,6. The overall idea is each value of KK has an associated view (you should be able to toggle between these) where each of the KK centroids is shown as a large colored
+              dot (you choose the color scheme), and all GPS points belonging to that centroid are colored using a related RGB value. My plot looks like this.</li>
+            <li>Also please add a link to your IPython notebook containing only the solution to the KK-means exercise from week 5 so we can check it out, if necessary.</li>
+          </ul>
+        </blockquote>
+
+
+
+
+        <p>
+          Below we visualize prostitutions in San Francisco. The data visulization shows every crime of this type from 2003 to 2015. The dataset is divided in clusters, that are defined by the K-nearest neighbors. Additionally we also show the centroids, that are
+          the center of the given cluster. The datasets used in this visualization can be found <a href="http://nbviewer.jupyter.org/github/masve/saav-deliveries/blob/ass2/app/notebooks/2d.ipynb" target="_blank">here</a>.
+        </p>
+      </div>
+
+      <div class="center">
+        <svg id="ass2d"></svg>
+      </div>
+
+      <p>Here you can choose the different sizes of <b>K</b></p>
+      <button id="ass2dbtn" data-k="2" class="btn btncolor" style="width:16.666%">K2</button>
+      <button id="ass2dbtn" data-k="3" class="btn btncolor" style="width:16.666%">K3</button>
+      <button id="ass2dbtn" data-k="4" class="btn btncolor" style="width:16.666%">K4</button>
+      <button id="ass2dbtn" data-k="5" class="btn btncolor" style="width:16.666%">K5</button>
+      <button id="ass2dbtn" data-k="6" class="btn btncolor" style="width:16.666%">K6</button>
+
+      <script>
+        (function(document) {
+          'use strict';
+
+          //We define some magic sizes
+          const h = 530;
+          const w = 530;
+          let scale = 200000;
+          let offset = [w / 2, h / 2];
+
+          //We define some colors that we like, that we use use in our buckets
+          const colorMap = {
+              0: 'green',
+              1: 'blue',
+              2: 'red',
+              3: 'yellow',
+              4: 'orange',
+              5: 'purple'
             }
-          })();
-          </script>
+            //Set the size of our svg
+          const svg = d3.select('svg#ass2d').attr({
+            'height': h + 100,
+            'width': w + 100
+          });
 
-          <h2>Assignment 2C: One barchart and (at least) two datasets</h2>
-          <h2>Assignment 2D: Visualizing geodata</h2>
+          //Create a mercator project, with the center just over San Francisco bay
+          // let projection = d3.geo.mercator()
+          // .center([-122.4442, 37.7742])
+          // .translate(offset)
+          // .scale(scale);
+          let projection;
 
-          <section>
-            <div>
-              <blockquote>
-                For this final sub-assignment we will visualize your results from the KK-means exercise from week 5.
-                <ul>
-                  <li>We try our luck with an geospatial visualization displaying results for K=2,…,6. The overall idea is each value of KK has an associated view (you should be able to toggle between these) where each of the KK centroids is shown as a large colored dot (you choose the color scheme), and all GPS points belonging to that centroid are colored using a related RGB value. My plot looks like this.</li>
-                  <li>Also please add a link to your IPython notebook containing only the solution to the KK-means exercise from week 5 so we can check it out, if necessary.</li>
-                </ul>
-              </blockquote>
+          // let path = d3.geo.path()
+          // .projection(projection);
+          let path;
 
+          const group1 = svg.append('g');
+          const group2 = svg.append('g');
+          const group3 = svg.append('g');
 
+          //We define the color of the districts, when not hovered
+          const districtColor = 'rgb(129,145,152)'
 
+          //Define some variable that we can place our data, into so that we do not need to read the file again
+          let centers;
 
-              <p>
-                Below we visualize prostitutions in San Francisco. The data visulization shows every crime of this type from 2003 to 2015.
+          d3.json('datasets/2d/sf_pd_districts.geojson', json => {
+            //Create a mercator project, with the center just over San Francisco bay
+            let center = d3.geo.centroid(json)
+            projection = d3.geo.mercator().scale(scale).center(center).translate(offset);
 
-                The dataset is divided in clusters, that are defined by the K-nearest neighbors. Additionally we also show the centroids, that are the center of the given cluster.
-                The datasets used in this visualization can be found <a href="http://nbviewer.jupyter.org/github/masve/saav-deliveries/blob/ass2/app/notebooks/2d.ipynb" target="_blank">here</a>.
-              </p>
-            </div>
+            // create the path
+            path = d3.geo.path().projection(projection);
 
-            <div class="center">
-              <svg id="ass2d"></svg>
-            </div>
+            // using the path determine the bounds of the current map and use
+            // these to determine better values for the scale and translation
+            // debugger;
+            let bounds = path.bounds(json);
+            let hscale = scale * w / (bounds[1][0] - bounds[0][0]);
+            let vscale = scale * h / (bounds[1][1] - bounds[0][1]);
+            scale = (hscale < vscale) ? hscale : vscale;
+            offset = [w - (bounds[0][0] + bounds[1][0]) / 2,
+              h - (bounds[0][1] + bounds[1][1]) / 2
+            ];
 
-            <p>Here you can choose the different sizes of <b>K</b></p>
-            <button id="ass2dbtn" data-k="2" class="btn btncolor" style="width:16.666%">K2</button>
-            <button id="ass2dbtn" data-k="3" class="btn btncolor" style="width:16.666%">K3</button>
-            <button id="ass2dbtn" data-k="4" class="btn btncolor" style="width:16.666%">K4</button>
-            <button id="ass2dbtn" data-k="5" class="btn btncolor" style="width:16.666%">K5</button>
-            <button id="ass2dbtn" data-k="6" class="btn btncolor" style="width:16.666%">K6</button>
+            // new projection
+            projection = d3.geo.mercator().scale(scale).center(center).translate(offset);
+            path = path.projection(projection);
 
-            <script>
-            (function(document) {
-              'use strict';
-
-              //We define some magic sizes
-              const h = 530;
-              const w = 530;
-              let scale = 200000;
-              let offset = [w/2, h/2];
-
-              //We define some colors that we like, that we use use in our buckets
-              const colorMap = {
-                0: 'green',
-                1: 'blue',
-                2: 'red',
-                3: 'yellow',
-                4: 'orange',
-                5: 'purple'
-              }
-              //Set the size of our svg
-              const svg = d3.select('svg#ass2d').attr({
-                'height': h + 100,
-                'width': w + 100
-              });
-
-              //Create a mercator project, with the center just over San Francisco bay
-              // let projection = d3.geo.mercator()
-              // .center([-122.4442, 37.7742])
-              // .translate(offset)
-              // .scale(scale);
-              let projection;
-
-              // let path = d3.geo.path()
-              // .projection(projection);
-              let path;
-
-              const group1 = svg.append('g');
-              const group2 = svg.append('g');
-              const group3 = svg.append('g');
-
-              //We define the color of the districts, when not hovered
-              const districtColor = 'rgb(129,145,152)'
-
-              //Define some variable that we can place our data, into so that we do not need to read the file again
-              let centers;
-
-              d3.json('datasets/2d/sf_pd_districts.geojson', json => {
-                //Create a mercator project, with the center just over San Francisco bay
-                let center = d3.geo.centroid(json)
-                projection = d3.geo.mercator().scale(scale).center(center).translate(offset);
-
-                // create the path
-                path = d3.geo.path().projection(projection);
-
-                // using the path determine the bounds of the current map and use
-                // these to determine better values for the scale and translation
-                // debugger;
-                let bounds  = path.bounds(json);
-                let hscale  = scale*w / (bounds[1][0] - bounds[0][0]);
-                let vscale  = scale*h / (bounds[1][1] - bounds[0][1]);
-                scale   = (hscale < vscale) ? hscale : vscale;
-                offset  = [w - (bounds[0][0] + bounds[1][0])/2,
-                h - (bounds[0][1] + bounds[1][1])/2];
-
-                // new projection
-                projection = d3.geo.mercator().scale(scale).center(center).translate(offset);
-                path = path.projection(projection);
-
-                group1.selectAll("path")
-                .data(json.features)
-                .enter()
-                .append("path")
-                .attr({
-                  "d": path,
-                  'fill': districtColor,
-                  'stroke-width': 2,
-                  stroke: "white"
-                })
-                .on('mouseover', function() {
-                  // Added hover effect
-                  d3.select(this)
+            group1.selectAll("path")
+              .data(json.features)
+              .enter()
+              .append("path")
+              .attr({
+                "d": path,
+                'fill': districtColor,
+                'stroke-width': 2,
+                stroke: "white"
+              })
+              .on('mouseover', function() {
+                // Added hover effect
+                d3.select(this)
                   .attr('fill', districtColor)
                   .transition()
                   .attr('fill', 'rgb(200,200,200)')
-                })
-                .on('mouseout', function() {
-                  //Remove the hover effect
-                  d3.select(this).transition()
-                  .attr('fill', districtColor)
-                })
-                .append('title')
-                .text(e => e.properties['DISTRICT']); // Add tool tip, containg district name
-
-
-                //Read the cvs file containing all the crimes
-                d3.csv('datasets/2d/week_8_vis_1.csv', crimes => {
-                  //Draw all the crimes (this is requires heavy load)
-                  group2.selectAll("circle")
-                  .data(crimes)
-                  .enter()
-                  .append('circle')
-                  .attr({
-                    cx: e => projection([e.X, e.Y])[0],
-                    cy: e => projection([e.X, e.Y])[1],
-                    r: 2,
-                    fill: e => colorMap[e.K3]
-                  })
-                  .style('pointer-events', 'none');// Avoid eating the pointer events
-                });
-                // Load the file containg all the centoids
-                d3.json('datasets/2d/centers_week8.json', c => {
-                  // Store the cetroids for lates use.
-                  centers = c;
-                  //Draw the default centoid
-                  group3.selectAll('circle')
-                  .data(centers['3'])
-                  .enter()
-                  .append('circle')
-                  .attr({
-                    cx: e => projection(e)[0],
-                    cy: e => projection(e)[1],
-                    r: 10,
-                    fill: (e,i) => colorMap[i],
-                    stroke: 'white',
-                    'stroke-width': 3
-                  })
-                  .style('pointer-events', 'none')
-                });
-
               })
+              .on('mouseout', function() {
+                //Remove the hover effect
+                d3.select(this).transition()
+                  .attr('fill', districtColor)
+              })
+              .append('title')
+              .text(e => e.properties['DISTRICT']); // Add tool tip, containg district name
 
-              // Add event listenere to the buttons.
-              d3.select('body').selectAll('#ass2dbtn').on('click', function () {
-                //Update the color
-                group2.selectAll("circle")
+
+            //Read the cvs file containing all the crimes
+            d3.csv('datasets/2d/week_8_vis_1.csv', crimes => {
+              //Draw all the crimes (this is requires heavy load)
+              group2.selectAll("circle")
+                .data(crimes)
+                .enter()
+                .append('circle')
                 .attr({
-                  fill: e => colorMap[e['K' + this.attributes['data-k'].value]]
-                }).style('pointer-events', 'none');
-
-                group3.selectAll('circle').remove(); // The data sets does not contain the same amount of data points, so we remove the old ones.
-
-                const c = centers[this.attributes['data-k'].value];
-                //Drwa the new centoids
-                group3.selectAll('circle')
-                .data(c)
+                  cx: e => projection([e.X, e.Y])[0],
+                  cy: e => projection([e.X, e.Y])[1],
+                  r: 2,
+                  fill: e => colorMap[e.K3]
+                })
+                .style('pointer-events', 'none'); // Avoid eating the pointer events
+            });
+            // Load the file containg all the centoids
+            d3.json('datasets/2d/centers_week8.json', c => {
+              // Store the cetroids for lates use.
+              centers = c;
+              //Draw the default centoid
+              group3.selectAll('circle')
+                .data(centers['3'])
                 .enter()
                 .append('circle')
                 .attr({
                   cx: e => projection(e)[0],
                   cy: e => projection(e)[1],
-                  r: 0,
-                  fill: (e,i) => colorMap[i],
+                  r: 10,
+                  fill: (e, i) => colorMap[i],
                   stroke: 'white',
                   'stroke-width': 3
                 })
                 .style('pointer-events', 'none')
-                .transition()
-                .ease('linear')
-                .delay( (d, i) => i / c.length * 800)
-                .attr( {
-                  r: 10 // With some fanzy transitions
-                });
+            });
 
+          })
+
+          // Add event listenere to the buttons.
+          d3.select('body').selectAll('#ass2dbtn').on('click', function() {
+            //Update the color
+            group2.selectAll("circle")
+              .attr({
+                fill: e => colorMap[e['K' + this.attributes['data-k'].value]]
+              }).style('pointer-events', 'none');
+
+            group3.selectAll('circle').remove(); // The data sets does not contain the same amount of data points, so we remove the old ones.
+
+            const c = centers[this.attributes['data-k'].value];
+            //Drwa the new centoids
+            group3.selectAll('circle')
+              .data(c)
+              .enter()
+              .append('circle')
+              .attr({
+                cx: e => projection(e)[0],
+                cy: e => projection(e)[1],
+                r: 0,
+                fill: (e, i) => colorMap[i],
+                stroke: 'white',
+                'stroke-width': 3
+              })
+              .style('pointer-events', 'none')
+              .transition()
+              .ease('linear')
+              .delay((d, i) => i / c.length * 800)
+              .attr({
+                r: 10 // With some fanzy transitions
               });
 
-            })();
-
-
-            </script>
-          </section>
-
-
-        </section>
-
-        <section id="project" class="main-content">
-          <h1>Project Assignment A &amp; B</h1>
-          <i>To be continued.</i>
-        </section>
-
-        <section id="info" class="main-content">
-          <footer class="site-footer">
-            <span class="site-footer-owner">For DTU course <a href="http://www.kurser.dtu.dk/courses/02806/default.aspx?menulanguage=en-GB">Social Data Analysis and Visualization</a> in relation to assignments described by <a href="https://github.com/suneman/socialdataanalysis2016/wiki/Assignments">suneman</a>.</span>
-            <span class="site-footer-credits">This page was generated by <a href="https://pages.github.com">GitHub Pages</a> using the <a href="https://github.com/jasonlong/cayman-theme">Cayman theme</a> by <a href="https://twitter.com/jasonlong">Jason Long</a>.</span>
-          </footer>
-        </section>
-        <script>
-        $(function() {
-          $('a[href*="#"]:not([href="#"])').click(function() {
-            if (location.pathname.replace(/^\//,'') == this.pathname.replace(/^\//,'') && location.hostname == this.hostname) {
-              var target = $(this.hash);
-              target = target.length ? target : $('[name=' + this.hash.slice(1) +']');
-              if (target.length) {
-                $('html, body').animate({
-                  scrollTop: target.offset().top
-                }, 1000);
-                return false;
-              }
-            }
           });
-        });
-        </script>
-      </body>
-      </html>
+
+        })();
+      </script>
+    </section>
+
+
+  </section>
+
+  <section id="project" class="main-content">
+    <h1>Project Assignment A &amp; B</h1>
+    <i>To be continued.</i>
+  </section>
+
+  <section id="info" class="main-content">
+    <footer class="site-footer">
+      <span class="site-footer-owner">For DTU course <a href="http://www.kurser.dtu.dk/courses/02806/default.aspx?menulanguage=en-GB">Social Data Analysis and Visualization</a> in relation to assignments described by <a href="https://github.com/suneman/socialdataanalysis2016/wiki/Assignments">suneman</a>.</span>
+      <span class="site-footer-credits">This page was generated by <a href="https://pages.github.com">GitHub Pages</a> using the <a href="https://github.com/jasonlong/cayman-theme">Cayman theme</a> by <a href="https://twitter.com/jasonlong">Jason Long</a>.</span>
+    </footer>
+  </section>
+  <script>
+    $(function() {
+      $('a[href*="#"]:not([href="#"])').click(function() {
+        if (location.pathname.replace(/^\//, '') == this.pathname.replace(/^\//, '') && location.hostname == this.hostname) {
+          var target = $(this.hash);
+          target = target.length ? target : $('[name=' + this.hash.slice(1) + ']');
+          if (target.length) {
+            $('html, body').animate({
+              scrollTop: target.offset().top
+            }, 1000);
+            return false;
+          }
+        }
+      });
+    });
+  </script>
+</body>
+
+</html>
