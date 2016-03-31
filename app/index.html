@@ -199,7 +199,7 @@
         // Global variables
         const w = 750;
         const padding = 60;
-        const h = 375;
+        const h = 500;
         let csv;
         let xScale, yScale, rScale, xAxis, yAxis, svg, blueScale, redScale;
 
@@ -252,7 +252,7 @@
           // Create svg
           svg = d3.select('svg#vis1').attr({
             'width': w + 100,
-            'height': h + 100
+            'height':h + 50
           });
 
           // Define the axes
@@ -371,63 +371,228 @@
     </script>
 
     <h2>Assignment 2C: One barchart and (at least) two datasets</h2>
-    <h2>Assignment 2D: Visualizing geodata</h2>
+    <blockquote>
+      This barchart visualization should also pull data from an associated CSV/JSON file. Here, Once again, you should use appropriate dynamic scales (see chapter 7 of IDV). Additional requirements for the visualizations are listed below
+      <ul class='task-list'>
+        <li>
+          This visualization consists of one histogram, which is able to switch between at least two datasets. You get to choose something interesting from Week 3.
+        </li>
+        <li>
+          Click on something to toggle between the two (or more) datasets.
+        </li>
+        <li>
+          Feel free to color and label according to your own taste.
+        </li>
+      </ul>
+    </blockquote>
+    <p>
+      The histogram below shows crimes reported on the hour in the period between <b>2003</b> and <b>2015</b>. For example at 1AM in the period 2003 to 2015 about 8000 assault crimes were recorded.
+    </p>
 
-    <section>
-      <div>
-        <blockquote>
-          For this final sub-assignment we will visualize your results from the KK-means exercise from week 5.
-          <ul>
-            <li>We try our luck with an geospatial visualization displaying results for K=2,…,6. The overall idea is each value of KK has an associated view (you should be able to toggle between these) where each of the KK centroids is shown as a large colored
-              dot (you choose the color scheme), and all GPS points belonging to that centroid are colored using a related RGB value. My plot looks like this.</li>
-            <li>Also please add a link to your IPython notebook containing only the solution to the KK-means exercise from week 5 so we can check it out, if necessary.</li>
-          </ul>
-        </blockquote>
+    Use the dropdown to change the <b>crime category</b>:
+    <form>
+      <select id="cat" tabindex="2">
+      </select>
+    </form>
 
+    <p>
 
+    </p>
 
+    <div class="center">
+      <svg id="vis2"></svg>
+    </div>
 
-        <p>
-          Below we visualize prostitutions in San Francisco. The data visulization shows every crime of this type from 2003 to 2015. The dataset is divided in clusters, that are defined by the K-nearest neighbors. Additionally we also show the centroids, that are
-          the center of the given cluster. The datasets used in this visualization can be found <a href="http://nbviewer.jupyter.org/github/masve/saav-deliveries/blob/ass2/app/notebooks/2d.ipynb" target="_blank">here</a>.
-        </p>
-      </div>
+    <script>
+    (function(document) {
+      'use strict';
 
-      <div class="center">
-        <svg id="ass2d"></svg>
-      </div>
+      // Constants
+      const h = 300;
+      const w = 600;
+      const p = 60;
 
-      <p>Here you can choose the different sizes of <b>K</b></p>
-      <button id="ass2dbtn" data-k="2" class="btn btncolor" style="width:16.666%">K2</button>
-      <button id="ass2dbtn" data-k="3" class="btn btncolor" style="width:16.666%">K3</button>
-      <button id="ass2dbtn" data-k="4" class="btn btncolor" style="width:16.666%">K4</button>
-      <button id="ass2dbtn" data-k="5" class="btn btncolor" style="width:16.666%">K5</button>
-      <button id="ass2dbtn" data-k="6" class="btn btncolor" style="width:16.666%">K6</button>
+      // Variables
+      let xAxis, yAxis;
+      let csv;
 
-      <script>
-        (function(document) {
-          'use strict';
+      // Load dataset, parse and draw histogram
+      d3.csv('datasets/2c/crimes_on_hour.csv', d => {
+        csv = d;
+        csv.forEach( e => {
+          e['ASSAULT'] = parseInt(e['ASSAULT'])
+          e['BURGLARY'] = parseInt(e['BURGLARY'])
+          e['DISORDERLY CONDUCT'] = parseInt(e['DISORDERLY CONDUCT'])
+          e['DRIVING UNDER THE INFLUENCE'] = parseInt(e['DRIVING UNDER THE INFLUENCE'])
+          e['DRUG/NARCOTIC'] = parseInt(e['DRUG/NARCOTIC'])
+          e['LARCENY/THEFT'] = parseInt(e['LARCENY/THEFT'])
+          e['TRESPASS'] = parseInt(e['TRESPASS'])
+          e['STOLEN PROPERTY'] = parseInt(e['STOLEN PROPERTY'])
+          e['ROBBERY'] = parseInt(e['ROBBERY'])
+          e['PROSTITUTION'] = parseInt(e['PROSTITUTION'])
+          e['VANDALISM'] = parseInt(e['VANDALISM'])
+          e['VEHICLE THEFT'] = parseInt(e['VEHICLE THEFT'])
+          e['WEAPON LAWS'] = parseInt(e['WEAPON LAWS'])
+          e['DRUNKENNESS'] = parseInt(e['DRUNKENNESS'])
+          e['hour'] = parseInt(e['hour'])
 
-          //We define some magic sizes
-          const h = 530;
-          const w = 530;
-          let scale = 200000;
-          let offset = [w / 2, h / 2];
+        })
+        drawHistogram(d)
+      });
 
-          //We define some colors that we like, that we use use in our buckets
-          const colorMap = {
-              0: 'green',
-              1: 'blue',
-              2: 'red',
-              3: 'yellow',
-              4: 'orange',
-              5: 'purple'
-            }
-            //Set the size of our svg
-          const svg = d3.select('svg#ass2d').attr({
-            'height': h + 100,
-            'width': w + 100
+      // Draws histogram to DOM
+      function drawHistogram(dataset) {
+        // X scale
+        let xScale = d3.scale.ordinal()
+        .domain(d3.range(dataset.length))
+        .rangeRoundBands([0, w], 0.05);
+
+        // Y scale
+        let yScale = d3.scale.linear()
+        .domain([0, d3.max(dataset, d => d['ASSAULT'] ) ] )
+        .range([h - p , 0]);
+
+        // Color scale
+        let redScale = d3.scale.linear()
+        .domain([0, d3.max(dataset, d => d['ASSAULT'] ) ] )
+        .range([20 , 255]);
+
+        //Create histogram SVG element
+        let svg = d3.select('svg#vis2').attr({
+          'height': h,
+          'width': w + 100
+        })
+
+        // Define axes
+        xAxis = d3.svg.axis().scale(xScale).orient('bottom').ticks(15);
+        yAxis = d3.svg.axis().scale(yScale).orient('left').ticks(8);
+
+        // Add histogram bars for default category to histogram
+        svg.selectAll('rect')
+        .data(dataset)
+        .enter()
+        .append('rect')
+        .attr({
+          'x': (d,i) => xScale(i) + p,
+          'y': (d,i) => yScale(d['ASSAULT']),
+          'width': xScale.rangeBand(),
+          'height': d => yScale(0) - yScale(d['ASSAULT']),
+          'fill': d => 'rgba(10, 10,' + Math.floor(redScale(d['ASSAULT'])) + ', 0.6)'
+        })
+
+        // Add x axis to historgram
+        svg.append('g').attr({
+          'class':'axis',
+          'transform': "translate(" + p + "," + (h-p)+ ")"
+        }).call(xAxis);
+
+        // Add y axis to histogram
+        svg.append('g').attr({
+          'class':'axis y',
+          'transform': "translate(" + (p) + ",0)"
+        }).call(yAxis);
+
+        // Add available categories as options to the dropdown selector
+        d3.select('#cat')
+        .selectAll('option')
+        .data(_.keys(dataset[0]).slice(1))
+        .enter()
+        .append('option')
+        .attr({
+          'value': d => d
+        }).text(d => d);
+
+        // Add change event handler to dropdown selector.
+        // Handles updates to the histogram based on category selected.
+        d3.select('#cat')
+        .on('change', function() {
+          yScale.domain([0, d3.max(dataset, d => d[this.value])]);
+
+          redScale.domain([0, d3.max(dataset, d => d[this.value])]);
+
+          // Update histogram bars
+          svg.selectAll('rect')
+          .data(dataset)
+          .attr({
+            'fill': d => 'rgba(10,10,' + Math.floor(redScale(d[this.value])) + ',0.6)'
+          })
+          .transition()
+          .delay( (d, i) => i / dataset.length * 1000)
+          .ease('bounce')
+          .duration(1200)
+          .attr({
+            'x': (d,i) => xScale(i) + p,
+            'y': d => yScale(d[this.value]),
+            'width': xScale.rangeBand(),
+            'height': d => Math.abs(yScale(0) - yScale(d[this.value])),
           });
+
+          // Refit the y axis
+          svg.select('.y.axis').transition().call(yAxis);
+        })
+      }
+    })();
+    </script>
+
+          <h2>Assignment 2D: Visualizing geodata</h2>
+
+          <section>
+            <div>
+              <blockquote>
+                For this final sub-assignment we will visualize your results from the KK-means exercise from week 5.
+                <ul>
+                  <li>We try our luck with an geospatial visualization displaying results for K=2,…,6. The overall idea is each value of KK has an associated view (you should be able to toggle between these) where each of the KK centroids is shown as a large colored dot (you choose the color scheme), and all GPS points belonging to that centroid are colored using a related RGB value. My plot looks like this.</li>
+                  <li>Also please add a link to your IPython notebook containing only the solution to the KK-means exercise from week 5 so we can check it out, if necessary.</li>
+                </ul>
+              </blockquote>
+
+
+
+
+              <p>
+                Below we visualize prostitutions in San Francisco. The data visulization shows every crime of this type from 2003 to 2015.
+
+                The dataset is divided in clusters, that are defined by the K-nearest neighbors. Additionally we also show the centroids, that are the center of the given cluster.
+                The datasets used in this visualization can be found <a href="http://nbviewer.jupyter.org/github/masve/saav-deliveries/blob/master/app/notebooks/2d.ipynb" target="_blank">here</a>.
+              </p>
+            </div>
+
+            <div class="center">
+              <svg id="ass2d"></svg>
+            </div>
+
+            <p>Here you can choose the different sizes of <b>K</b></p>
+            <button id="ass2dbtn" data-k="2" class="btn btncolor" style="width:16.666%">K2</button>
+            <button id="ass2dbtn" data-k="3" class="btn btncolor" style="width:16.666%">K3</button>
+            <button id="ass2dbtn" data-k="4" class="btn btncolor" style="width:16.666%">K4</button>
+            <button id="ass2dbtn" data-k="5" class="btn btncolor" style="width:16.666%">K5</button>
+            <button id="ass2dbtn" data-k="6" class="btn btncolor" style="width:16.666%">K6</button>
+
+            <script>
+            (function(document) {
+              'use strict';
+
+              //We define some magic sizes
+              const h = 530;
+              const w = 530;
+              let scale = 200000;
+              let offset = [w/2, h/2];
+
+              //We define some colors that we like, that we use use in our buckets
+              const colorMap = {
+                0: 'green',
+                1: 'blue',
+                2: 'red',
+                3: 'yellow',
+                4: 'orange',
+                5: 'purple'
+              }
+              //Set the size of our svg
+              const svg = d3.select('svg#ass2d').attr({
+                'height': h + 100,
+                'width': w + 100
+              });
+
 
           //Create a mercator project, with the center just over San Francisco bay
           // let projection = d3.geo.mercator()
