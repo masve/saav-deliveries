@@ -3,3 +3,8 @@ This repository is dedicated for deliverables for DTU course **02806 Social data
 - s113604 Mark Ian Svenningsen
 - s113627 Casper Clemmensen
 - s146893 Kasper Hoa Quoc Duong
+
+
+# Project page
+
+You can view our project page [here](https://masve.github.io/saav-deliveries/).
