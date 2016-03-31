@@ -174,7 +174,7 @@
     </p>
     Use the dropdown below to switch between <b>years</b>:
     <form>
-      <select id="years" tabindex="1">
+      <select id="years" tabindex="1" style="width:100%">
       </select>
     </form>
     <svg id="vis1"></svg>
@@ -461,7 +461,7 @@
         let svg = d3.select('svg#vis2').attr({
           'height': h,
           'width': w + 100
-        })
+        }).style('padding-top', 10);
 
         // Define axes
         xAxis = d3.svg.axis().scale(xScale).orient('bottom').ticks(15);
