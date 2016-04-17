@@ -15,6 +15,7 @@
   <script type="text/javascript" src="bower_components/d3/d3.min.js"></script>
   <script type="text/javascript" src="bower_components/lodash/lodash.js"></script>
   <script type="text/javascript" src="bower_components/jquery/dist/jquery.min.js"></script>
+  <script type="text/javascript" src="scripts/knn.js"></script>
 
   <script>
     //Check for ES 6 support, and alert user if his browser does not support it.
@@ -173,7 +174,7 @@
       </select>
     </form>
     <div class="center">
-    <svg id="vis1"></svg>
+      <svg id="vis1"></svg>
     </div>
 
 
@@ -250,7 +251,7 @@
           // Create svg
           svg = d3.select('svg#vis1').attr({
             'width': w + 100,
-            'height':h + 50
+            'height': h + 50
           });
 
           // Define the axes
@@ -402,194 +403,193 @@
     </div>
 
     <script>
-    (function(document) {
-      'use strict';
+      (function(document) {
+        'use strict';
 
-      // Constants
-      const h = 300;
-      const w = 600;
-      const p = 60;
+        // Constants
+        const h = 300;
+        const w = 600;
+        const p = 60;
 
-      // Variables
-      let xAxis, yAxis;
-      let csv;
+        // Variables
+        let xAxis, yAxis;
+        let csv;
 
-      // Load dataset, parse and draw histogram
-      d3.csv('datasets/2c/crimes_on_hour.csv', d => {
-        csv = d;
-        csv.forEach( e => {
-          e['ASSAULT'] = parseInt(e['ASSAULT'])
-          e['BURGLARY'] = parseInt(e['BURGLARY'])
-          e['DISORDERLY CONDUCT'] = parseInt(e['DISORDERLY CONDUCT'])
-          e['DRIVING UNDER THE INFLUENCE'] = parseInt(e['DRIVING UNDER THE INFLUENCE'])
-          e['DRUG/NARCOTIC'] = parseInt(e['DRUG/NARCOTIC'])
-          e['LARCENY/THEFT'] = parseInt(e['LARCENY/THEFT'])
-          e['TRESPASS'] = parseInt(e['TRESPASS'])
-          e['STOLEN PROPERTY'] = parseInt(e['STOLEN PROPERTY'])
-          e['ROBBERY'] = parseInt(e['ROBBERY'])
-          e['PROSTITUTION'] = parseInt(e['PROSTITUTION'])
-          e['VANDALISM'] = parseInt(e['VANDALISM'])
-          e['VEHICLE THEFT'] = parseInt(e['VEHICLE THEFT'])
-          e['WEAPON LAWS'] = parseInt(e['WEAPON LAWS'])
-          e['DRUNKENNESS'] = parseInt(e['DRUNKENNESS'])
-          e['hour'] = parseInt(e['hour'])
+        // Load dataset, parse and draw histogram
+        d3.csv('datasets/2c/crimes_on_hour.csv', d => {
+          csv = d;
+          csv.forEach(e => {
+            e['ASSAULT'] = parseInt(e['ASSAULT'])
+            e['BURGLARY'] = parseInt(e['BURGLARY'])
+            e['DISORDERLY CONDUCT'] = parseInt(e['DISORDERLY CONDUCT'])
+            e['DRIVING UNDER THE INFLUENCE'] = parseInt(e['DRIVING UNDER THE INFLUENCE'])
+            e['DRUG/NARCOTIC'] = parseInt(e['DRUG/NARCOTIC'])
+            e['LARCENY/THEFT'] = parseInt(e['LARCENY/THEFT'])
+            e['TRESPASS'] = parseInt(e['TRESPASS'])
+            e['STOLEN PROPERTY'] = parseInt(e['STOLEN PROPERTY'])
+            e['ROBBERY'] = parseInt(e['ROBBERY'])
+            e['PROSTITUTION'] = parseInt(e['PROSTITUTION'])
+            e['VANDALISM'] = parseInt(e['VANDALISM'])
+            e['VEHICLE THEFT'] = parseInt(e['VEHICLE THEFT'])
+            e['WEAPON LAWS'] = parseInt(e['WEAPON LAWS'])
+            e['DRUNKENNESS'] = parseInt(e['DRUNKENNESS'])
+            e['hour'] = parseInt(e['hour'])
 
-        })
-        drawHistogram(d)
-      });
-
-      // Draws histogram to DOM
-      function drawHistogram(dataset) {
-        // X scale
-        let xScale = d3.scale.ordinal()
-        .domain(d3.range(dataset.length))
-        .rangeRoundBands([0, w], 0.05);
-
-        // Y scale
-        let yScale = d3.scale.linear()
-        .domain([0, d3.max(dataset, d => d['ASSAULT'] ) ] )
-        .range([h - p , 0]);
-
-        // Color scale
-        let redScale = d3.scale.linear()
-        .domain([0, d3.max(dataset, d => d['ASSAULT'] ) ] )
-        .range([20 , 255]);
-
-        //Create histogram SVG element
-        let svg = d3.select('svg#vis2').attr({
-          'height': h,
-          'width': w + 100
-        }).style('padding-top', 10);
-
-        // Define axes
-        xAxis = d3.svg.axis().scale(xScale).orient('bottom').ticks(15);
-        yAxis = d3.svg.axis().scale(yScale).orient('left').ticks(8);
-
-        // Add histogram bars for default category to histogram
-        svg.selectAll('rect')
-        .data(dataset)
-        .enter()
-        .append('rect')
-        .attr({
-          'x': (d,i) => xScale(i) + p,
-          'y': (d,i) => yScale(d['ASSAULT']),
-          'width': xScale.rangeBand(),
-          'height': d => yScale(0) - yScale(d['ASSAULT']),
-          'fill': d => 'rgba(10, 10,' + Math.floor(redScale(d['ASSAULT'])) + ', 0.6)'
-        })
-
-        // Add x axis to historgram
-        svg.append('g').attr({
-          'class':'axis',
-          'transform': "translate(" + p + "," + (h-p)+ ")"
-        }).call(xAxis);
-
-        // Add y axis to histogram
-        svg.append('g').attr({
-          'class':'axis y',
-          'transform': "translate(" + (p) + ",0)"
-        }).call(yAxis);
-
-        // Add available categories as options to the dropdown selector
-        d3.select('#cat')
-        .selectAll('option')
-        .data(_.keys(dataset[0]).slice(1))
-        .enter()
-        .append('option')
-        .attr({
-          'value': d => d
-        }).text(d => d);
-
-        // Add change event handler to dropdown selector.
-        // Handles updates to the histogram based on category selected.
-        d3.select('#cat')
-        .on('change', function() {
-          yScale.domain([0, d3.max(dataset, d => d[this.value])]);
-
-          redScale.domain([0, d3.max(dataset, d => d[this.value])]);
-
-          // Update histogram bars
-          svg.selectAll('rect')
-          .data(dataset)
-          .attr({
-            'fill': d => 'rgba(10,10,' + Math.floor(redScale(d[this.value])) + ',0.6)'
           })
-          .transition()
-          .delay( (d, i) => i / dataset.length * 1000)
-          .ease('bounce')
-          .duration(1200)
-          .attr({
-            'x': (d,i) => xScale(i) + p,
-            'y': d => yScale(d[this.value]),
-            'width': xScale.rangeBand(),
-            'height': d => Math.abs(yScale(0) - yScale(d[this.value])),
-          });
+          drawHistogram(d)
+        });
 
-          // Refit the y axis
-          svg.select('.y.axis').transition().call(yAxis);
-        })
-      }
-    })();
+        // Draws histogram to DOM
+        function drawHistogram(dataset) {
+          // X scale
+          let xScale = d3.scale.ordinal()
+            .domain(d3.range(dataset.length))
+            .rangeRoundBands([0, w], 0.05);
+
+          // Y scale
+          let yScale = d3.scale.linear()
+            .domain([0, d3.max(dataset, d => d['ASSAULT'])])
+            .range([h - p, 0]);
+
+          // Color scale
+          let redScale = d3.scale.linear()
+            .domain([0, d3.max(dataset, d => d['ASSAULT'])])
+            .range([20, 255]);
+
+          //Create histogram SVG element
+          let svg = d3.select('svg#vis2').attr({
+            'height': h,
+            'width': w + 100
+          }).style('padding-top', 10);
+
+          // Define axes
+          xAxis = d3.svg.axis().scale(xScale).orient('bottom').ticks(15);
+          yAxis = d3.svg.axis().scale(yScale).orient('left').ticks(8);
+
+          // Add histogram bars for default category to histogram
+          svg.selectAll('rect')
+            .data(dataset)
+            .enter()
+            .append('rect')
+            .attr({
+              'x': (d, i) => xScale(i) + p,
+              'y': (d, i) => yScale(d['ASSAULT']),
+              'width': xScale.rangeBand(),
+              'height': d => yScale(0) - yScale(d['ASSAULT']),
+              'fill': d => 'rgba(10, 10,' + Math.floor(redScale(d['ASSAULT'])) + ', 0.6)'
+            })
+
+          // Add x axis to historgram
+          svg.append('g').attr({
+            'class': 'axis',
+            'transform': "translate(" + p + "," + (h - p) + ")"
+          }).call(xAxis);
+
+          // Add y axis to histogram
+          svg.append('g').attr({
+            'class': 'axis y',
+            'transform': "translate(" + (p) + ",0)"
+          }).call(yAxis);
+
+          // Add available categories as options to the dropdown selector
+          d3.select('#cat')
+            .selectAll('option')
+            .data(_.keys(dataset[0]).slice(1))
+            .enter()
+            .append('option')
+            .attr({
+              'value': d => d
+            }).text(d => d);
+
+          // Add change event handler to dropdown selector.
+          // Handles updates to the histogram based on category selected.
+          d3.select('#cat')
+            .on('change', function() {
+              yScale.domain([0, d3.max(dataset, d => d[this.value])]);
+
+              redScale.domain([0, d3.max(dataset, d => d[this.value])]);
+
+              // Update histogram bars
+              svg.selectAll('rect')
+                .data(dataset)
+                .attr({
+                  'fill': d => 'rgba(10,10,' + Math.floor(redScale(d[this.value])) + ',0.6)'
+                })
+                .transition()
+                .delay((d, i) => i / dataset.length * 1000)
+                .ease('bounce')
+                .duration(1200)
+                .attr({
+                  'x': (d, i) => xScale(i) + p,
+                  'y': d => yScale(d[this.value]),
+                  'width': xScale.rangeBand(),
+                  'height': d => Math.abs(yScale(0) - yScale(d[this.value])),
+                });
+
+              // Refit the y axis
+              svg.select('.y.axis').transition().call(yAxis);
+            })
+        }
+      })();
     </script>
 
-          <h2>Assignment 2D: Visualizing geodata</h2>
+    <h2>Assignment 2D: Visualizing geodata</h2>
 
-          <section>
-            <div>
-              <blockquote>
-                For this final sub-assignment we will visualize your results from the KK-means exercise from week 5.
-                <ul>
-                  <li>We try our luck with an geospatial visualization displaying results for K=2,…,6. The overall idea is each value of KK has an associated view (you should be able to toggle between these) where each of the KK centroids is shown as a large colored dot (you choose the color scheme), and all GPS points belonging to that centroid are colored using a related RGB value. My plot looks like this.</li>
-                  <li>Also please add a link to your IPython notebook containing only the solution to the KK-means exercise from week 5 so we can check it out, if necessary.</li>
-                </ul>
-              </blockquote>
+    <section>
+      <div>
+        <blockquote>
+          For this final sub-assignment we will visualize your results from the KK-means exercise from week 5.
+          <ul>
+            <li>We try our luck with an geospatial visualization displaying results for K=2,…,6. The overall idea is each value of KK has an associated view (you should be able to toggle between these) where each of the KK centroids is shown as a large colored
+              dot (you choose the color scheme), and all GPS points belonging to that centroid are colored using a related RGB value. My plot looks like this.</li>
+            <li>Also please add a link to your IPython notebook containing only the solution to the KK-means exercise from week 5 so we can check it out, if necessary.</li>
+          </ul>
+        </blockquote>
 
 
 
 
-              <p>
-                Below we visualize prostitutions in San Francisco. The data visulization shows every crime of this type from 2003 to 2015.
+        <p>
+          Below we visualize prostitutions in San Francisco. The data visulization shows every crime of this type from 2003 to 2015. The dataset is divided in clusters, that are defined by the K-nearest neighbors. Additionally we also show the centroids, that are
+          the center of the given cluster. The datasets used in this visualization can be found <a href="http://nbviewer.jupyter.org/github/masve/saav-deliveries/blob/master/app/notebooks/2d.ipynb" target="_blank">here</a>.
+        </p>
+      </div>
 
-                The dataset is divided in clusters, that are defined by the K-nearest neighbors. Additionally we also show the centroids, that are the center of the given cluster.
-                The datasets used in this visualization can be found <a href="http://nbviewer.jupyter.org/github/masve/saav-deliveries/blob/master/app/notebooks/2d.ipynb" target="_blank">here</a>.
-              </p>
-            </div>
+      <div class="center">
+        <svg id="ass2d"></svg>
+      </div>
 
-            <div class="center">
-              <svg id="ass2d"></svg>
-            </div>
+      <p>Here you can choose the different sizes of <b>K</b></p>
+      <button id="ass2dbtn" data-k="2" class="btn btncolor" style="width:16.666%">K2</button>
+      <button id="ass2dbtn" data-k="3" class="btn btncolor" style="width:16.666%">K3</button>
+      <button id="ass2dbtn" data-k="4" class="btn btncolor" style="width:16.666%">K4</button>
+      <button id="ass2dbtn" data-k="5" class="btn btncolor" style="width:16.666%">K5</button>
+      <button id="ass2dbtn" data-k="6" class="btn btncolor" style="width:16.666%">K6</button>
 
-            <p>Here you can choose the different sizes of <b>K</b></p>
-            <button id="ass2dbtn" data-k="2" class="btn btncolor" style="width:16.666%">K2</button>
-            <button id="ass2dbtn" data-k="3" class="btn btncolor" style="width:16.666%">K3</button>
-            <button id="ass2dbtn" data-k="4" class="btn btncolor" style="width:16.666%">K4</button>
-            <button id="ass2dbtn" data-k="5" class="btn btncolor" style="width:16.666%">K5</button>
-            <button id="ass2dbtn" data-k="6" class="btn btncolor" style="width:16.666%">K6</button>
+      <script>
+        (function(document) {
+          'use strict';
 
-            <script>
-            (function(document) {
-              'use strict';
+          //We define some magic sizes
+          const h = 530;
+          const w = 530;
+          let scale = 200000;
+          let offset = [w / 2, h / 2];
 
-              //We define some magic sizes
-              const h = 530;
-              const w = 530;
-              let scale = 200000;
-              let offset = [w/2, h/2];
-
-              //We define some colors that we like, that we use use in our buckets
-              const colorMap = {
-                0: 'green',
-                1: 'blue',
-                2: 'red',
-                3: 'yellow',
-                4: 'orange',
-                5: 'purple'
-              }
-              //Set the size of our svg
-              const svg = d3.select('svg#ass2d').attr({
-                'height': h + 100,
-                'width': w + 100
-              });
+          //We define some colors that we like, that we use use in our buckets
+          const colorMap = {
+              0: 'green',
+              1: 'blue',
+              2: 'red',
+              3: 'yellow',
+              4: 'orange',
+              5: 'purple'
+            }
+            //Set the size of our svg
+          const svg = d3.select('svg#ass2d').attr({
+            'height': h + 100,
+            'width': w + 100
+          });
 
 
           //Create a mercator project, with the center just over San Francisco bay
@@ -615,6 +615,7 @@
 
           d3.json('datasets/2d/sf_pd_districts.geojson', json => {
             //Create a mercator project, with the center just over San Francisco bay
+
             let center = d3.geo.centroid(json)
             projection = d3.geo.mercator().scale(scale).center(center).translate(offset);
 
@@ -743,6 +744,95 @@
   <section id="project" class="main-content">
     <h1>Project Assignment A &amp; B</h1>
     <i>To be continued.</i>
+
+    <svg id="projectMap"></svg>
+    <script>
+      (function(doo) {
+        'use strict';
+
+
+
+        class ColorMap {
+          constructor() {
+            this.colorMap = [
+              'green',
+              'blue',
+              'red',
+              'yellow'
+            ]
+          }
+          getColor(int) {
+            return this.colorMap[int];
+          }
+        }
+
+        const elm = document.querySelector('svg#projectMap');
+        const svg = d3.select(elm);
+
+
+        const cvsDestination = 'datasets/pb/PASSENGER_VEHICLE_CLUSTERS.csv';
+
+
+
+
+
+        const height = 530;
+        const width = 530;
+
+        elm.style.height = `${height}px`;
+        elm.style.width = `${width}px`;
+
+        //d3.cvs('datasets/pb/PASSENGER_VEHICLE_CLUSTERS.csv', this.)
+        d3.json('datasets/pb/School_Districts.geojson', json => {
+          // const offset = [width / 2, height / 2]
+          const scale = 200000;
+          const districts = json;
+          let center = d3.geo.centroid(districts);
+
+          // let scale = 200000;
+          let offset = [width / 2, height / 2];
+
+          let projection = d3.geo.mercator().scale(scale).center(center).translate(offset);
+
+
+          //const hscale = scale * width / (bounds[1][0] - bounds[0][0]);
+          //const vscale = scale * height / (bounds[1][1] - bounds[0][1]);
+          //const scale = (hscale < vscale) ? hscale : vscale;
+          // const bounds = path.bounds(districts);
+          // const offsetDiff = [
+          //   (width - (bounds[0][0] + bounds[1][0]) / 2),
+          //   height - (bounds[0][1] + bounds[1][1]) / 2
+          // ];
+          // draw(this.svg, path, this.districts)
+
+          let path = d3.geo.path().projection(projection);
+          //Render the districts
+          d3.select('svg#projectMap').selectAll("path")
+          .data(json)
+          .enter()
+          .append("path")
+          .attr({
+            "d": path,
+            'fill': 'rgb(129,145,152)',
+            'stroke-width': 2,
+            'stroke': "white"
+          });
+
+
+        });
+
+
+
+
+
+
+        //document.addEventListener("DOMContentLoaded", new KNN(document.querySelector('svg#projectMap')))
+      })();
+    </script>
+
+
+
+
   </section>
 
   <section id="info" class="main-content">
