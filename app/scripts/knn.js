@@ -54,7 +54,7 @@ class KNN {
     }
   }
   renderD3Elems() {
-    this.svg.selectAll("path")
+    this.svg.append('g').selectAll("path")
     .data(this.districts.features)
     .enter()
     .append("path")
