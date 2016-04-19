@@ -74,7 +74,7 @@
     <p>Note that the size of the points indicate the amount of collisions, as the <span style="color:red">red</span> color show
       if there is any fatalities.</p>
     <div class="map" id="intersections"></div>
-
+    <p class="small">Note that all intersections with less that 10 collisions and without falaties have been omitted to increase performance.</p>
     <script>
       (function(d) {
           "use strict";
@@ -93,6 +93,7 @@
                 clickable: true,
                 weight: 2
               };
+              this.lowerBound = 10;
               
               this.map = L.map(target).setView([40.715, -73.984], 11);
               
@@ -127,12 +128,8 @@
             addPoint() {
               if (this.intersections.length > 0) {  
                 this.intersections.forEach( a => {
-                  if (parseInt(a.LOCATION) > 10 || parseInt(a['NUMBER OF PERSONS KILLED'] > 0) ) {
-                    
-                    let opt = this.pointOptions;
-                    if (parseInt(a['NUMBER OF PERSONS KILLED']) > 0) {
-                      opt.color = '#F11'
-                    }
+                  if (parseInt(a.LOCATION) > this.lowerBound || parseInt(a['NUMBER OF PERSONS KILLED'] > 0) ) {
+                    // Add a circle for the given intersection. Adjust the radio with regards to the amount of incidents.
                     L
                       .circle([a.LAT, a.LON], this.scale(parseInt(a.LOCATION)), {
                           color: parseInt(a['NUMBER OF PERSONS KILLED']) >= 1 ? '#F11': '#03f',
