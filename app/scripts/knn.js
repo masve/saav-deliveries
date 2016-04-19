@@ -16,7 +16,7 @@ class KNN {
     this.center = undefined;
 
     elm.style.height = `${this.height}px`;
-    elm.style.width = `${this.width}px`;
+    elm.style.width = '100%';
 
     //d3.cvs('datasets/pb/PASSENGER_VEHICLE_CLUSTERS.csv', this.)
     d3.json('datasets/pb/School_Districts.geojson', json => this.onDistrictsLoaded(json));
