@@ -9,13 +9,14 @@
   <link rel="stylesheet" href="styles/normalize.css">
   <link href='https://fonts.googleapis.com/css?family=Open+Sans:400,700' rel='stylesheet' type='text/css'>
   <link rel="stylesheet" href="styles/cayman.css">
-
   <link rel="stylesheet" href="styles/styles.css">
+  <link rel="stylesheet" href="http://cdn.leafletjs.com/leaflet/v0.7.7/leaflet.css" />
 
   <script type="text/javascript" src="bower_components/d3/d3.min.js"></script>
   <script type="text/javascript" src="bower_components/lodash/lodash.js"></script>
   <script type="text/javascript" src="bower_components/jquery/dist/jquery.min.js"></script>
 
+  <script src="http://cdn.leafletjs.com/leaflet/v0.7.7/leaflet.js"></script>
   <script>
     //Check for ES 6 support, and alert user if his browser does not support it.
     (function(document) {
@@ -132,8 +133,9 @@
     <h2>Assignment 2B: One scatter plot and two datasets</h2>
     <blockquote>
       <p>
-        This scatter plot visualization should pull data from an associated CSV/JSON file (it's easiest to use Python to generate a nicely formatted file that contains only the data you need for the visualization). You should use appropriate dynamic scales (see
-        chapter 7 of IDV). Additional requirements for the visualizations are listed below
+        This scatter plot visualization should pull data from an associated CSV/JSON file (it's easiest to use Python to generate
+        a nicely formatted file that contains only the data you need for the visualization). You should use appropriate dynamic
+        scales (see chapter 7 of IDV). Additional requirements for the visualizations are listed below
       </p>
       <ul class="task-list">
         <li>
@@ -164,8 +166,9 @@
       Below you'll find the scatter plot visualized as described above.
     </p>
     <p>
-      Some interesting notes to take a way is much progress has been made in regard to both vehicle theft and prostitution from 2003 to 2015. For example, the Mission district has experienced a rise in prostitution which peaked in 2009, at a relative low point
-      in prostitution and vehicle theft crimes for every other district.
+      Some interesting notes to take a way is much progress has been made in regard to both vehicle theft and prostitution from
+      2003 to 2015. For example, the Mission district has experienced a rise in prostitution which peaked in 2009, at a relative
+      low point in prostitution and vehicle theft crimes for every other district.
     </p>
     Use the dropdown below to switch between <b>years</b>:
     <form>
@@ -173,22 +176,25 @@
       </select>
     </form>
     <div class="center">
-    <svg id="vis1"></svg>
+      <svg id="vis1"></svg>
     </div>
 
 
     <blockquote>
       <ul class="task-list">
         <li>
-          Explain in your own words why you think I want the axes to be the same for both years? (Even though you know how to make axes adapt to the data values.)</li>
+          Explain in your own words why you think I want the axes to be the same for both years? (Even though you know how to make
+          axes adapt to the data values.)</li>
       </ul>
     </blockquote>
     <p>
-      It really depends on what we want to compare. If we want the relative <i>distance</i> between each district for a given year, we maybe would like to fit the axes. However, it is implied we want to compare two different years. Therefore it makes
-      sense to show how big a change that have occurred during period. This would be hidden with fitting axes.
+      It really depends on what we want to compare. If we want the relative <i>distance</i> between each district for a given
+      year, we maybe would like to fit the axes. However, it is implied we want to compare two different years. Therefore
+      it makes sense to show how big a change that have occurred during period. This would be hidden with fitting axes.
     </p>
     <p>
-      Even though the X and Y's do tell the actual number of crimes of each type, it becomes difficult from a visualization point-of-view to determine the absolute change.
+      Even though the X and Y's do tell the actual number of crimes of each type, it becomes difficult from a visualization point-of-view
+      to determine the absolute change.
     </p>
     <script>
       (function(document) {
@@ -370,10 +376,12 @@
 
     <h2>Assignment 2C: One barchart and (at least) two datasets</h2>
     <blockquote>
-      This barchart visualization should also pull data from an associated CSV/JSON file. Here, Once again, you should use appropriate dynamic scales (see chapter 7 of IDV). Additional requirements for the visualizations are listed below
+      This barchart visualization should also pull data from an associated CSV/JSON file. Here, Once again, you should use appropriate
+      dynamic scales (see chapter 7 of IDV). Additional requirements for the visualizations are listed below
       <ul class='task-list'>
         <li>
-          This visualization consists of one histogram, which is able to switch between at least two datasets. You get to choose something interesting from Week 3.
+          This visualization consists of one histogram, which is able to switch between at least two datasets. You get to choose something
+          interesting from Week 3.
         </li>
         <li>
           Click on something to toggle between the two (or more) datasets.
@@ -384,7 +392,8 @@
       </ul>
     </blockquote>
     <p>
-      The histogram below shows crimes reported on the hour in the period between <b>2003</b> and <b>2015</b>. For example at 1AM in the period 2003 to 2015 about 8000 assault crimes were recorded.
+      The histogram below shows crimes reported on the hour in the period between <b>2003</b> and <b>2015</b>. For example
+      at 1AM in the period 2003 to 2015 about 8000 assault crimes were recorded.
     </p>
 
     Use the dropdown to change the <b>crime category</b>:
@@ -402,7 +411,7 @@
     </div>
 
     <script>
-    (function(document) {
+      (function(document) {
       'use strict';
 
       // Constants
@@ -532,42 +541,46 @@
     })();
     </script>
 
-          <h2>Assignment 2D: Visualizing geodata</h2>
+    <h2>Assignment 2D: Visualizing geodata</h2>
 
-          <section>
-            <div>
-              <blockquote>
-                For this final sub-assignment we will visualize your results from the KK-means exercise from week 5.
-                <ul>
-                  <li>We try our luck with an geospatial visualization displaying results for K=2,…,6. The overall idea is each value of KK has an associated view (you should be able to toggle between these) where each of the KK centroids is shown as a large colored dot (you choose the color scheme), and all GPS points belonging to that centroid are colored using a related RGB value. My plot looks like this.</li>
-                  <li>Also please add a link to your IPython notebook containing only the solution to the KK-means exercise from week 5 so we can check it out, if necessary.</li>
-                </ul>
-              </blockquote>
+    <section>
+      <div>
+        <blockquote>
+          For this final sub-assignment we will visualize your results from the KK-means exercise from week 5.
+          <ul>
+            <li>We try our luck with an geospatial visualization displaying results for K=2,…,6. The overall idea is each value
+              of KK has an associated view (you should be able to toggle between these) where each of the KK centroids is
+              shown as a large colored dot (you choose the color scheme), and all GPS points belonging to that centroid are
+              colored using a related RGB value. My plot looks like this.</li>
+            <li>Also please add a link to your IPython notebook containing only the solution to the KK-means exercise from week
+              5 so we can check it out, if necessary.</li>
+          </ul>
+        </blockquote>
 
 
 
 
-              <p>
-                Below we visualize prostitutions in San Francisco. The data visulization shows every crime of this type from 2003 to 2015.
+        <p>
+          Below we visualize prostitutions in San Francisco. The data visulization shows every crime of this type from 2003 to 2015.
+          The dataset is divided in clusters, that are defined by the K-nearest neighbors. Additionally we also show the
+          centroids, that are the center of the given cluster. The datasets used in this visualization can be found
+          <a href="http://nbviewer.jupyter.org/github/masve/saav-deliveries/blob/master/app/notebooks/2d.ipynb" target="_blank">here</a>.
+        </p>
+      </div>
 
-                The dataset is divided in clusters, that are defined by the K-nearest neighbors. Additionally we also show the centroids, that are the center of the given cluster.
-                The datasets used in this visualization can be found <a href="http://nbviewer.jupyter.org/github/masve/saav-deliveries/blob/master/app/notebooks/2d.ipynb" target="_blank">here</a>.
-              </p>
-            </div>
+      <div class="center">
+        <svg id="ass2d"></svg>
+      </div>
 
-            <div class="center">
-              <svg id="ass2d"></svg>
-            </div>
+      <p>Here you can choose the different sizes of <b>K</b></p>
+      <button id="ass2dbtn" data-k="2" class="btn btncolor" style="width:16.666%">K2</button>
+      <button id="ass2dbtn" data-k="3" class="btn btncolor" style="width:16.666%">K3</button>
+      <button id="ass2dbtn" data-k="4" class="btn btncolor" style="width:16.666%">K4</button>
+      <button id="ass2dbtn" data-k="5" class="btn btncolor" style="width:16.666%">K5</button>
+      <button id="ass2dbtn" data-k="6" class="btn btncolor" style="width:16.666%">K6</button>
 
-            <p>Here you can choose the different sizes of <b>K</b></p>
-            <button id="ass2dbtn" data-k="2" class="btn btncolor" style="width:16.666%">K2</button>
-            <button id="ass2dbtn" data-k="3" class="btn btncolor" style="width:16.666%">K3</button>
-            <button id="ass2dbtn" data-k="4" class="btn btncolor" style="width:16.666%">K4</button>
-            <button id="ass2dbtn" data-k="5" class="btn btncolor" style="width:16.666%">K5</button>
-            <button id="ass2dbtn" data-k="6" class="btn btncolor" style="width:16.666%">K6</button>
-
-            <script>
-            (function(document) {
+      <script>
+        (function(document) {
               'use strict';
 
               //We define some magic sizes
@@ -742,6 +755,96 @@
 
   <section id="project" class="main-content">
     <h1>Project Assignment A &amp; B</h1>
+    <section>
+      <!--<iframe src="http://www.youtube.com/embed/s6K-tIxNXtA" width="100%" height="400px"></iframe>-->
+
+    </section>
+
+
+    <section>
+      <div class="map" id="intersections"></div>
+
+      <script>
+        (function(d) {
+          "use strict";
+          
+          class Intersection {
+            constructor(target) {
+              this.maxZoomLevel = 18;
+              this.zoomLevel = 11;
+              this.accessToken = 'pk.eyJ1IjoiY2xlbW1lIiwiYSI6ImNpbjdhNGR4MTAwMW11c2x6aGlsZXJ2dHoifQ.zKSRPItYOGDGxSUuXr_McQ';
+              this.projectionId = 'clemme.pngigh8e';
+              this.intersections = [];
+              this.scale = d3.scale.linear();
+              this.pointOptions = {
+                stroke: true,
+                color: '#03f',
+                clickable: true,
+                weight: 2
+              };
+              
+              this.map = L.map(target).setView([40.715, -73.984], 11);
+              
+              this.map.on('zoomend', (e) => this.zoomChanged(e))
+              
+              this.addMapLayer();
+              this.loadInterSection();
+            }
+            zoomChanged(e) {
+              this.zoomLevel = e.target._zoom;
+            }
+            addMapLayer() {
+              
+              L.tileLayer('https://api.tiles.mapbox.com/v4/{id}/{z}/{x}/{y}.png?access_token={accessToken}', {
+                attribution: 'Map data &copy; <a href="http://openstreetmap.org">OpenStreetMap</a> contributors, <a href="http://creativecommons.org/licenses/by-sa/2.0/">CC-BY-SA</a>, Imagery © <a href="http://mapbox.com">Mapbox</a>',
+                maxZoom: this.maxZoomLevel,
+                id: this.projectionId,
+                accessToken: this.accessToken
+              }).addTo(this.map);
+              
+            }
+            loadInterSection() {
+              d3.csv('datasets/collision_counts.csv', json => {
+                this.intersections = json; 
+                this.scale = this.scale.domain([
+                  d3.min(json, j => parseInt(j.LOCATION)),
+                  d3.max(json, j => parseInt(j.LOCATION)),
+                ]).range([10, 120]);
+                this.addPoint();
+              })
+            }
+            addPoint() {
+              if (this.intersections.length > 0) {  
+                this.intersections.forEach( a => {
+                  if (parseInt(a.LOCATION) > 10 || parseInt(a['NUMBER OF PERSONS KILLED'] > 0) ) {
+                    
+                    let opt = this.pointOptions;
+                    if (parseInt(a['NUMBER OF PERSONS KILLED']) > 0) {
+                      opt.color = '#F11'
+                    }
+                    L
+                      .circle([a.LAT, a.LON], this.scale(parseInt(a.LOCATION)), {
+                          color: parseInt(a['NUMBER OF PERSONS KILLED']) >= 1 ? '#F11': '#03f',
+                          clickable: true,
+                          weight: 2
+                      })
+                      .bindPopup(`Total collisions: ${a.LOCATION} <br/> Injuries ${a['NUMBER OF PERSONS INJURED']}<br/> Fatalities ${a['NUMBER OF PERSONS KILLED']}`)
+                      .addTo(this.map);
+                  }
+                });
+                
+              }
+              
+            }
+          }
+          
+          document.addEventListener('DOMContentLoaded', new Intersection('intersections'));
+        })();
+      </script>
+
+
+    </section>
+
     <i>To be continued.</i>
   </section>
 
