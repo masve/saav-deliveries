@@ -116,22 +116,36 @@
               
             }
             loadInterSection() {
-              d3.csv('datasets/collision_counts.csv', json => {
-                this.intersections = json; 
-                this.scale = this.scale.domain([
-                  d3.min(json, j => parseInt(j.LOCATION)),
-                  d3.max(json, j => parseInt(j.LOCATION)),
-                ]).range([10, 120]);
-                this.addPoint();
+              d3.csv(
+                'datasets/collision_counts.csv',
+                row => {
+                   return {
+                    'LOCATION': +row['LOCATION'],
+                    'NUMBER OF PERSONS KILLED': +row['NUMBER OF PERSONS KILLED'],
+                    'NUMBER OF PERSONS INJURED': +row['NUMBER OF PERSONS INJURED'],
+                    'LAT': row['LAT'],
+                    'LON': row['LON'].trim()
+                  };
+                },
+                (err, json) => {
+                  if (err) {
+                    console.log(err);
+                  }
+                  this.intersections = json; 
+                  this.scale = this.scale.domain([
+                    d3.min(json, j => j.LOCATION),
+                    d3.max(json, j => j.LOCATION),
+                  ]).range([10, 120]);
+                  this.addPoint();
               })
             }
             addPoint() {
               if (this.intersections.length > 0) {  
                 this.intersections.forEach( a => {
-                  if (parseInt(a.LOCATION) > this.lowerBound || parseInt(a['NUMBER OF PERSONS KILLED'] > 0) ) {
+                  if (a.LOCATION > this.lowerBound || a['NUMBER OF PERSONS KILLED'] > 0 ) {
                     // Add a circle for the given intersection. Adjust the radio with regards to the amount of incidents.
                     L
-                      .circle([a.LAT, a.LON], this.scale(parseInt(a.LOCATION)), {
+                      .circle([a.LAT, a.LON], this.scale(a.LOCATION), {
                           color: parseInt(a['NUMBER OF PERSONS KILLED']) >= 1 ? '#F11': '#03f',
                           clickable: true,
                           weight: 2
