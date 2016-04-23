@@ -18,12 +18,12 @@ class KNN {
     elm.style.height = `${this.height}px`;
     elm.style.width = '100%';
 
-    d3.json('datasets/pb/zip_districts.topojson', json => this.onDistrictsLoaded(json));
+    d3.json('datasets/pb/zip.json', json => this.onDistrictsLoaded(json));
    
   }
   onDistrictsLoaded(json) {
     this.districts = json;
-    this.topo = topojson.feature(json, json.objects.zip_districts);
+    this.topo = topojson.feature(json, json.objects['zip_dist']);
     requestAnimationFrame(() => this.renderSectors());
   }
   renderSectors() {
@@ -54,6 +54,24 @@ class KNN {
           'fill': 'grey',
           'stroke-width': 1,
           'stroke': "white"
-        });
+        })
+        .on('mouseover', e => {
+          console.log(e.properties)
+            d3.select("#tooltip")
+              .classed('hidden', false)
+              .transition()
+              .style('left', `${d3.event.pageX}px`)
+              .style('top', `${d3.event.pageY}px`)
+              .style('opacity', 1)
+              .duration(100)
+              .select("#value")
+              .text(e.properties['PO_NAME']);                        
+        })
+        .on('mouseout', e => {
+          d3.select("#tooltip")
+            .transition()
+            .duration(150)
+            .style('opacity', 0);
+        })
   }
 }
