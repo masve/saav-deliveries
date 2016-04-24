@@ -175,14 +175,18 @@
 
     <svg id="projectMap"></svg>
     <div id="tooltip" class="hidden tooltip">
-        <p><strong>Important Label Heading</strong></p>
-        <p><span id="value">100</span></p>
+        <p><strong>Zip code:&nbsp; <span id="title">Title</span></strong></p>
+        <p>Name:&nbsp;<span id="value">100</span></p>
+        <p>Population:&nbsp;<span id="pop"></span></p>
+        <p>Collisions:&nbsp;<span id="col"></span></p>
     </div>
+    
+      <button id="toggle" data-toggle="pop" class="btn btncolor toggle" style="width:25%" disabled>VIEW COLLISIONS</button>
     <script>
       (function(doo) {
           'use strict';
 
-          document.addEventListener("DOMContentLoaded", new KNN(document.querySelector('svg#projectMap')))
+          document.addEventListener("DOMContentLoaded", new KNN(document.querySelector('svg#projectMap'), document.querySelector('button#toggle')))
         })();
     </script>
 
