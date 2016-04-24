@@ -7,3 +7,6 @@ less accidents at night. does that mean there is less traffic at night?
 look at weekdays. what does does accidents occur?
 
 compare with traffic data (taxi data).
+
+what is the distribution of incidents in different weather conditions?
+does the distribution of incidents change depending on weather conditions (kde/heatmap)?
