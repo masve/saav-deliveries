@@ -1,0 +1,747 @@
+<!DOCTYPE html>
+<html lang="en-us">
+
+<head>
+  <meta charset="UTF-8">
+  <title>Social Data Analysis 2016</title>
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#157878">
+  <link rel="stylesheet" href="styles/normalize.css">
+  <link href='https://fonts.googleapis.com/css?family=Open+Sans:400,700' rel='stylesheet' type='text/css'>
+  <link rel="stylesheet" href="styles/cayman.css">
+  <link rel="stylesheet" href="styles/styles.css">
+  <link rel="stylesheet" href="http://cdn.leafletjs.com/leaflet/v0.7.7/leaflet.css" />
+
+  <script type="text/javascript" src="bower_components/d3/d3.min.js"></script>
+  <script type="text/javascript" src="bower_components/lodash/lodash.js"></script>
+  <script type="text/javascript" src="bower_components/jquery/dist/jquery.min.js"></script>
+</head>
+
+<body>
+  
+  <section class="page-header">
+    <h1 class="project-name">Social Data Analysis and Visualization 2016</h1>
+    <h2 class="project-tagline">Use the buttons to navigate the assignments</h2>
+    <a href="https://github.com/masve/saav-deliveries" target="_blank" class="btn">View on GitHub</a>
+    <a href="/assigment2.html" class="btn">Assignment 2</a>
+    <a href="/" class="btn">Project Assignment A &amp; B</a>
+  </section>
+
+  <section id="intro" class="main-content">
+    <p>
+      This page is to represent the work related to assignements for course Social Data Analysis and Visualization.
+    </p>
+    <p>
+      These exercises has been performed by DTU students:
+      <ul class="task-list">
+        <li><a href="https://www.campusnet.dtu.dk/cnnet/participants/showperson.aspx?id=147236">s113627</a> Casper Clemmensen</li>
+        <li><a href="https://www.campusnet.dtu.dk/cnnet/participants/showperson.aspx?id=209126">s146893</a> Kasper Hoa Quoc Duong</li>
+        <li><a href="https://www.campusnet.dtu.dk/cnnet/participants/showperson.aspx?id=147192">s113604</a> Mark Ian Svennningsen</li>
+      </ul>
+    </p>
+  </section>
+  
+  <section id="assignment2" class="main-content">
+    <h1>Assignment 2</h1>
+    <h2>Assignment 2A: Simple SVG stuff</h2>
+    <blockquote>
+      <p>
+        Put something simple on the web. For this exercise, I want you to modify a bit of code from IDV Chapter 5.
+      </p>
+      <ul class="task-list">
+        <li>
+          Create an new version of the 5 SVG squares in example 3-22. Make the following modifications
+        </li>
+        <ul class="task-list">
+          <li>
+            Add a gray boundary of width 2 around each square.
+          </li>
+          <li>
+            Make the squares increasingly transparant from left to right.
+          </li>
+          <li>
+            Make the squares 80 by 80 instead of 30 by 30.
+          </li>
+          <li>
+            Make the squares go from bottom of the SVG element to the top instead of the other way around.
+          </li>
+        </ul>
+      </ul>
+    </blockquote>
+
+    <p>
+      Below you'll find the simple svg implementation derived from the above description.
+      <span class="small-font">Please note that partying hard for too long may cause dizziness.</span>
+    </p>
+
+    <svg id="ass2asvg" width="600" height="200">
+      <rect x="30" y="60" width="80" height="80" fill="purple" stroke="grey" stroke-width="2" fill-opacity="1" />
+      <rect x="60" y="50" width="80" height="80" fill="blue" fill="purple" stroke="grey" stroke-width="2" fill-opacity="0.8" />
+      <rect x="90" y="40" width="80" height="80" fill="green" fill="purple" stroke="grey" stroke-width="2" fill-opacity="0.6" />
+      <rect x="120" y="30" width="80" height="80" fill="yellow" fill="purple" stroke="grey" stroke-width="2" fill-opacity="0.4" />
+      <rect x="150" y="20" width="80" height="80" fill="red" fill="purple" stroke="grey" stroke-width="2" fill-opacity="0.2" />
+    </svg>
+
+    <button id="ass2apartybtn" class="btn btncolor">PARTY!!!</button>
+
+    <link rel="stylesheet" href="styles/ass2a.css">
+    <script>
+      (function(document) {
+        'use strict';
+
+        let dataset = [5, 10, 15, 20, 25];
+        let party = false;
+
+        d3.select("#ass2asvg").selectAll("p")
+          .data(dataset)
+          .enter()
+          .append("p")
+          .text(function(d) {
+            return "I can count up to " + d;
+          })
+          .style("color", d => d > 15 ? "red" : "black")
+
+        d3.select("#ass2apartybtn")
+          .on('click', e => {
+            if (!party) {
+              party = true;
+              d3.select("#ass2asvg").selectAll("rect")
+                .classed("ass2svg", party);
+            } else {
+              party = false;
+              d3.select("#ass2asvg").selectAll("rect")
+                .classed("ass2svg", party);
+            }
+          });
+      })();
+    </script>
+
+    <h2>Assignment 2B: One scatter plot and two datasets</h2>
+    <blockquote>
+      <p>
+        This scatter plot visualization should pull data from an associated CSV/JSON file (it's easiest to use Python to generate
+        a nicely formatted file that contains only the data you need for the visualization). You should use appropriate dynamic
+        scales (see chapter 7 of IDV). Additional requirements for the visualizations are listed below
+      </p>
+      <ul class="task-list">
+        <li>
+          Each point should correspond to a district
+        </li>
+        <li>
+          Points should be labeled
+        </li>
+        <li>
+          The radius of a point should be proportional to total number of crimes in that district
+        </li>
+        <li>
+          The xx-axis should correspond to total number of PROSTITUTION incidents
+        </li>
+        <li>
+          The yy-axis should correspond to total number of VEHICLE THEFT incidents
+        </li>
+        <li>
+          Click on something (your choice) to toggle between data from 2003 and 2015 - there must be a smooth transition.
+        </li>
+        <li>
+          Axes should not change but fit data from both years.
+        </li>
+      </ul>
+    </blockquote>
+
+    <p>
+      Below you'll find the scatter plot visualized as described above.
+    </p>
+    <p>
+      Some interesting notes to take a way is much progress has been made in regard to both vehicle theft and prostitution from
+      2003 to 2015. For example, the Mission district has experienced a rise in prostitution which peaked in 2009, at a relative
+      low point in prostitution and vehicle theft crimes for every other district.
+    </p>
+    Use the dropdown below to switch between <b>years</b>:
+    <form>
+      <select id="years" tabindex="1" style="width:20%">
+      </select>
+    </form>
+    <div class="center">
+      <svg id="vis1"></svg>
+    </div>
+
+
+    <blockquote>
+      <ul class="task-list">
+        <li>
+          Explain in your own words why you think I want the axes to be the same for both years? (Even though you know how to make
+          axes adapt to the data values.)</li>
+      </ul>
+    </blockquote>
+    <p>
+      It really depends on what we want to compare. If we want the relative <i>distance</i> between each district for a given
+      year, we maybe would like to fit the axes. However, it is implied we want to compare two different years. Therefore
+      it makes sense to show how big a change that have occurred during period. This would be hidden with fitting axes.
+    </p>
+    <p>
+      Even though the X and Y's do tell the actual number of crimes of each type, it becomes difficult from a visualization point-of-view
+      to determine the absolute change.
+    </p>
+    <script>
+      (function(document) {
+        'use strict';
+
+        // Global variables
+        const w = 750;
+        const padding = 60;
+        const h = 500;
+        let csv;
+        let xScale, yScale, rScale, xAxis, yAxis, svg, blueScale, redScale;
+
+        // Load in dataset
+        d3.csv('datasets/2b/week_7_vis_1.csv', data => {
+          csv = data;
+          // Draw scatter to screen
+          displayVis1(data, '2003')
+        });
+
+        // Draws a scatter plot to the screen
+        function displayVis1(data, year) {
+          // Parse data to "strong" types
+          data.forEach(e => {
+            e.pro = parseInt(e.pro),
+              e.vet = parseInt(e.vet),
+              e.total = parseInt(e.total)
+          });
+
+          // Set x, y and r (radius) scales
+          xScale = d3.scale.linear().domain([
+            d3.min(data, d => d.pro),
+            d3.max(data, d => d.pro) + padding
+          ]).range([padding, w - padding * 2]);
+
+          yScale = d3.scale.linear().domain([
+            d3.min(data, d => d.vet),
+            d3.max(data, d => d.vet) + padding
+          ]).range([h - padding, padding]);
+
+          rScale = d3.scale.linear().domain([
+            d3.min(data, d => d.total),
+            d3.max(data, d => d.total)
+          ]).range([5, 25])
+
+          // Filter dataset for the default selected year
+          data = _.filter(data, d => d.year == '2003');
+
+          // Set color scales (Y = RED, X = BLUE)
+          redScale = d3.scale.linear().domain([
+            d3.min(data, d => d.vet),
+            d3.max(data, d => d.vet)
+          ]).range([40, 255]);
+
+          blueScale = d3.scale.linear().domain([
+            d3.min(data, d => d.pro),
+            d3.max(data, d => d.pro)
+          ]).range([40, 255]);
+
+          // Create svg
+          svg = d3.select('svg#vis1').attr({
+            'width': w + 100,
+            'height': h + 50
+          });
+
+          // Define the axes
+          xAxis = d3.svg.axis().scale(xScale).orient('bottom').ticks(15);
+          yAxis = d3.svg.axis().scale(yScale).orient('left').ticks(10);
+
+          // Draw the circles for the scatter plot
+          svg.selectAll("circle")
+            .data(data)
+            .enter()
+            .append("circle")
+            .attr({
+              'cx': d => xScale(d.pro) + padding,
+              'cy': d => yScale(d.vet),
+              'r': d => rScale(d.total),
+              'fill': d => 'rgba(' + '0' + ', ' + Math.floor(redScale(d.vet)) + ',' + Math.floor(blueScale(d.pro)) + ',0.6)',
+              'stroke-width': 2,
+              'stroke': 'white',
+              'stroke-opacity': 0.6
+            });
+
+          // Add labels to each circle in the scatter plot
+          svg.selectAll("text")
+            .data(data)
+            .enter()
+            .append("text")
+            .text(d => d.dis)
+            .attr({
+              'x': d => xScale(d.pro) + 20 + padding,
+              'y': d => yScale(d.vet),
+              "font-family": "sans-serif",
+              "fill": "#6E6C71",
+              'font-size': '11px',
+            });
+
+          // Set Y and X axes and add labels to them
+          svg.append('g').attr({
+              'class': 'axis',
+              'transform': "translate(" + padding + "," + (h - padding) + ")"
+            })
+            .style("fill", "#6E6C71")
+            .call(xAxis);
+
+          svg.append('g')
+            .attr({
+              'class': 'axis',
+              'transform': "translate(" + (padding * 2) + ",0)"
+            })
+            .style("fill", "#6E6C71")
+            .call(yAxis);
+
+          svg.append("text")
+            .attr("transform", "translate(" + (w / 2) + " ," + (h + 10) + ")")
+            .style("text-anchor", "middle")
+            .style("font-size", "1em")
+            .style("fill", "#6E6C71")
+            .text("Prostitution");
+
+          svg.append("text")
+            .attr("transform", "rotate(-90)")
+            .attr("y", 0 + padding / 2)
+            .attr("x", 0 - (h / 2))
+            .attr("dy", "1em")
+            .style("text-anchor", "middle")
+            .style("fill", "#6E6C71")
+            .text("Vehicle Theft");
+
+          // Add all available options (years) to the dropdown selector
+          d3.select('#years')
+            .selectAll('option')
+            .data(_.range(2003, 2016))
+            .enter()
+            .append('option')
+            .attr({
+              'value': d => d
+            })
+            .text(d => d);
+
+          // Dynamic handling of change in chosen year
+          d3.select('#years')
+            .on('change', function() {
+              let data = _.filter(csv, d => d.year == this.value);
+
+              // Handle circle transitions
+              d3.selectAll('circle')
+                .data(data)
+                .attr({
+                  'fill': d => 'rgba(' + '0' + ', ' + Math.floor(redScale(d.vet)) + ',' + Math.floor(blueScale(d.pro)) + ',0.6)',
+                })
+                .transition()
+                .duration(1000)
+                .ease("elastic")
+                .attr({
+                  'cx': d => xScale(d.pro) + padding,
+                  'cy': d => yScale(d.vet),
+                  'r': d => rScale(d.total),
+                });
+
+              // Handle label transitions
+              svg.selectAll("text")
+                .data(data)
+                .transition()
+                .duration(1000)
+                .ease("elastic")
+                .text(d => d.dis)
+                .attr({
+                  'x': d => xScale(d.pro) + padding + 20,
+                  'y': d => yScale(d.vet),
+                  "font-family": "sans-serif",
+                  "fill": "#6E6C71",
+                  'font-size': '11px'
+                });
+            });
+        }
+      })();
+    </script>
+
+    <h2>Assignment 2C: One barchart and (at least) two datasets</h2>
+    <blockquote>
+      This barchart visualization should also pull data from an associated CSV/JSON file. Here, Once again, you should use appropriate
+      dynamic scales (see chapter 7 of IDV). Additional requirements for the visualizations are listed below
+      <ul class='task-list'>
+        <li>
+          This visualization consists of one histogram, which is able to switch between at least two datasets. You get to choose something
+          interesting from Week 3.
+        </li>
+        <li>
+          Click on something to toggle between the two (or more) datasets.
+        </li>
+        <li>
+          Feel free to color and label according to your own taste.
+        </li>
+      </ul>
+    </blockquote>
+    <p>
+      The histogram below shows crimes reported on the hour in the period between <b>2003</b> and <b>2015</b>. For example
+      at 1AM in the period 2003 to 2015 about 8000 assault crimes were recorded.
+    </p>
+
+    Use the dropdown to change the <b>crime category</b>:
+    <form>
+      <select id="cat" tabindex="2">
+      </select>
+    </form>
+
+    <p>
+
+    </p>
+
+    <div class="center">
+      <svg id="vis2"></svg>
+    </div>
+
+    <script>
+      (function(document) {
+        'use strict';
+
+        // Constants
+        const h = 300;
+        const w = 600;
+        const p = 60;
+
+        // Variables
+        let xAxis, yAxis;
+        let csv;
+
+        // Load dataset, parse and draw histogram
+        d3.csv('datasets/2c/crimes_on_hour.csv', d => {
+          csv = d;
+          csv.forEach(e => {
+            e['ASSAULT'] = parseInt(e['ASSAULT'])
+            e['BURGLARY'] = parseInt(e['BURGLARY'])
+            e['DISORDERLY CONDUCT'] = parseInt(e['DISORDERLY CONDUCT'])
+            e['DRIVING UNDER THE INFLUENCE'] = parseInt(e['DRIVING UNDER THE INFLUENCE'])
+            e['DRUG/NARCOTIC'] = parseInt(e['DRUG/NARCOTIC'])
+            e['LARCENY/THEFT'] = parseInt(e['LARCENY/THEFT'])
+            e['TRESPASS'] = parseInt(e['TRESPASS'])
+            e['STOLEN PROPERTY'] = parseInt(e['STOLEN PROPERTY'])
+            e['ROBBERY'] = parseInt(e['ROBBERY'])
+            e['PROSTITUTION'] = parseInt(e['PROSTITUTION'])
+            e['VANDALISM'] = parseInt(e['VANDALISM'])
+            e['VEHICLE THEFT'] = parseInt(e['VEHICLE THEFT'])
+            e['WEAPON LAWS'] = parseInt(e['WEAPON LAWS'])
+            e['DRUNKENNESS'] = parseInt(e['DRUNKENNESS'])
+            e['hour'] = parseInt(e['hour'])
+
+          })
+          drawHistogram(d)
+        });
+
+        // Draws histogram to DOM
+        function drawHistogram(dataset) {
+          // X scale
+          let xScale = d3.scale.ordinal()
+            .domain(d3.range(dataset.length))
+            .rangeRoundBands([0, w], 0.05);
+
+          // Y scale
+          let yScale = d3.scale.linear()
+            .domain([0, d3.max(dataset, d => d['ASSAULT'])])
+            .range([h - p, 0]);
+
+          // Color scale
+          let redScale = d3.scale.linear()
+            .domain([0, d3.max(dataset, d => d['ASSAULT'])])
+            .range([20, 255]);
+
+          //Create histogram SVG element
+          let svg = d3.select('svg#vis2').attr({
+            'height': h,
+            'width': w + 100
+          }).style('padding-top', 10);
+
+          // Define axes
+          xAxis = d3.svg.axis().scale(xScale).orient('bottom').ticks(15);
+          yAxis = d3.svg.axis().scale(yScale).orient('left').ticks(8);
+
+          // Add histogram bars for default category to histogram
+          svg.selectAll('rect')
+            .data(dataset)
+            .enter()
+            .append('rect')
+            .attr({
+              'x': (d, i) => xScale(i) + p,
+              'y': (d, i) => yScale(d['ASSAULT']),
+              'width': xScale.rangeBand(),
+              'height': d => yScale(0) - yScale(d['ASSAULT']),
+              'fill': d => 'rgba(10, 10,' + Math.floor(redScale(d['ASSAULT'])) + ', 0.6)'
+            })
+
+          // Add x axis to historgram
+          svg.append('g').attr({
+            'class': 'axis',
+            'transform': "translate(" + p + "," + (h - p) + ")"
+          }).call(xAxis);
+
+          // Add y axis to histogram
+          svg.append('g').attr({
+            'class': 'axis y',
+            'transform': "translate(" + (p) + ",0)"
+          }).call(yAxis);
+
+          // Add available categories as options to the dropdown selector
+          d3.select('#cat')
+            .selectAll('option')
+            .data(_.keys(dataset[0]).slice(1))
+            .enter()
+            .append('option')
+            .attr({
+              'value': d => d
+            }).text(d => d);
+
+          // Add change event handler to dropdown selector.
+          // Handles updates to the histogram based on category selected.
+          d3.select('#cat')
+            .on('change', function() {
+              yScale.domain([0, d3.max(dataset, d => d[this.value])]);
+
+              redScale.domain([0, d3.max(dataset, d => d[this.value])]);
+
+              // Update histogram bars
+              svg.selectAll('rect')
+                .data(dataset)
+                .attr({
+                  'fill': d => 'rgba(10,10,' + Math.floor(redScale(d[this.value])) + ',0.6)'
+                })
+                .transition()
+                .delay((d, i) => i / dataset.length * 1000)
+                .ease('bounce')
+                .duration(1200)
+                .attr({
+                  'x': (d, i) => xScale(i) + p,
+                  'y': d => yScale(d[this.value]),
+                  'width': xScale.rangeBand(),
+                  'height': d => Math.abs(yScale(0) - yScale(d[this.value])),
+                });
+
+              // Refit the y axis
+              svg.select('.y.axis').transition().call(yAxis);
+            })
+        }
+      })();
+    </script>
+
+    <h2>Assignment 2D: Visualizing geodata</h2>
+
+    <section>
+      <div>
+        <blockquote>
+          For this final sub-assignment we will visualize your results from the KK-means exercise from week 5.
+          <ul>
+
+            <li>We try our luck with an geospatial visualization displaying results for K=2,…,6. The overall idea is each value
+              of KK has an associated view (you should be able to toggle between these) where each of the KK centroids is
+              shown as a large colored dot (you choose the color scheme), and all GPS points belonging to that centroid are
+              colored using a related RGB value. My plot looks like this.</li>
+            <li>Also please add a link to your IPython notebook containing only the solution to the KK-means exercise from week
+              5 so we can check it out, if necessary.</li>
+
+          </ul>
+        </blockquote>
+
+
+
+
+        <p>
+          Below we visualize prostitutions in San Francisco. The data visulization shows every crime of this type from 2003 to 2015.
+          The dataset is divided in clusters, that are defined by the K-nearest neighbors. Additionally we also show the
+          centroids, that are the center of the given cluster. The datasets used in this visualization can be found
+          <a href="http://nbviewer.jupyter.org/github/masve/saav-deliveries/blob/master/app/notebooks/2d.ipynb" target="_blank">here</a>.
+        </p>
+      </div>
+
+      <div class="center">
+        <svg id="ass2d"></svg>
+      </div>
+
+      <p>Here you can choose the different sizes of <b>K</b></p>
+      <button id="ass2dbtn" data-k="2" class="btn btncolor" style="width:16.666%">K2</button>
+      <button id="ass2dbtn" data-k="3" class="btn btncolor" style="width:16.666%">K3</button>
+      <button id="ass2dbtn" data-k="4" class="btn btncolor" style="width:16.666%">K4</button>
+      <button id="ass2dbtn" data-k="5" class="btn btncolor" style="width:16.666%">K5</button>
+      <button id="ass2dbtn" data-k="6" class="btn btncolor" style="width:16.666%">K6</button>
+
+      <script>
+        (function(document) {
+          'use strict';
+
+          //We define some magic sizes
+          const h = 530;
+          const w = 530;
+          let scale = 200000;
+          let offset = [w / 2, h / 2];
+
+          //We define some colors that we like, that we use use in our buckets
+          const colorMap = {
+              0: 'green',
+              1: 'blue',
+              2: 'red',
+              3: 'yellow',
+              4: 'orange',
+              5: 'purple'
+            }
+            //Set the size of our svg
+          const svg = d3.select('svg#ass2d').attr({
+            'height': h + 100,
+            'width': w + 100
+          });
+
+
+          //Create a mercator project, with the center just over San Francisco bay
+          // let projection = d3.geo.mercator()
+          // .center([-122.4442, 37.7742])
+          // .translate(offset)
+          // .scale(scale);
+          let projection;
+
+          // let path = d3.geo.path()
+          // .projection(projection);
+          let path;
+
+          const group1 = svg.append('g');
+          const group2 = svg.append('g');
+          const group3 = svg.append('g');
+
+          //We define the color of the districts, when not hovered
+          const districtColor = 'rgb(129,145,152)'
+
+          //Define some variable that we can place our data, into so that we do not need to read the file again
+          let centers;
+
+          d3.json('datasets/2d/sf_pd_districts.geojson', json => {
+            //Create a mercator project, with the center just over San Francisco bay
+
+            let center = d3.geo.centroid(json)
+            projection = d3.geo.mercator().scale(scale).center(center).translate(offset);
+
+            // create the path
+            path = d3.geo.path().projection(projection);
+
+            // using the path determine the bounds of the current map and use
+            // these to determine better values for the scale and translation
+            // debugger;
+            let bounds = path.bounds(json);
+            let hscale = scale * w / (bounds[1][0] - bounds[0][0]);
+            let vscale = scale * h / (bounds[1][1] - bounds[0][1]);
+            scale = (hscale < vscale) ? hscale : vscale;
+            offset = [w - (bounds[0][0] + bounds[1][0]) / 2,
+              h - (bounds[0][1] + bounds[1][1]) / 2
+            ];
+
+            // new projection
+            projection = d3.geo.mercator().scale(scale).center(center).translate(offset);
+            path = path.projection(projection);
+
+            group1.selectAll("path")
+              .data(json.features)
+              .enter()
+              .append("path")
+              .attr({
+                "d": path,
+                'fill': districtColor,
+                'stroke-width': 2,
+                stroke: "white"
+              })
+              .on('mouseover', function() {
+                // Added hover effect
+                d3.select(this)
+                  .attr('fill', districtColor)
+                  .transition()
+                  .attr('fill', 'rgb(200,200,200)')
+              })
+              .on('mouseout', function() {
+                //Remove the hover effect
+                d3.select(this).transition()
+                  .attr('fill', districtColor)
+              })
+              .append('title')
+              .text(e => e.properties['DISTRICT']); // Add tool tip, containg district name
+
+
+            //Read the cvs file containing all the crimes
+            d3.csv('datasets/2d/week_8_vis_1.csv', crimes => {
+              //Draw all the crimes (this is requires heavy load)
+              group2.selectAll("circle")
+                .data(crimes)
+                .enter()
+                .append('circle')
+                .attr({
+                  cx: e => projection([e.X, e.Y])[0],
+                  cy: e => projection([e.X, e.Y])[1],
+                  r: 2,
+                  fill: e => colorMap[e.K3]
+                })
+                .style('pointer-events', 'none'); // Avoid eating the pointer events
+            });
+            // Load the file containg all the centoids
+            d3.json('datasets/2d/centers_week8.json', c => {
+              // Store the cetroids for lates use.
+              centers = c;
+              //Draw the default centoid
+              group3.selectAll('circle')
+                .data(centers['3'])
+                .enter()
+                .append('circle')
+                .attr({
+                  cx: e => projection(e)[0],
+                  cy: e => projection(e)[1],
+                  r: 10,
+                  fill: (e, i) => colorMap[i],
+                  stroke: 'white',
+                  'stroke-width': 3
+                })
+                .style('pointer-events', 'none')
+            });
+
+          })
+
+          // Add event listenere to the buttons.
+          d3.select('body').selectAll('#ass2dbtn').on('click', function() {
+            //Update the color
+            group2.selectAll("circle")
+              .attr({
+                fill: e => colorMap[e['K' + this.attributes['data-k'].value]]
+              }).style('pointer-events', 'none');
+
+            group3.selectAll('circle').remove(); // The data sets does not contain the same amount of data points, so we remove the old ones.
+
+            const c = centers[this.attributes['data-k'].value];
+            //Drwa the new centoids
+            group3.selectAll('circle')
+              .data(c)
+              .enter()
+              .append('circle')
+              .attr({
+                cx: e => projection(e)[0],
+                cy: e => projection(e)[1],
+                r: 0,
+                fill: (e, i) => colorMap[i],
+                stroke: 'white',
+                'stroke-width': 3
+              })
+              .style('pointer-events', 'none')
+              .transition()
+              .ease('linear')
+              .delay((d, i) => i / c.length * 800)
+              .attr({
+                r: 10 // With some fanzy transitions
+              });
+
+          });
+
+        })();
+      </script>
+    </section>
+  </section>
+
+
+</body>
+
+</html>
