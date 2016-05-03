@@ -70,3 +70,7 @@ p.small {
   box-shadow: 4px 4px 10px rgba(0, 0, 0, 0.4);
   pointer-events: none; 
 }
+
+rect:hover {
+  fill: #1075ED;
+}
