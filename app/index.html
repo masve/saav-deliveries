@@ -183,6 +183,11 @@
       <p>Let's begin by locating the top 10 intersections with the most collisions. </p>
       
       <svg id="top10intersections" class="center" style="display:block"></svg>
+      <div id="top10intersectionstooltip" class="hidden tooltip">
+          <p><strong><span id="title">Title</span></strong></p>
+          <p>Location:&nbsp;<span id="location">100</span></p>
+          <p>Collisions:&nbsp;<span id="col"></span></p>
+      </div>
       
       <script>
         'use strict';
@@ -199,6 +204,7 @@
             this.yAxis = this.svg.append('g');
             this.xAxis = this.svg.append('g');
             this.xLabels = [];
+            this.tooltip = d3.select('#top10intersectionstooltip')
             
             this.data = null;
             
@@ -243,6 +249,8 @@
                   'y': this.yScale(0) - this.yScale(max),
                   'height': 0
                 })
+                .on('mouseover', this.renderTooltip.bind(this))
+                .on('mouseout', this.hideTooltip.bind(this))
                 .transition()
                 .duration(2000) 
                 .delay(10000)
@@ -250,16 +258,29 @@
                   'y': (d, i) => this.yScale(d.collisions),
                   'height': d => (Math.abs(this.yScale(0) - this.yScale(d.collisions)))
                 })
-                .text(e => e.collisions)
-                //.on('mouseover', this.renderTooltip.bind(this))
-                //.on('mouseout', this.hideTooltip.bind(this))
+                
+                
             this.renderAxis();
           }
           renderTooltip(aCollision) {
             
+            this.tooltip
+            .classed('hidden', false)
+            .transition()
+            .style('left', `${d3.event.pageX}px`)
+            .style('top', `${d3.event.pageY}px`)
+            .style('opacity', 1)
+            .duration(100);
+
+            this.tooltip.select('#title').text(aCollision.name);
+            this.tooltip.select('#col').text(aCollision.collisions);
+            this.tooltip.select("#location").text(aCollision.location);
           }
           hideTooltip() {
-            
+            this.tooltip
+                .transition()
+                .duration(150)
+                .style('opacity', 0);            
           }
           renderAxis() {
             // Define axes
