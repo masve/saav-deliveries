@@ -182,11 +182,12 @@
       
       <p>Let's begin by locating the top 10 intersections with the most collisions. </p>
       
-      <svg id="top10intersections" class="center" style="display:block"></svg>
-      <div id="top10intersectionstooltip" class="hidden tooltip">
+      <svg id="top10intersections" class="center" style="display:block; width:100%"></svg>
+      <div id="top10intersectionstooltip" class="hidden tooltip" style="<width:4></width:4>00px">
           <p><strong><span id="title">Title</span></strong></p>
           <p>Location:&nbsp;<span id="location">100</span></p>
           <p>Collisions:&nbsp;<span id="col"></span></p>
+          <p><i>Click to view</i></p>
       </div>
       
       <script>
@@ -198,8 +199,11 @@
             this.cvsPath = 'datasets/pb/intersection_top_10.csv';
             this.xScale = d3.scale.ordinal();
             this.yScale = d3.scale.linear();
-            this.padding = 20;
-            this.height = 400;
+            svg.style.width = "100%";
+            this.paddingLeft = (svg.clientWidth / 5);
+            this.paddingTop = 30;
+            this.height = 330;
+            this.width = svg.clientWidth;
             this.bars = this.svg.append('g');
             this.yAxis = this.svg.append('g');
             this.xAxis = this.svg.append('g');
@@ -208,9 +212,8 @@
             
             this.data = null;
             
-            //svg.style.width = "100%";
             svg.style.height = this.height + 300;
-            svg.style['padding-left'] = this.padding;
+            svg.style['padding-left'] = this.paddingLeft;
             
             d3.csv(
               this.cvsPath,
@@ -227,7 +230,7 @@
             // Y scale
             this.yScale = this.yScale
               .domain([0, d3.max(this.data, d => d.collisions)])
-              .range([this.height - this.padding, 0]);
+              .range([0, this.width - (2*this.paddingLeft) - 20]);
             
             this.xLabels = data.map(d => d.name);
               
@@ -243,20 +246,20 @@
                 .enter()
                 .append('rect')
                 .attr({
-                  'x': (d, i) => this.xScale(i) + this.padding,
-                  'width': this.xScale.rangeBand(),
-                  'fill': 'green',
-                  'y': this.yScale(0) - this.yScale(max),
-                  'height': 0
+                  'x': (d, i) => (this.paddingLeft),
+                  'height': this.xScale.rangeBand(),
+                  'fill': 'cornflowerblue',
+                  'y': (d,i) => (this.xScale(i) + this.paddingTop),
+                  'width': 0
                 })
                 .on('mouseover', this.renderTooltip.bind(this))
                 .on('mouseout', this.hideTooltip.bind(this))
+                .on('click', this.sendToMaps.bind(this))
                 .transition()
                 .duration(2000) 
-                .delay(10000)
+                .delay((d, i) => (i / this.data.length * 1000) + 10000)
                 .attr({
-                  'y': (d, i) => this.yScale(d.collisions),
-                  'height': d => (Math.abs(this.yScale(0) - this.yScale(d.collisions)))
+                  'width': d => (Math.abs(this.yScale(0) - this.yScale(d.collisions)))
                 })
                 
                 
@@ -285,28 +288,31 @@
           renderAxis() {
             // Define axes
             
-            let xAxis = d3.svg.axis().scale(this.xScale).orient('bottom').tickFormat((d) => this.xLabels[d]);
-            let yAxis = d3.svg.axis().scale(this.yScale).orient('left').ticks(10);
+            let xAxis = d3.svg.axis().scale(this.xScale).orient('left').tickFormat((d) => this.xLabels[d]).tickValues(d3.range(10));
+            let yAxis = d3.svg.axis().scale(this.yScale).orient('bottom').ticks(11);
             
             // Add y axis to histogram
-            this.yAxis.attr({
-              'class': 'axis y',
-              'transform': `translate(${this.padding}, 0)`
-            }).call(yAxis);
-            
             this.xAxis.attr({
               'class': 'axis',
-              'transform': `translate(${this.padding}, ${this.height - this.padding})`
+              'transform': `translate(${this.paddingLeft}, ${this.paddingTop})`
+            }).call(xAxis);
+            
+            this.yAxis.attr({
+              'class': 'axis',
+              'transform': `translate(${this.paddingLeft}, ${this.height})`
             })
-            .call(xAxis)
+            .call(yAxis)
             .selectAll("text")  
             .style("text-anchor", "end")
             .attr({
-             'dx': '-.8em',
-             'dy': '.15em',
-             'transform': 'rotate(-90)'
+             'dx': '.8em'
             });
             
+          }
+          sendToMaps(aCollision) {
+            const [lat, lon] = _.trim(aCollision.location, ['(', ')']).split(',');
+            const url = `http://maps.google.com/maps?z=12&t=h&q=loc:${lat.trim()}+${lon.trim()}`
+            window.open(url, '_blank').focus();
           }
         }
         
