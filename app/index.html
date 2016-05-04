@@ -173,20 +173,172 @@
         })();
     </script>
 
-    <svg id="projectMap"></svg>
-    <div id="tooltip" class="hidden tooltip">
-        <p><strong>Zip code:&nbsp; <span id="title">Title</span></strong></p>
-        <p>Name:&nbsp;<span id="value">100</span></p>
-        <p>Population:&nbsp;<span id="pop"></span></p>
-        <p>Collisions:&nbsp;<span id="col"></span></p>
-    </div>
+    </section>
     
+    <section class="main-content">
+      
+      <h2>A Closer Look</h2>
+      <p>Let's take a closer look at the intersections. Are there any intersections that are different from the rest? And are there an underlying reason for this?</p>
+      
+      <p>Let's begin by locating the top 10 intersections with the most collisions. </p>
+      
+      <svg id="top10intersections" class="center" style="display:block; width:100%"></svg>
+      <div id="top10intersectionstooltip" class="hidden tooltip" style="width:400px">
+          <p><strong><span id="title">Title</span></strong></p>
+          <p>Location:&nbsp;<span id="location">100</span></p>
+          <p>Collisions:&nbsp;<span id="col"></span></p>
+          <p><i>Click to view</i></p>
+      </div>
+      
+      <script>
+        'use strict';
+        
+        class Top10 {
+          constructor(svg) {
+            this.svg = d3.select(svg);
+            this.cvsPath = 'datasets/pb/intersection_top_10.csv';
+            this.xScale = d3.scale.ordinal();
+            this.yScale = d3.scale.linear();
+            svg.style.width = "100%";
+            this.paddingLeft = (svg.clientWidth / 5);
+            this.paddingTop = 30;
+            this.height = 330;
+            this.width = svg.clientWidth;
+            this.bars = this.svg.append('g');
+            this.yAxis = this.svg.append('g');
+            this.xAxis = this.svg.append('g');
+            this.xLabels = [];
+            this.tooltip = d3.select('#top10intersectionstooltip')
+            
+            this.data = null;
+            
+            svg.style.height = this.height + 300;
+            svg.style['padding-left'] = this.paddingLeft;
+            
+            d3.csv(
+              this.cvsPath,
+              (r) => ({collisions: +r['COLLISIONS'], name: `${r['ON STREET NAME']} / ${r['CROSS STREET NAME']}`, location: r['LOCATION']}),
+              this.onDataLoaded.bind(this)
+            );
+          }
+          onDataLoaded(data) {
+            this.data = data;
+            // X scale
+            this.xScale = this.xScale.domain(d3.range(data.length))
+              .rangeRoundBands([0, 300], 0.05);
+
+            // Y scale
+            this.yScale = this.yScale
+              .domain([0, d3.max(this.data, d => d.collisions)])
+              .range([0, this.width - (2*this.paddingLeft) - 20]);
+            
+            this.xLabels = data.map(d => d.name);
+              
+            this.render();
+          }
+          render() {
+            
+            const max = d3.max(this.data, d => d.collisions);
+            
+            this.bars
+                .selectAll('rect')
+                .data(this.data)
+                .enter()
+                .append('rect')
+                .attr({
+                  'x': (d, i) => (this.paddingLeft),
+                  'height': this.xScale.rangeBand(),
+                  'fill': 'cornflowerblue',
+                  'y': (d,i) => (this.xScale(i) + this.paddingTop),
+                  'width': 0
+                })
+                .on('mouseover', this.renderTooltip.bind(this))
+                .on('mouseout', this.hideTooltip.bind(this))
+                .on('click', this.sendToMaps.bind(this))
+                .transition()
+                .duration(2000) 
+                .delay((d, i) => (i / this.data.length * 1000) + 10000)
+                .attr({
+                  'width': d => (Math.abs(this.yScale(0) - this.yScale(d.collisions)))
+                })
+                
+                
+            this.renderAxis();
+          }
+          renderTooltip(aCollision) {
+            
+            this.tooltip
+            .classed('hidden', false)
+            .transition()
+            .style('left', `${d3.event.pageX}px`)
+            .style('top', `${d3.event.pageY}px`)
+            .style('opacity', 1)
+            .duration(100);
+
+            this.tooltip.select('#title').text(aCollision.name);
+            this.tooltip.select('#col').text(aCollision.collisions);
+            this.tooltip.select("#location").text(aCollision.location);
+          }
+          hideTooltip() {
+            this.tooltip
+                .transition()
+                .duration(150)
+                .style('opacity', 0);            
+          }
+          renderAxis() {
+            // Define axes
+            
+            let xAxis = d3.svg.axis().scale(this.xScale).orient('left').tickFormat((d) => this.xLabels[d]).tickValues(d3.range(10));
+            let yAxis = d3.svg.axis().scale(this.yScale).orient('bottom').ticks(11);
+            
+            // Add y axis to histogram
+            this.xAxis.attr({
+              'class': 'axis',
+              'transform': `translate(${this.paddingLeft}, ${this.paddingTop})`
+            }).call(xAxis);
+            
+            this.yAxis.attr({
+              'class': 'axis',
+              'transform': `translate(${this.paddingLeft}, ${this.height})`
+            })
+            .call(yAxis)
+            .selectAll("text")  
+            .style("text-anchor", "end")
+            .attr({
+             'dx': '.8em'
+            });
+            
+          }
+          sendToMaps(aCollision) {
+            const [lat, lon] = _.trim(aCollision.location, ['(', ')']).split(',');
+            const url = `http://maps.google.com/maps?z=12&t=h&q=loc:${lat.trim()}+${lon.trim()}`
+            window.open(url, '_blank').focus();
+          }
+        }
+        
+        
+        
+        
+        document.addEventListener("DOMContentLoaded", new Top10(document.querySelector('svg#top10intersections')));
+      </script>
+      
+    </section>
+    
+    <section class="main-content">
+      <h2>Distribution By Postal District</h2>
+      <svg id="projectMap"></svg>
+      <div id="tooltip" class="hidden tooltip">
+          <p><strong>Zip code:&nbsp; <span id="title">Title</span></strong></p>
+          <p>Name:&nbsp;<span id="value">100</span></p>
+          <p>Population:&nbsp;<span id="pop"></span></p>
+          <p>Collisions:&nbsp;<span id="col"></span></p>
+      </div>
       <button id="toggle" data-toggle="pop" class="btn btncolor toggle" style="width:25%" disabled>VIEW COLLISIONS</button>
     <script>
       (function(doo) {
           'use strict';
 
-          document.addEventListener("DOMContentLoaded", new KNN(document.querySelector('svg#projectMap'), document.querySelector('button#toggle')))
+          document.addEventListener("DOMContentLoaded", new KNN(document.querySelector('svg#projectMap'), document.querySelector('button#toggle')));
         })();
     </script>
 
