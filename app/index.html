@@ -15,6 +15,7 @@
 
   <link rel="stylesheet" href="bower_components/leaflet/dist/leaflet.css"/>
   
+  
   <!-- Bower components -->
   <script type="text/javascript" src="bower_components/d3/d3.min.js"></script>
   <script type="text/javascript" src="bower_components/lodash/lodash.js"></script>
@@ -212,7 +213,7 @@
             
             this.data = null;
             
-            svg.style.height = this.height + 300;
+            svg.style.height = this.height + 30;
             svg.style['padding-left'] = this.paddingLeft;
             
             d3.csv(
@@ -257,7 +258,7 @@
                 .on('click', this.sendToMaps.bind(this))
                 .transition()
                 .duration(2000) 
-                .delay((d, i) => (i / this.data.length * 1000) + 10000)
+                .delay((d, i) => ((i / this.data.length * 1000) + 10000))
                 .attr({
                   'width': d => (Math.abs(this.yScale(0) - this.yScale(d.collisions)))
                 })
@@ -321,6 +322,18 @@
         
         document.addEventListener("DOMContentLoaded", new Top10(document.querySelector('svg#top10intersections')));
       </script>
+      
+      <p>These intersections, seems to be affected by the amount of traffic that flows each and every day.</p>
+      
+      <h4>TILLARY STREET / FLATBUSH AVENUE EXTENSION</h4>
+      <img alt="Flatbush Ave" src="images/streetview/Flatbush_Ave.png"/>
+      <h4>EAST 59 STREET / 2 AVENUE</h4>
+      <img alt="Flatbush Ave" src="images/streetview/EAST59STREET.png"/>
+      
+      <p>We can see that the these top 10 intersection. All have the same thing in common; they are on a motorway access/exit ramp or one block from this.</p>
+      <p>Bla bla bla </p>
+    </section>
+    <section class="main-content">
       
     </section>
     
