@@ -5,6 +5,7 @@
     "d3": "~3.5.16",
     "lodash": "~4.6.1",
     "jquery": "~2.2.1",
+    "photoswipe": "*",
     "topojson": "https://github.com/mbostock/topojson/releases/download/v1.6.24/topojson.zip",
     "leaflet": "https://github.com/Leaflet/Leaflet/archive/v0.7.7.tar.gz"
   },
