@@ -77,19 +77,19 @@
 
 
   <section class="main-content">
-    <h2>Explore Your Daily Communute</h2> 
-    <p>NYC is a big city. A lot of traffic means a high chance for collision to occour. Therefore we are providing 
+    <h2>Explore Your Daily Communute</h2>
+    <p>NYC is a big city. A lot of traffic means a high chance for collision to occour. Therefore we are providing
       an opportunity for you to discover the amount of vehicle collisions that has happened throughout the city in
       the period 2012-2015. Find out where if you can take a safer route to work!</p>
-    <p>The size of each point indicate the accumulate amount of incidents that have happened for that 
-      intersection. The color <span style="color:red">red</span> shows if there is any fatalities. Click on a 
+    <p>The size of each point indicate the accumulate amount of incidents that have happened for that
+      intersection. The color <span style="color:red">red</span> shows if there is any fatalities. Click on a
       point to get the numeric values.</p>
     <div class="map" id="intersections"></div>
     <p class="small">Note that all intersections with less that 10 collisions and without falaties have been omitted to increase performance.</p>
     <script>
       (function(d) {
           "use strict";
-          
+
           class Intersection {
             constructor(target) {
               this.maxZoomLevel = 18;
@@ -105,11 +105,11 @@
                 weight: 2
               };
               this.lowerBound = 10;
-              
+
               this.map = L.map(target).setView([40.715, -73.984], 11);
-              
+
               this.map.on('zoomend', (e) => this.zoomChanged(e))
-              
+
               this.addMapLayer();
               this.loadInterSection();
             }
@@ -124,7 +124,7 @@
                 id: this.projectionId,
                 accessToken: this.accessToken
               }).addTo(this.map);
-              
+
             }
             loadInterSection() {
               d3.csv(
@@ -142,7 +142,7 @@
                   if (err) {
                     console.log(err);
                   }
-                  this.intersections = json; 
+                  this.intersections = json;
                   this.scale = this.scale.domain([
                     d3.min(json, j => j.LOCATION),
                     d3.max(json, j => j.LOCATION),
@@ -151,7 +151,7 @@
               })
             }
             addPoint() {
-              if (this.intersections.length > 0) {  
+              if (this.intersections.length > 0) {
                 this.intersections.forEach( a => {
                   if (a.LOCATION > this.lowerBound || a['NUMBER OF PERSONS KILLED'] > 0 ) {
                     // Add a circle for the given intersection. Adjust the radio with regards to the amount of incidents.
@@ -165,12 +165,12 @@
                       .addTo(this.map);
                   }
                 });
-                
+
               }
-              
+
             }
           }
-          
+
           document.addEventListener('DOMContentLoaded', new Intersection('intersections'));
         })();
     </script>
@@ -196,7 +196,7 @@
 
     <script>
       'use strict';
-        
+
         class Top10 {
           constructor(svg) {
             this.svg = d3.select(svg);
@@ -213,12 +213,12 @@
             this.xAxis = this.svg.append('g');
             this.xLabels = [];
             this.tooltip = d3.select('#top10intersectionstooltip')
-            
+
             this.data = null;
-            
-            svg.style.height = this.height + 30;
+
+            svg.style.height = this.height + 100;
             svg.style['padding-left'] = this.paddingLeft;
-            
+
             d3.csv(
               this.cvsPath,
               (r) => ({collisions: +r['COLLISIONS'], name: `${r['ON STREET NAME']} / ${r['CROSS STREET NAME']}`, location: r['LOCATION']}),
@@ -235,15 +235,15 @@
             this.yScale = this.yScale
               .domain([0, d3.max(this.data, d => d.collisions)])
               .range([0, this.width - (2*this.paddingLeft) - 20]);
-            
+
             this.xLabels = data.map(d => d.name);
-              
+
             this.render();
           }
           render() {
-            
+
             const max = d3.max(this.data, d => d.collisions);
-            
+
             this.bars
                 .selectAll('rect')
                 .data(this.data)
@@ -260,17 +260,17 @@
                 .on('mouseout', this.hideTooltip.bind(this))
                 .on('click', this.sendToMaps.bind(this))
                 .transition()
-                .duration(2000) 
+                .duration(2000)
                 .delay((d, i) => ((i / this.data.length * 1000) + 10000))
                 .attr({
                   'width': d => (Math.abs(this.yScale(0) - this.yScale(d.collisions)))
                 })
-                
-                
+
+
             this.renderAxis();
           }
           renderTooltip(aCollision) {
-            
+
             this.tooltip
             .classed('hidden', false)
             .transition()
@@ -287,31 +287,31 @@
             this.tooltip
                 .transition()
                 .duration(150)
-                .style('opacity', 0);            
+                .style('opacity', 0);
           }
           renderAxis() {
             // Define axes
-            
+
             let xAxis = d3.svg.axis().scale(this.xScale).orient('left').tickFormat((d) => this.xLabels[d]).tickValues(d3.range(10));
             let yAxis = d3.svg.axis().scale(this.yScale).orient('bottom').ticks(11);
-            
+
             // Add y axis to histogram
             this.xAxis.attr({
               'class': 'axis',
               'transform': `translate(${this.paddingLeft}, ${this.paddingTop})`
             }).call(xAxis);
-            
+
             this.yAxis.attr({
               'class': 'axis',
               'transform': `translate(${this.paddingLeft}, ${this.height})`
             })
             .call(yAxis)
-            .selectAll("text")  
+            .selectAll("text")
             .style("text-anchor", "end")
             .attr({
              'dx': '.8em'
             });
-            
+
           }
           sendToMaps(aCollision) {
             const [lat, lon] = _.trim(aCollision.location, ['(', ')']).split(',');
@@ -319,27 +319,27 @@
             window.open(url, '_blank').focus();
           }
         }
-        
-        
-        
-        
+
+
+
+
         document.addEventListener("DOMContentLoaded", new Top10(document.querySelector('svg#top10intersections')));
     </script>
 
-    <p>By hovering over each bar in the top 10 bar chart. We can find that the intersection 
-      Tillary Street / Flatbush Avenue Extension is the most dangerous intesection - by some margin - based 
+    <p>By hovering over each bar in the top 10 bar chart. We can find that the intersection
+      Tillary Street / Flatbush Avenue Extension is the most dangerous intesection - by some margin - based
       on the 585 collisions happening.</p>
-      
-    <p>For now we can only guess, but clicking on the Tillary Street / Flatbush Avenue Extension bar, or 
-      looking below one could assume that the intersection is the perfect storm. The intersection is 
+
+    <p>For now we can only guess, but clicking on the Tillary Street / Flatbush Avenue Extension bar, or
+      looking below one could assume that the intersection is the perfect storm. The intersection is
       right before an highway access/exit ramp and extends into Manhattan by the Manhattan Bridge.</p>
 
     <h4>TILLARY STREET / FLATBUSH AVENUE EXTENSION</h4>
     <img alt="Flatbush Ave" src="images/streetview/Flatbush_Ave.png" />
     <h4>EAST 59 STREET / 2 AVENUE</h4>
     <img alt="Flatbush Ave" src="images/streetview/EAST59STREET.png" />
-      
-   <p>What we see is in the top 10. Is that most of the intersections have a few things in common; they are next to 
+
+   <p>What we see is in the top 10. Is that most of the intersections have a few things in common; they are next to
      a highway access/exit ramp or one block from one.</p>
   </section>
   <section class="main-content">
@@ -351,8 +351,8 @@
       <p>We all assume that weather has a big impact on the traffic anywhere. Collisions are far more likely to happen
       in bad weather. So what is bad weather really? Is there any condition that is whose than others? And if so can
       we found out which so you can be more aware in traffic during one of these?</p>
-      
-      <p>By combining the Motor Vehicle Collisions dataset with weather data from 
+
+      <p>By combining the Motor Vehicle Collisions dataset with weather data from
         <a href="wunderground.com">Weather Underground</a>
         we are able to find out which weather condition on average produce the most collisions per hour.
         The data data has been normalized with the most common weather condition, Mostly Cloudy.</p>
@@ -360,7 +360,7 @@
 
     <script>
       'use strict';
-        
+
         class WeatherFreq {
           constructor(svg) {
             this.svg = d3.select(svg);
@@ -376,12 +376,12 @@
             this.yAxis = this.svg.append('g');
             this.xAxis = this.svg.append('g');
             this.xLabels = [];
-            
+
             this.data = null;
-            
+
             svg.style.height = this.height + 30;
             svg.style['padding-left'] = this.paddingLeft;
-            
+
             d3.json(
               this.jsonPath,
               this.onDataLoaded.bind(this)
@@ -392,22 +392,22 @@
             // X scale
             this.xScale = this.xScale.domain(d3.range(_.size(data)))
               .rangeRoundBands([0, 300], 0.05);
-             
+
 
             // Y scale
             this.yScale = this.yScale
               .domain([0, d3.max(d3.values(this.data))])
               .range([0, this.width - (2*this.paddingLeft) - 20]);
-            
+
             this.xLabels = d3.keys(this.data);
-              
+
             this.renderBars();
             this.renderAxis();
           }
           renderBars() {
-            
+
             const max = d3.max(d3.values(this.data));
-            
+
             this.bars
                 .selectAll('rect')
                 .data(d3.values(this.data))
@@ -424,7 +424,7 @@
                 // .on('mouseout', this.hideTooltip.bind(this))
                 // .on('click', this.sendToMaps.bind(this))
                 // .transition()
-                // .duration(2000) 
+                // .duration(2000)
                 // .delay((d, i) => ((i / this.data.length * 1000) + 10000))
                 .attr({
                   'width': d => (Math.abs(this.yScale(0) - this.yScale(d)))
@@ -434,19 +434,19 @@
             // Define axes
             let xAxis = d3.svg.axis().scale(this.xScale).orient('left').tickFormat((d) => this.xLabels[d]);
             let yAxis = d3.svg.axis().scale(this.yScale).orient('bottom').ticks(11);
-            
+
             // Add y axis to histogram
             this.xAxis.attr({
               'class': 'axis',
               'transform': `translate(${this.paddingLeft}, ${this.paddingTop})`
             }).call(xAxis);
-            
+
             this.yAxis.attr({
               'class': 'axis',
               'transform': `translate(${this.paddingLeft}, ${this.height})`
             })
             .call(yAxis)
-            .selectAll("text")  
+            .selectAll("text")
             .style("text-anchor", "end")
             .attr({
              'dx': '.8em'
@@ -464,7 +464,7 @@
             });
           }
         }
-        
+
         document.addEventListener("DOMContentLoaded", new WeatherFreq(document.querySelector('svg#weatherfreq')));
     </script>
   </section>
