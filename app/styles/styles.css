@@ -1,3 +1,7 @@
+svg {
+  display: block;
+}
+
 .small-font {
   font-size: 0.5em;
 }
@@ -25,8 +29,18 @@ button:disabled {
   color: blue;
 }
 
+.rotate {
+  transform: rotate(-45deg);
+}
+
 .center {
   text-align: center;
+}
+
+svg.center {
+    margin: auto;
+    width: 60%;
+    padding: 10px;
 }
 
 .map {
@@ -47,7 +61,7 @@ p.small {
   width: 200px;
   height: auto;
   padding: 10px;
-  background-color: white;
+  background-color: #FFF;
   -webkit-border-radius: 2px;
   -moz-border-radius: 2px;
   border-radius: 2px;
@@ -55,4 +69,47 @@ p.small {
   -moz-box-shadow: 4px 4px 10px rgba(0, 0, 0, 0.4);
   box-shadow: 4px 4px 10px rgba(0, 0, 0, 0.4);
   pointer-events: none; 
+}
+
+rect:hover {
+  fill: #1075ED;
+}
+
+.shadow {
+  -webkit-border-radius: 2px;
+  -moz-border-radius: 2px;
+  border-radius: 2px;
+  -webkit-box-shadow: 4px 4px 10px rgba(0, 0, 0, 0.4);
+  -moz-box-shadow: 4px 4px 10px rgba(0, 0, 0, 0.4);
+  box-shadow: 4px 4px 10px rgba(0, 0, 0, 0.4);
+}
+.img-switch-secondary {
+  position: absolute; top: 0; left: 0;
+}
+
+.img-switch-container {
+  position: relative;
+}
+.img-switch-container:not(:hover) .img-switch-primary {
+    visibility: visible;
+    opacity: 1;
+    transition: opacity 0.5s linear;
+}
+
+.img-switch-container:hover .img-switch-primary {
+    visibility: hidden;
+    opacity: 0;
+    transition: visibility 0s 0.5s, opacity 0.5s linear;
+}
+
+.img-switch-container:not(:hover) .img-switch-secondary {
+    visibility: hidden;
+    opacity: 0;
+    transition: visibility 0s 0.5s, opacity 0.5s linear;
+}
+
+.img-switch-container:hover .img-switch-secondary {
+    visibility: visible;
+    opacity: 1;
+    transition: opacity 0.5s linear;
 }
