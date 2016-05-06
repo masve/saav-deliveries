@@ -7,15 +7,15 @@
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <meta name="theme-color" content="#157878">
   <link href='https://fonts.googleapis.com/css?family=Open+Sans:400,700' rel='stylesheet' type='text/css'>
-  
-  <!-- Style sheets -->
-  <link rel="stylesheet" href="styles/normalize.css"/>
-  <link rel="stylesheet" href="styles/cayman.css"/>
-  <link rel="stylesheet" href="styles/styles.css"/>
 
-  <link rel="stylesheet" href="bower_components/leaflet/dist/leaflet.css"/>
-  
-  
+  <!-- Style sheets -->
+  <link rel="stylesheet" href="styles/normalize.css" />
+  <link rel="stylesheet" href="styles/cayman.css" />
+  <link rel="stylesheet" href="styles/styles.css" />
+
+  <link rel="stylesheet" href="bower_components/leaflet/dist/leaflet.css" />
+
+
   <!-- Bower components -->
   <script type="text/javascript" src="bower_components/d3/d3.min.js"></script>
   <script type="text/javascript" src="bower_components/lodash/lodash.js"></script>
@@ -24,10 +24,10 @@
   <script type="text/javascript" src="bower_components/leaflet/dist/leaflet.js"></script>
 
   <!-- CDNs -->
-  
-  <!-- our scripts --> 
+
+  <!-- our scripts -->
   <script type="text/javascript" src="scripts/knn.js"></script>
-  
+
   <script>
     //Check for ES 6 support, and alert user if his browser does not support it.
     (function(document) {
@@ -77,12 +77,13 @@
 
 
   <section class="main-content">
-    <h2>Find your local intersection</h2>
-    <p>In NYC there is a lot of collistions thougth the city. Therefore we are providing an opportunity for you to discover
-      the amount of collistions, injuries and fatalaties in intersections thougth the city. Locate the intersection nearest
-      to your home, work or on your daily commute.</p>
-    <p>Note that the size of the points indicate the amount of collisions, as the <span style="color:red">red</span> color show
-      if there is any fatalities.</p>
+    <h2>Explore Your Daily Communute</h2> 
+    <p>NYC is a big city. A lot of traffic means a high chance for collision to occour. Therefore we are providing 
+      an opportunity for you to discover the amount of vehicle collisions that has happened throughout the city in
+      the period 2012-2015. Find out where if you can take a safer route to work!</p>
+    <p>The size of each point indicate the accumulate amount of incidents that have happened for that 
+      intersection. The color <span style="color:red">red</span> shows if there is any fatalities. Click on a 
+      point to get the numeric values.</p>
     <div class="map" id="intersections"></div>
     <p class="small">Note that all intersections with less that 10 collisions and without falaties have been omitted to increase performance.</p>
     <script>
@@ -174,25 +175,27 @@
         })();
     </script>
 
-    </section>
-    
-    <section class="main-content">
-      
-      <h2>A Closer Look</h2>
-      <p>Let's take a closer look at the intersections. Are there any intersections that are different from the rest? And are there an underlying reason for this?</p>
-      
-      <p>Let's begin by locating the top 10 intersections with the most collisions. </p>
-      
-      <svg id="top10intersections" class="center" style="display:block; width:100%"></svg>
-      <div id="top10intersectionstooltip" class="hidden tooltip" style="width:400px">
-          <p><strong><span id="title">Title</span></strong></p>
-          <p>Location:&nbsp;<span id="location">100</span></p>
-          <p>Collisions:&nbsp;<span id="col"></span></p>
-          <p><i>Click to view</i></p>
-      </div>
-      
-      <script>
-        'use strict';
+  </section>
+
+  <section class="main-content">
+
+    <h2>A Closer Look</h2>
+    <p>This is all good. Looking at the worst offenders regarding the number of collisions, can we
+      find out why there are whose than the others? Are there any underlying reason for this?
+    </p>
+
+    <p>Let's begin by locating the top 10 intersections with the most collisions.</p>
+
+    <svg id="top10intersections" class="center" style="display:block; width:100%"></svg>
+    <div id="top10intersectionstooltip" class="hidden tooltip" style="width:400px">
+      <p><strong><span id="title">Title</span></strong></p>
+      <p>Location:&nbsp;<span id="location">100</span></p>
+      <p>Collisions:&nbsp;<span id="col"></span></p>
+      <p><i>Click to view</i></p>
+    </div>
+
+    <script>
+      'use strict';
         
         class Top10 {
           constructor(svg) {
@@ -312,7 +315,7 @@
           }
           sendToMaps(aCollision) {
             const [lat, lon] = _.trim(aCollision.location, ['(', ')']).split(',');
-            const url = `http://maps.google.com/maps?z=12&t=h&q=loc:${lat.trim()}+${lon.trim()}`
+            const url = `http://maps.google.com/maps?z=12&t=t&q=loc:${lat.trim()}+${lon.trim()}`
             window.open(url, '_blank').focus();
           }
         }
@@ -321,23 +324,152 @@
         
         
         document.addEventListener("DOMContentLoaded", new Top10(document.querySelector('svg#top10intersections')));
-      </script>
+    </script>
+
+    <p>By hovering over each bar in the top 10 bar chart. We can find that the intersection 
+      Tillary Street / Flatbush Avenue Extension is the most dangerous intesection - by some margin - based 
+      on the 585 collisions happening.</p>
       
-      <p>These intersections, seems to be affected by the amount of traffic that flows each and every day.</p>
+    <p>For now we can only guess, but clicking on the Tillary Street / Flatbush Avenue Extension bar, or 
+      looking below one could assume that the intersection is the perfect storm. The intersection is 
+      right before an highway access/exit ramp and extends into Manhattan by the Manhattan Bridge.</p>
+
+    <h4>TILLARY STREET / FLATBUSH AVENUE EXTENSION</h4>
+    <img alt="Flatbush Ave" src="images/streetview/Flatbush_Ave.png" />
+    <h4>EAST 59 STREET / 2 AVENUE</h4>
+    <img alt="Flatbush Ave" src="images/streetview/EAST59STREET.png" />
       
-      <h4>TILLARY STREET / FLATBUSH AVENUE EXTENSION</h4>
-      <img alt="Flatbush Ave" src="images/streetview/Flatbush_Ave.png"/>
-      <h4>EAST 59 STREET / 2 AVENUE</h4>
-      <img alt="Flatbush Ave" src="images/streetview/EAST59STREET.png"/>
+   <p>What we see is in the top 10. Is that most of the intersections have a few things in common; they are next to 
+     a highway access/exit ramp or one block from one.</p>
+  </section>
+  <section class="main-content">
+
+  </section>
+
+  <section class="main-content">
+    <h2>Traffic and Weather in New York City</h2>
+      <p>We all assume that weather has a big impact on the traffic anywhere. Collisions are far more likely to happen
+      in bad weather. So what is bad weather really? Is there any condition that is whose than others? And if so can
+      we found out which so you can be more aware in traffic during one of these?</p>
       
-      <p>We can see that the these top 10 intersection. All have the same thing in common; they are on a motorway access/exit ramp or one block from this.</p>
-      <p>Bla bla bla </p>
-    </section>
-    <section class="main-content">
-      
-    </section>
-    
-    <section class="main-content">
+      <p>By combining the Motor Vehicle Collisions dataset with weather data from 
+        <a href="wunderground.com">Weather Underground</a>
+        we are able to find out which weather condition on average produce the most collisions per hour.
+        The data data has been normalized with the most common weather condition, Mostly Cloudy.</p>
+    <svg id="weatherfreq" class="center" style="display:block; width:100%"></svg>
+
+    <script>
+      'use strict';
+        
+        class WeatherFreq {
+          constructor(svg) {
+            this.svg = d3.select(svg);
+            this.jsonPath = 'datasets/pb/freq_weather.json';
+            this.xScale = d3.scale.ordinal();
+            this.yScale = d3.scale.linear();
+            svg.style.width = "100%";
+            this.paddingLeft = (svg.clientWidth / 5);
+            this.paddingTop = 30;
+            this.height = 330;
+            this.width = svg.clientWidth;
+            this.bars = this.svg.append('g');
+            this.yAxis = this.svg.append('g');
+            this.xAxis = this.svg.append('g');
+            this.xLabels = [];
+            
+            this.data = null;
+            
+            svg.style.height = this.height + 30;
+            svg.style['padding-left'] = this.paddingLeft;
+            
+            d3.json(
+              this.jsonPath,
+              this.onDataLoaded.bind(this)
+            )
+          }
+          onDataLoaded(data) {
+            this.data = data;
+            // X scale
+            this.xScale = this.xScale.domain(d3.range(_.size(data)))
+              .rangeRoundBands([0, 300], 0.05);
+             
+
+            // Y scale
+            this.yScale = this.yScale
+              .domain([0, d3.max(d3.values(this.data))])
+              .range([0, this.width - (2*this.paddingLeft) - 20]);
+            
+            this.xLabels = d3.keys(this.data);
+              
+            this.renderBars();
+            this.renderAxis();
+          }
+          renderBars() {
+            
+            const max = d3.max(d3.values(this.data));
+            
+            this.bars
+                .selectAll('rect')
+                .data(d3.values(this.data))
+                .enter()
+                .append('rect')
+                .attr({
+                  'x': (d, i) => (this.paddingLeft),
+                  'height': this.xScale.rangeBand(),
+                  'fill': 'cornflowerblue',
+                  'y': (d,i) => (this.xScale(i) + this.paddingTop),
+                  'width': 0
+                })
+                // .on('mouseover', this.renderTooltip.bind(this))
+                // .on('mouseout', this.hideTooltip.bind(this))
+                // .on('click', this.sendToMaps.bind(this))
+                // .transition()
+                // .duration(2000) 
+                // .delay((d, i) => ((i / this.data.length * 1000) + 10000))
+                .attr({
+                  'width': d => (Math.abs(this.yScale(0) - this.yScale(d)))
+                })
+          }
+          renderAxis() {
+            // Define axes
+            let xAxis = d3.svg.axis().scale(this.xScale).orient('left').tickFormat((d) => this.xLabels[d]);
+            let yAxis = d3.svg.axis().scale(this.yScale).orient('bottom').ticks(11);
+            
+            // Add y axis to histogram
+            this.xAxis.attr({
+              'class': 'axis',
+              'transform': `translate(${this.paddingLeft}, ${this.paddingTop})`
+            }).call(xAxis);
+            
+            this.yAxis.attr({
+              'class': 'axis',
+              'transform': `translate(${this.paddingLeft}, ${this.height})`
+            })
+            .call(yAxis)
+            .selectAll("text")  
+            .style("text-anchor", "end")
+            .attr({
+             'dx': '.8em'
+            });
+            debugger;
+            this.svg.append('line')
+            .attr({
+              'y1': this.yScale.range()[0]+this.paddingTop,
+              'y2': this.yScale.range()[1]-this.paddingTop,
+              'x1': this.paddingLeft + (Math.abs(this.yScale(0) - this.yScale(this.data['Mostly Cloudy']))),
+              'x2': this.paddingLeft + (Math.abs(this.yScale(0) - this.yScale(this.data['Mostly Cloudy']))),
+              'stroke': 'grey',
+              'stroke-width': '1',
+              'stroke-dasharray': '10, 10'
+            });
+          }
+        }
+        
+        document.addEventListener("DOMContentLoaded", new WeatherFreq(document.querySelector('svg#weatherfreq')));
+    </script>
+  </section>
+
+  <!--<section class="main-content">
       <h2>Distribution By Postal District</h2>
       <svg id="projectMap"></svg>
       <div id="tooltip" class="hidden tooltip">
@@ -355,7 +487,7 @@
         })();
     </script>
 
-  </section>
+  </section>-->
 
   </section>
 
