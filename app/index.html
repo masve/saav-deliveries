@@ -78,14 +78,12 @@
 
   <section class="main-content">
     <h2>Explore Your Daily Communute</h2>
-    <p>NYC is a big city. A lot of traffic means a high chance for collision to occour. Therefore we are providing
-      an opportunity for you to discover the amount of vehicle collisions that has happened throughout the city in
-      the period 2012-2015. Find out where if you can take a safer route to work!</p>
-      <p>The size of each point indicate the accumulate amount of incidents that have happened for that
+    <p>NYC is a big city. A lot of traffic means a high chance for a collision to occur. Therefore, we are providing an opportunity for you to discover the amount of vehicle collisions that has happened throughout the city in the period 2012-2015. Find out where if you can take a safer route to work!</p>
+      <p>The size of each point indicates the accumulated amount of incidents that have happened for that
         intersection. The color <span style="color:red">red</span> shows if there is any fatalities. Click on a
         point to get the numeric values.</p>
         <div class="map" id="intersections"></div>
-        <p class="small">Note that all intersections with less that 10 collisions and without falaties have been omitted to increase performance.</p>
+        <p class="small">Note that all intersections with less that 10 collisions and without facilities have been omitted to increase performance.</p>
         <script>
         (function(d) {
           "use strict";
@@ -181,7 +179,7 @@
 
           <h2>A Closer Look</h2>
           <p>This is all good. Looking at the worst offenders regarding the number of collisions, can we
-            find out why there are whose than the others? Are there any underlying reason for this?
+            find out why there are worse than the others? Is there any underlying reason for this?
           </p>
 
           <p>Let's begin by locating the top 10 intersections with the most collisions.</p>
@@ -330,9 +328,9 @@
             Tillary Street / Flatbush Avenue Extension is the <i>most dangerous</i> intesection - by some margin - based
             on the 585 collisions happening.</p>
 
-            <p>For now we can only guess, but clicking on the Tillary Street / Flatbush Avenue Extension bar, or
+            <p>For now, we can only guess, but clicking on the Tillary Street / Flatbush Avenue Extension bar, or
               looking below one could assume that the intersection is the perfect storm. The intersection is
-              right before an highway access/exit ramp and extends into Manhattan by the Manhattan Bridge.</p>
+              right before a highway access/exit ramp and extends into Manhattan by the Manhattan Bridge.</p>
 
               <!-- <h4>TILLARY STREET / FLATBUSH AVENUE EXTENSION</h4>
               <img alt="Flatbush Ave" src="images/streetview/Flatbush_Ave.png" />
@@ -362,7 +360,7 @@
 
                   <p>By combining the Motor Vehicle Collisions dataset with weather data from
                     <a href="wunderground.com">Weather Underground</a>
-                    we are able to find out which weather condition on average produce the most collisions per hour.
+                    we are able to find out which weather condition on average produces the most collisions per hour.
                     The data data has been normalized with the most common weather condition, Mostly Cloudy.</p>
                     <svg id="weatherfreq" class="center" style="display:block; width:100%"></svg>
 
@@ -478,12 +476,12 @@
 
                     <p>
                       From the visualization we see a clear uptick in the collision frequency <i>rainy</i> and <i>snowy</i> conditions.
-                      Upto 60% more collisions compared to Mostly Cloudy conditions. In completely Clear weather seems to hover around 40% less.
-                      It does however also raises some questions. Why are the conditions Blowing Snow and Heavy Snow. So far down the list?
+                      Up to 60%, more collisions compared to Mostly Cloudy conditions. In completely Clear weather seems to hover around 40% less.
+                      It does however also raises some questions. Why are the conditions Blowing Snow and Heavy Snow so far down the list?
                     </p>
 
                     <p>
-                      In early 2015 and 2016 NYC experienced two blizzards. In both cases NYPD issued Travel Bans meaning that only emergency
+                      In early 2015 and 2016, NYC experienced two blizzards. In both cases, NYPD issued Travel Bans meaning that only emergency
                       vehicles were allowed on the roads. This could be a tell in why we in the very bad weather we do not see the uptick
                       in collision frequency in very bad weather.
                     </p>
@@ -492,7 +490,7 @@
                     <blockquote class="twitter-tweet tw-align-center" data-lang="en"><p lang="en" dir="ltr">After 2:30 p.m and you&#39;re on the road, we will arrest you <a href="https://twitter.com/NYPDChiefofDept">@NYPDChiefofDept</a> says</p>&mdash; NYPD NEWS (@NYPDnews) <a href="https://twitter.com/NYPDnews/status/690955566529773568">January 23, 2016</a></blockquote>
                     <script async src="//platform.twitter.com/widgets.js" charset="utf-8"></script>
                     <p class="small">
-                      Have anyone caught the cold during spring-time, where it is getting warmer but not warm enough to not wear a jacket?
+                      Has anyone else caught a cold during spring-time, where it is getting warmer but not warm enough to not wear a jacket?
                     </p>
 
                     <p>
@@ -523,7 +521,7 @@
                     class SplipperyPavement {
                       constructor(svg) {
                         this.svg = d3.select(svg);
-                        this.jsonPath = 'datasets/pb/freq_weather.json';
+                        this.jsonPath = 'datasets/pb/slippery_pavement.json';
                         this.xScale = d3.scale.ordinal();
                         this.yScale = d3.scale.linear();
                         svg.style.width = "100%";
