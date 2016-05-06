@@ -334,10 +334,18 @@
       looking below one could assume that the intersection is the perfect storm. The intersection is
       right before an highway access/exit ramp and extends into Manhattan by the Manhattan Bridge.</p>
 
-    <h4>TILLARY STREET / FLATBUSH AVENUE EXTENSION</h4>
+    <!-- <h4>TILLARY STREET / FLATBUSH AVENUE EXTENSION</h4>
     <img alt="Flatbush Ave" src="images/streetview/Flatbush_Ave.png" />
     <h4>EAST 59 STREET / 2 AVENUE</h4>
-    <img alt="Flatbush Ave" src="images/streetview/EAST59STREET.png" />
+    <img alt="Flatbush Ave" src="images/streetview/EAST59STREET.png" /> -->
+
+    <h4>TILLARY STREET / FLATBUSH AVENUE EXTENSION</h4>
+       <div id="Flatbush" class="img-switch-container">
+        <img alt="Flatbush Ave" data-img="primary" src="images/streetview/Flatbush_Ave.png" class="img-switch-primary shadow"/>
+        <img alt="Flatbush Ave" data-img="secondary" class="shadow img-switch-secondary" src="images/streetview/Flatbush_Ave_map.png"/>
+       </div>
+      <!-- <h4>EAST 59 STREET / 2 AVENUE</h4>
+      <img alt="Flatbush Ave" src="images/streetview/EAST59STREET.png"/> -->
 
    <p>What we see is in the top 10. Is that most of the intersections have a few things in common; they are next to
      a highway access/exit ramp or one block from one.</p>
@@ -451,7 +459,7 @@
             .attr({
              'dx': '.8em'
             });
-            debugger;
+            // debugger;
             this.svg.append('line')
             .attr({
               'y1': this.yScale.range()[0]+this.paddingTop,
