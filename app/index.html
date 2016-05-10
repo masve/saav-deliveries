@@ -361,8 +361,14 @@
                   <p>By combining the Motor Vehicle Collisions dataset with weather data from
                     <a href="wunderground.com">Weather Underground</a>
                     we are able to find out which weather condition on average produces the most collisions per hour.
-                    The data data has been normalized with the most common weather condition, Mostly Cloudy.</p>
+                    The data data has been normalized with the most common weather condition, <strong>Mostly Cloudy</strong>.</p>
+                    
                     <svg id="weatherfreq" class="center" style="display:block; width:100%"></svg>
+                    
+                    <div id="weatherfreqtooltip" class="hidden tooltip" style="width:400px">
+                      <p><strong><span id="title">Title</span></strong></p>
+                      <p>Value:&nbsp;<span id="val"></span>%</p>
+                    </div>
 
                     <script>
                     'use strict';
@@ -382,6 +388,7 @@
                         this.yAxis = this.svg.append('g');
                         this.xAxis = this.svg.append('g');
                         this.xLabels = [];
+                        this.tooltip = d3.select('div#weatherfreqtooltip');
 
                         this.data = null;
 
@@ -426,8 +433,8 @@
                           'y': (d,i) => (this.xScale(i) + this.paddingTop),
                           'width': 0
                         })
-                        // .on('mouseover', this.renderTooltip.bind(this))
-                        // .on('mouseout', this.hideTooltip.bind(this))
+                        .on('mouseover', this.renderTooltip.bind(this))
+                        .on('mouseout', this.hideTooltip.bind(this))
                         // .on('click', this.sendToMaps.bind(this))
                         // .transition()
                         // .duration(2000)
@@ -457,7 +464,7 @@
                         .attr({
                           'dx': '.8em'
                         });
-                        // debugger;
+                        
                         this.svg.append('line')
                         .attr({
                           'y1': this.yScale.range()[0]+this.paddingTop,
@@ -468,6 +475,26 @@
                           'stroke-width': '1',
                           'stroke-dasharray': '10, 10'
                         });
+                      }
+                      renderTooltip(aWeatherPoint, i) {
+                        
+                        this.tooltip
+                        .classed('hidden', false)
+                        .transition()
+                        .style('left', `${d3.event.pageX}px`)
+                        .style('top', `${d3.event.pageY}px`)
+                        .style('opacity', 1)
+                        .duration(100);
+
+                        this.tooltip.select('#title').text(this.xLabels[i]);
+                        this.tooltip.select('#val').text(Math.round(aWeatherPoint * 100) / 100);
+                        
+                      }
+                      hideTooltip() {
+                        this.tooltip
+                        .transition()
+                        .duration(150)
+                        .style('opacity', 0);
                       }
                     }
 
