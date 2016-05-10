@@ -6,6 +6,10 @@ svg {
   font-size: 0.5em;
 }
 
+.huge {
+  font-size: 3em;
+}
+
 button.btncolor {
   background-image: linear-gradient(120deg, rgba(21,84,153,0.8), rgba(21,153,84,0.8));
   color: white
@@ -41,6 +45,10 @@ svg.center {
     margin: auto;
     width: 60%;
     padding: 10px;
+}
+img.center {
+  display: block;
+  margin: auto;
 }
 
 .map {
