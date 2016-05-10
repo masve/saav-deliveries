@@ -16,6 +16,19 @@
   <script type="text/javascript" src="bower_components/d3/d3.min.js"></script>
   <script type="text/javascript" src="bower_components/lodash/lodash.js"></script>
   <script type="text/javascript" src="bower_components/jquery/dist/jquery.min.js"></script>
+  
+  <script>
+    //Check for ES 6 support, and alert user if his browser does not support it.
+  (function(document) {
+    "use strict";
+    try {
+      eval("var foo = (x)=>x+1");
+    } catch (e) {
+      alert('This page uses modern javascript, that your browser does not support.\nPlease use a modern browser to display this properly (e.i. Chrome or Firefox).')
+    }
+  })();
+  </script>
+  
 </head>
 
 <body>

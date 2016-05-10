@@ -113,3 +113,7 @@ rect:hover {
     opacity: 1;
     transition: opacity 0.5s linear;
 }
+
+.texttt {
+  font-family: 'Courier New', Courier, 'Lucida Sans Typewriter', 'Lucida Typewriter', monospace;
+}
