@@ -27,6 +27,7 @@
 
   <!-- our scripts -->
   <script type="text/javascript" src="scripts/knn.js"></script>
+  <script type="text/javascript" src="scripts/BarChart.js" async></script>
 
   <script>
     //Check for ES 6 support, and alert user if his browser does not support it.
@@ -196,133 +197,32 @@
     <script>
       'use strict';
 
-          class Top10 {
-            constructor(svg) {
-              this.svg = d3.select(svg);
-              this.cvsPath = 'datasets/pb/intersection_top_10.csv';
-              this.xScale = d3.scale.ordinal();
-              this.yScale = d3.scale.linear();
-              svg.style.width = "100%";
-              this.paddingLeft = (svg.clientWidth / 5);
-              this.paddingTop = 30;
-              this.height = 330;
-              this.width = svg.clientWidth;
-              this.bars = this.svg.append('g');
-              this.yAxis = this.svg.append('g');
-              this.xAxis = this.svg.append('g');
-              this.xLabels = [];
-              this.tooltip = d3.select('#top10intersectionstooltip')
-
-              this.data = null;
-
-              svg.style.height = this.height + 100;
-              svg.style['padding-left'] = this.paddingLeft;
-
-              d3.csv(
-                this.cvsPath,
-                (r) => ({collisions: +r['COLLISIONS'], name: `${r['ON STREET NAME']} / ${r['CROSS STREET NAME']}`, location: r['LOCATION']}),
-                this.onDataLoaded.bind(this)
-              );
-            }
-            onDataLoaded(data) {
-              this.data = data;
-              // X scale
-              this.xScale = this.xScale.domain(d3.range(data.length))
-              .rangeRoundBands([0, 300], 0.05);
-
-              // Y scale
-              this.yScale = this.yScale
-              .domain([0, d3.max(this.data, d => d.collisions)])
-              .range([0, this.width - (2*this.paddingLeft) - 20]);
-
-              this.xLabels = data.map(d => d.name);
-
-              this.render();
-            }
-            render() {
-
-              const max = d3.max(this.data, d => d.collisions);
-
-              this.bars
-              .selectAll('rect')
-              .data(this.data)
-              .enter()
-              .append('rect')
-              .attr({
-                'x': (d, i) => (this.paddingLeft),
-                'height': this.xScale.rangeBand(),
-                'fill': 'cornflowerblue',
-                'y': (d,i) => (this.xScale(i) + this.paddingTop),
-                'width': 0
-              })
-              .on('mouseover', this.renderTooltip.bind(this))
-              .on('mouseout', this.hideTooltip.bind(this))
-              .on('click', this.sendToMaps.bind(this))
-              .transition()
-              .duration(2000)
-              .delay((d, i) => ((i / this.data.length * 1000) + 10000))
-              .attr({
-                'width': d => (Math.abs(this.yScale(0) - this.yScale(d.collisions)))
-              })
-
-
-              this.renderAxis();
-            }
-            renderTooltip(aCollision) {
-
-              this.tooltip
-              .classed('hidden', false)
-              .transition()
-              .style('left', `${d3.event.pageX}px`)
-              .style('top', `${d3.event.pageY}px`)
-              .style('opacity', 1)
-              .duration(100);
-
-              this.tooltip.select('#title').text(aCollision.name);
-              this.tooltip.select('#col').text(aCollision.collisions);
-              this.tooltip.select("#location").text(aCollision.location);
-            }
-            hideTooltip() {
-              this.tooltip
-              .transition()
-              .duration(150)
-              .style('opacity', 0);
-            }
-            renderAxis() {
-              // Define axes
-
-              let xAxis = d3.svg.axis().scale(this.xScale).orient('left').tickFormat((d) => this.xLabels[d]).tickValues(d3.range(10));
-              let yAxis = d3.svg.axis().scale(this.yScale).orient('bottom').ticks(11);
-
-              // Add y axis to histogram
-              this.xAxis.attr({
-                'class': 'axis',
-                'transform': `translate(${this.paddingLeft}, ${this.paddingTop})`
-              }).call(xAxis);
-
-              this.yAxis.attr({
-                'class': 'axis',
-                'transform': `translate(${this.paddingLeft}, ${this.height})`
-              })
-              .call(yAxis)
-              .selectAll("text")
-              .style("text-anchor", "end")
-              .attr({
-                'dx': '.8em'
-              });
-
-            }
-            sendToMaps(aCollision) {
+      document.addEventListener(
+        "DOMContentLoaded", 
+        new BarChart(
+          'svg#top10intersections',
+          'datasets/pb/intersection_top_10.csv',
+          {
+            value: (r => r.collisions),
+            tooltip: {
+              id: '#top10intersectionstooltip',
+              render: (tooltip, aCollision) => {
+                tooltip.select('#title').text(aCollision.name);
+                tooltip.select('#col').text(aCollision.collisions);
+                tooltip.select("#location").text(aCollision.location);
+              }
+            },
+            onClick: (aCollision) => {
               const [lat, lon] = _.trim(aCollision.location, ['(', ')']).split(',');
-              const url = `http://maps.google.com/maps?z=12&t=t&q=loc:${lat.trim()}+${lon.trim()}`
+              const url = `http://maps.google.com/maps?z=12&t=t&q=loc:${lat.trim()}+${lon.trim()}`;
               window.open(url, '_blank').focus();
-            }
+            },
+            labels: (r => r.name),
+            paddingLeft: 5,
+            parseFun: ((r) => ({collisions: +r['COLLISIONS'], name: `${r['ON STREET NAME']} / ${r['CROSS STREET NAME']}`, location: r['LOCATION']}))
           }
-
-
-
-
-          document.addEventListener("DOMContentLoaded", new Top10(document.querySelector('svg#top10intersections')));
+        )
+      );
     </script>
 
     <p>By hovering over each bar in the top 10 bar chart. We can find that the intersection Tillary Street / Flatbush Avenue
@@ -371,136 +271,17 @@
     <script>
       'use strict';
 
-                    class WeatherFreq {
-                      constructor(svg) {
-                        this.svg = d3.select(svg);
-                        this.jsonPath = 'datasets/pb/freq_weather.json';
-                        this.xScale = d3.scale.ordinal();
-                        this.yScale = d3.scale.linear();
-                        svg.style.width = "100%";
-                        this.paddingLeft = (svg.clientWidth / 6);
-                        this.paddingTop = 30;
-                        this.height = 430;
-                        this.width = svg.clientWidth;
-                        this.bars = this.svg.append('g');
-                        this.yAxis = this.svg.append('g');
-                        this.xAxis = this.svg.append('g');
-                        this.xLabels = [];
-                        this.tooltip = d3.select('div#weatherfreqtooltip');
-
-                        this.data = null;
-
-                        svg.style.height = this.height + 30;
-                        svg.style['padding-left'] = this.paddingLeft;
-
-                        d3.json(
-                          this.jsonPath,
-                          this.onDataLoaded.bind(this)
-                        )
-                      }
-                      onDataLoaded(data) {
-                        this.data = data;
-                        // X scale
-                        this.xScale = this.xScale.domain(d3.range(_.size(data)))
-                        .rangeRoundBands([0, 400], 0.2);
-
-
-                        // Y scale
-                        this.yScale = this.yScale
-                        .domain([0, d3.max(d3.values(this.data))])
-                        .range([0, this.width - (2*this.paddingLeft) - 20]);
-
-                        this.xLabels = d3.keys(this.data);
-
-                        this.renderBars();
-                        this.renderAxis();
-                        this.renderLine();
-                      }
-                      renderBars() {
-
-                        const max = d3.max(d3.values(this.data));
-                        const size = d3.values(this.data).length;
-
-                        this.bars
-                        .selectAll('rect')
-                        .data(d3.values(this.data))
-                        .enter()
-                        .append('rect')
-                        .attr({
-                          'x': (d, i) => (this.paddingLeft),
-                          'height': this.xScale.rangeBand(),
-                          'fill': 'cornflowerblue',
-                          'y': (d,i) => (this.xScale(i) + this.paddingTop),
-                          'width': 0
-                        })
-                        .on('mouseover', this.renderTooltip.bind(this))
-                        .on('mouseout', this.hideTooltip.bind(this))
-                        // .on('click', this.sendToMaps.bind(this))
-                        .transition()
-                        .duration(2000)
-                        .delay((d, i) => ((i / size * 1000) + 10000))
-                        .attr({
-                          'width': d => (Math.abs(this.yScale(0) - this.yScale(d)))
-                        })
-                      }
-                      renderAxis() {
-                        // Define axes
-                        let xAxis = d3.svg.axis().scale(this.xScale).orient('left').tickFormat((d) => this.xLabels[d]);
-                        let yAxis = d3.svg.axis().scale(this.yScale).orient('bottom').ticks(11);
-
-                        // Add y axis to histogram
-                        this.xAxis.attr({
-                          'class': 'axis',
-                          'transform': `translate(${this.paddingLeft}, ${this.paddingTop})`
-                        }).call(xAxis);
-
-                        this.yAxis.attr({
-                          'class': 'axis',
-                          'transform': `translate(${this.paddingLeft}, ${this.height})`
-                        })
-                        .call(yAxis)
-                        .selectAll("text")
-                        .style("text-anchor", "end")
-                        .attr({
-                          'dx': '.8em'
-                        });
-                        
-                      }
-                      renderLine() {
-                        this.svg.append('line')
-                        .attr({
-                          'y1': this.yScale.range()[0] + this.paddingTop,
-                          'y2': this.yScale.range()[1] - this.paddingTop,
-                          'x1': this.paddingLeft + (Math.abs(this.yScale(0) - this.yScale(this.data['Mostly Cloudy']))),
-                          'x2': this.paddingLeft + (Math.abs(this.yScale(0) - this.yScale(this.data['Mostly Cloudy']))),
-                          'stroke': 'grey',
-                          'stroke-width': '1',
-                          'stroke-dasharray': '10, 10'
-                        });
-                      }
-                      renderTooltip(aWeatherPoint, i) {
-                        
-                        this.tooltip
-                        .classed('hidden', false)
-                        .transition()
-                        .style('left', `${d3.event.pageX}px`)
-                        .style('top', `${d3.event.pageY}px`)
-                        .style('opacity', 1)
-                        .duration(100);
-
-                        this.tooltip.select('#title').text(this.xLabels[i]);
-                        this.tooltip.select('#val').text(Math.round(aWeatherPoint * 100) / 100);
-                        
-                      }
-                      hideTooltip() {
-                        this.tooltip
-                        .transition()
-                        .duration(150)
-                        .style('opacity', 0);
-                      }
-                    }
-
-                    document.addEventListener("DOMContentLoaded", new WeatherFreq(document.querySelector('svg#weatherfreq')));
+      document.addEventListener("DOMContentLoaded", new BarChart('svg#weatherfreq','datasets/pb/freq_weather.json', {
+        value: (r => r),
+        tooltip: {
+          id: 'div#weatherfreqtooltip',
+          render: (tooltip, weatherPoint, name) => {
+            tooltip.select('#title').text(name);
+            tooltip.select('#val').text(Math.round(weatherPoint * 100) / 100);
+          },
+        },
+        line: { x: ((data) => data['Mostly Cloudy'])}
+      }));
     </script>
 
     <p>
@@ -511,7 +292,7 @@
     </p>
 
     <p>
-      In early 2015 and 2016, NYC experienced two blizzards. In both cases, NYPD issued Travel Bans meaning that only emergency
+      In early 2015 and 2016, NYC experienced two blizzards. In both cases, NYPD issued <b>Travel Bans</b> meaning that only emergency
       vehicles were allowed on the roads. This could be a tell in why we in the very bad weather we do not see the uptick
       in collision frequency in very bad weather.
     </p>
@@ -552,131 +333,68 @@
       <p><strong><span id="title">Title</span></strong></p>
       <p>Amount:&nbsp;<span id="val"></span></p>
     </div>
+    
+    <p>
+      As it is clear in the chart above. Accidents happening due to a slippery pavement, were as predicted indeed more frequent at light rain and snow.
+      This shows that some accidents are sensitive to the weather. However this was the general data. There might be more information hidden here.
+      For instance, is there some peticular intersections in NYC that are overly sensitive to this condition?
+    </p>
 
     <script>
       'use strict';
 
-                    class SplipperyPavement {
-                      constructor(svg) {
-                        this.svg = d3.select(svg);
-                        this.jsonPath = 'datasets/pb/slippery_pavement.json';
-                        this.xScale = d3.scale.ordinal();
-                        this.yScale = d3.scale.linear();
-                        svg.style.width = "100%";
-                        this.paddingLeft = (svg.clientWidth / 6);
-                        this.paddingTop = 30;
-                        this.height = 430;
-                        this.width = svg.clientWidth;
-                        this.bars = this.svg.append('g');
-                        this.yAxis = this.svg.append('g');
-                        this.xAxis = this.svg.append('g');
-                        this.xLabels = [];
-                        this.tooltip = d3.select('#splipperypavementtooltip');
-
-                        this.data = null;
-
-                        svg.style.height = this.height + 30;
-                        svg.style['padding-left'] = this.paddingLeft;
-
-                        d3.json(
-                          this.jsonPath,
-                          this.onDataLoaded.bind(this)
-                        )
-                      }
-                      onDataLoaded(data) {
-                        this.data = data;
-                        // X scale
-                        this.xScale = this.xScale.domain(d3.range(_.size(data))).rangeRoundBands([0, 400], 0.05);
-
-
-                        // Y scale
-                        this.yScale = this.yScale
-                                          .domain([0, d3.max(d3.values(this.data))])
-                                          .range([0, this.width - (2*this.paddingLeft) - 20]);
-
-                        this.xLabels = d3.keys(this.data);
-
-                        this.renderBars();
-                        this.renderAxis();
-                      }
-                      renderBars() {
-
-                        const max = d3.max(d3.values(this.data));
-                        const size = d3.values(this.data).length;
-
-                        this.bars
-                        .selectAll('rect')
-                        .data(d3.values(this.data))
-                        .enter()
-                        .append('rect')
-                        .attr({
-                          'x': (d, i) => (this.paddingLeft),
-                          'height': this.xScale.rangeBand(),
-                          'fill': 'cornflowerblue',
-                          'y': (d,i) => (this.xScale(i) + this.paddingTop),
-                          'width': 0
-                        })
-                        .on('mouseover', this.renderTooltip.bind(this))
-                        .on('mouseout', this.hideTooltip.bind(this))
-                        // .on('click', this.sendToMaps.bind(this))
-                        .transition()
-                        .duration(2000)
-                        .delay((d, i) => ((i / size * 1000) + 10000))
-                        .attr({
-                          'width': d => (Math.abs(this.yScale(0) - this.yScale(d)))
-                        })
-                      }
-                      renderAxis() {
-                        // Define axes
-                        let xAxis = d3.svg.axis().scale(this.xScale).orient('left').tickFormat((d) => this.xLabels[d]);
-                        let yAxis = d3.svg.axis().scale(this.yScale).orient('bottom').ticks(11);
-
-                        // Add y axis to histogram
-                        this.xAxis.attr({
-                          'class': 'axis',
-                          'transform': `translate(${this.paddingLeft}, ${this.paddingTop})`
-                        }).call(xAxis);
-
-                        this.yAxis.attr({
-                          'class': 'axis',
-                          'transform': `translate(${this.paddingLeft}, ${this.height})`
-                        })
-                        .call(yAxis)
-                        .selectAll("text")
-                        .style("text-anchor", "end")
-                        .attr({
-                          'dx': '.8em'
-                        });
-                      }
-                      renderTooltip(aSlip, i) {
-                        
-                        this.tooltip
-                        .classed('hidden', false)
-                        .transition()
-                        .style('left', `${d3.event.pageX}px`)
-                        .style('top', `${d3.event.pageY}px`)
-                        .style('opacity', 1)
-                        .duration(100);
-
-                        this.tooltip.select('#title').text(this.xLabels[i]);
-                        this.tooltip.select('#val').text(aSlip);
-                        
-                      }
-                      hideTooltip() {
-                        this.tooltip
-                        .transition()
-                        .duration(150)
-                        .style('opacity', 0);
-                      }
-                    }
-
-                    document.addEventListener("DOMContentLoaded", new SplipperyPavement(document.querySelector('svg#slipperypavement')));
+      document.addEventListener(
+        "DOMContentLoaded",
+          new BarChart('svg#slipperypavement','datasets/pb/slippery_pavement.json', {
+          value: (r => r),
+          tooltip: {
+            id: '#splipperypavementtooltip',
+            render: (tooltip, aSlip, name) => {
+              tooltip.select('#title').text(name);
+              tooltip.select('#val').text(aSlip);
+            }
+          }
+        })
+      );
     </script>
 
   </section>
 
   <section class="main-content">
-    <h2></h2>
+    <h2>Weather Sensitive Intersections</h2>
+    <p>
+      If we look at the slippery pavement cause for collisions. We can finde som interesting information.
+      Looking at the frequency of accidents, we found perticular sensitive intersection.
+    </p>
+    <img src="images/slipperyHeatmap.png" class="shadow" alt="Heatmap of slippery pavement accidents"/>
+    <p>
+      As we see in the above heatmap, the spead is very broad. This is infact very similar to what the overall insident spread.
+      However looking a the intersections, we can find some interiesting discoveries.
+    </p>
+    <svg id="slipperyintersection" class="center" style="display:block; width:100%"></svg>
+    
+    <script>
+      'use strict';
+      
+      function getCrossName(r) {
+        if (r['ON STREET NAME'] && r['CROSS STREET NAME']) {
+          return [r['ON STREET NAME'],r['CROSS STREET NAME']].join('/'); 
+        } else 
+          return r['LOCATION'];
+      }
+
+
+      document.addEventListener(
+        "DOMContentLoaded",
+         new BarChart('svg#slipperyintersection', 'datasets/slippery.csv', {
+          parseFun: (r => ({'location': r['LOCATION'], 'value': +r['COUNT'], 'cross': getCrossName(r)})),
+          labels: (r => r.cross),
+          value: (r => r.value),
+          cutAt: 10
+        })
+      );
+    </script>
+    
   </section>
 
   <!--<section class="main-content">
