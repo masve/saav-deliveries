@@ -3,10 +3,10 @@
  *  @author Casper Clemmensen
  *  @author Mark Ian Svenningsen
  *  @author Kasper Hoa Quoc Duong
- *  
+ *
  * Used in Social Data Analysis and Visualization at DTU.
- * To create D3 bar charts. 
- * 
+ * To create D3 bar charts.
+ *
  */
 
 'use strict';
@@ -36,7 +36,7 @@ class BarChart {
         this.getValue = opt.value || _.noop;
         this.getLabel = opt.labels || ((e, i) => i)
         this.data = null;
-        
+
         this.bars = this.svg.append('g');
         this.yAxis = this.svg.append('g');
         this.xAxis = this.svg.append('g');
@@ -81,17 +81,17 @@ class BarChart {
             // We create a viewport listener, so that we can animate the chart when visible in the browser.
             const m = scrollMonitor.create(this.monitorElm);
             m.enterViewport(() => {
-                
+
                 if (this.hasRendered) return;
-                
+
                 this.renderBars();
                 this.renderAxis();
                 if (this.line) this.renderLine();
-                
+
             });
         } else {
             if (this.hasRendered) return;
-                
+
             this.renderBars();
             this.renderAxis();
             if (this.line) this.renderLine();
@@ -152,7 +152,7 @@ class BarChart {
     }
     renderLine() {
         const x = this.line.x(this.data);
-        
+
         this.svg.append('line')
             .attr({
                 'y1': this.yScale.range()[1] - this.paddingTop,
@@ -161,7 +161,8 @@ class BarChart {
                 'x2': this.paddingLeft + (Math.abs(this.yScale(0) - this.yScale(x))),
                 'stroke': 'black',
                 'stroke-width': '1',
-                'stroke-dasharray': '10, 10'
+                'stroke-dasharray': '10, 10',
+                'shape-rendering': 'crispEdges'
             })
             .transition()
             .duration(2000)
