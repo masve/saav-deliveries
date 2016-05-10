@@ -240,8 +240,7 @@
     <h4>TILLARY STREET / FLATBUSH AVENUE EXTENSION</h4>
     <div id="Flatbush" class="img-switch-container">
       <img alt="Flatbush Ave" data-img="primary" src="images/streetview/Flatbush_Ave.png" class="img-switch-primary shadow" />
-      <img alt="Flatbush Ave" data-img="secondary" class="shadow img-switch-secondary" src="images/streetview/Flatbush_Ave_map.png"
-      />
+      <img alt="Flatbush Ave" data-img="secondary" class="shadow img-switch-secondary" src="images/streetview/Flatbush_Ave_map.png"/>
     </div>
     <!-- <h4>EAST 59 STREET / 2 AVENUE</h4>
               <img alt="Flatbush Ave" src="images/streetview/EAST59STREET.png"/> -->
@@ -367,7 +366,10 @@
       If we look at the slippery pavement cause for collisions. We can finde som interesting information.
       Looking at the frequency of accidents, we found perticular sensitive intersection.
     </p>
-    <img src="images/slipperyHeatmap.png" class="shadow" alt="Heatmap of slippery pavement accidents"/>
+    <div class="img-switch-container">
+      <img src="images/slipperyHeatmap.png" class="shadow img-switch-primary" alt="Heatmap of slippery pavement accidents"/>
+      <img src="images/slipperyMap.png" class="shadow img-switch-secondary"/>     
+    </div>
     <p>
       As we see in the above heatmap, the spead is very broad. This is infact very similar to what the overall insident spread.
       However looking a the intersections, we can find some interiesting discoveries.
@@ -380,8 +382,8 @@
       function getCrossName(r) {
         if (r['ON STREET NAME'] && r['CROSS STREET NAME']) {
           return [r['ON STREET NAME'],r['CROSS STREET NAME']].join('/'); 
-        } else 
-          return r['LOCATION'];
+        }
+        return r['LOCATION'];
       }
 
 

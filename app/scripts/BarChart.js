@@ -1,8 +1,19 @@
+/**
+ * This is a Class created by:
+ *  @author Casper Clemmensen
+ *  @author Mark Ian Svenningsen
+ *  @author Kasper Hoa Quoc Duong
+ *  
+ * Used in Social Data Analysis and Visualization at DTU.
+ * To create D3 bar charts. 
+ * 
+ */
+
 'use strict';
 
 class BarChart {
     constructor(svgId, dataPath, opt) {
-
+        // Initialize all variables
         const svg = document.querySelector(svgId);
         this.monitorElm = svg;
         this.svg = d3.select(svgId);
@@ -17,26 +28,25 @@ class BarChart {
         this.height = opt.height || 430;
         this.ticks = opt.ticks || 11;
         this.width = svg.clientWidth;
-        this.bars = this.svg.append('g');
-        this.yAxis = this.svg.append('g');
-        this.xAxis = this.svg.append('g');
         this.xLabels = [];
         this.tooltip = opt.tooltip;
-        if (opt.tooltip) {
-            this.tooltip.elm = d3.select(opt.tooltip.id);
-        }
-        
+        if (opt.tooltip) this.tooltip.elm = d3.select(opt.tooltip.id);
 
         this.cutAt = opt.cutAt;
         this.getValue = opt.value || _.noop;
         this.getLabel = opt.labels || ((e, i) => i)
         this.data = null;
+        
+        this.bars = this.svg.append('g');
+        this.yAxis = this.svg.append('g');
+        this.xAxis = this.svg.append('g');
         this.line = opt.line;
         this.onClick = opt.onClick || _.noop;
 
         svg.style.height = this.height + 30;
         svg.style['padding-left'] = this.paddingLeft;
 
+        // This class supports both csv as well as JSON
         if (this.isJson) {
             d3.json(
                 this.dataPath,
@@ -68,6 +78,7 @@ class BarChart {
         this.xLabels = this.isJson ? d3.keys(this.data) : this.data.map(this.getLabel);
 
         if (this.monitorElm) {
+            // We create a viewport listener, so that we can animate the chart when visible in the browser.
             const m = scrollMonitor.create(this.monitorElm);
             m.enterViewport(() => {
                 
@@ -78,6 +89,12 @@ class BarChart {
                 if (this.line) this.renderLine();
                 
             });
+        } else {
+            if (this.hasRendered) return;
+                
+            this.renderBars();
+            this.renderAxis();
+            if (this.line) this.renderLine();
         }
 
     }
