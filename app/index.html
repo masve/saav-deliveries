@@ -359,13 +359,13 @@
                   we found out which so you can be more aware in traffic during one of these?</p>
 
                   <p>By combining the Motor Vehicle Collisions dataset with weather data from
-                    <a href="wunderground.com">Weather Underground</a>
+                    <a href="//wunderground.com" target="_blank">Weather Underground</a>
                     we are able to find out which weather condition on average produces the most collisions per hour.
                     The data data has been normalized with the most common weather condition, <strong>Mostly Cloudy</strong>.</p>
                     
                     <svg id="weatherfreq" class="center" style="display:block; width:100%"></svg>
                     
-                    <div id="weatherfreqtooltip" class="hidden tooltip" style="width:400px">
+                    <div id="weatherfreqtooltip" class="hidden tooltip" style="width:300px">
                       <p><strong><span id="title">Title</span></strong></p>
                       <p>Value:&nbsp;<span id="val"></span>%</p>
                     </div>
@@ -416,6 +416,7 @@
 
                         this.renderBars();
                         this.renderAxis();
+                        this.renderLine();
                       }
                       renderBars() {
 
@@ -466,10 +467,12 @@
                           'dx': '.8em'
                         });
                         
+                      }
+                      renderLine() {
                         this.svg.append('line')
                         .attr({
-                          'y1': this.yScale.range()[0]+this.paddingTop,
-                          'y2': this.yScale.range()[1]-this.paddingTop,
+                          'y1': this.yScale.range()[0] + this.paddingTop,
+                          'y2': this.yScale.range()[1] - this.paddingTop,
                           'x1': this.paddingLeft + (Math.abs(this.yScale(0) - this.yScale(this.data['Mostly Cloudy']))),
                           'x2': this.paddingLeft + (Math.abs(this.yScale(0) - this.yScale(this.data['Mostly Cloudy']))),
                           'stroke': 'grey',
