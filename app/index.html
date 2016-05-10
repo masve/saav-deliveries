@@ -57,7 +57,7 @@
 
   <section id="intro" class="main-content">
     <p>
-      This page is to represent the work related to assignements for course Social Data Analysis and Visualization.
+      This page is to represent the work related to assignments for course Social Data Analysis and Visualization.
     </p>
     <p>
       These exercises has been performed by DTU students:
@@ -80,24 +80,24 @@
 
   <section class="main-content">
     <h1>Project Assigment B</h1>
-      <p>As explained in the video above, the following page will look into vehicel collisions in NYC. Additionally we will try to explore where, how and why collisions happen.
+      <p>As explained in the video above, the following page will look into vehicle collisions in NYC. Additionally, we will try to explore where, how and why collisions happen.
       </p>
       <img src="images/crashnyc.jpg" class="center shadow"/>
-      <p>One of our hypothesis is that when; the weather in NYC is bad (e.g. Snowy), there are more collisons. We will investigate if this accually is true, or not. Additionally we want to investigate if there is any perticilar places in NYC are affected by bad weather compared to others.</p>
-      
+      <p>One of our hypothesis is that when; the weather in NYC is bad (e.g. Snowy), there are more collisions. We will investigate if this actually is true, or not. Additionally, we want to investigate if there is any particular places in NYC are affected by bad weather compared to others.</p>
+
       <img src="images/snownyc.jpg" class="center shadow"/>
-    <h2>The Hard Data</h2>
+    <h2>The Cold Hard Truth (Data)</h2>
     <p>
       Our main dataset is the <a target="_blank" href="//data.cityofnewyork.us/Public-Safety/NYPD-Motor-Vehicle-Collisions/h9gi-nx95">NYPD Motor Vehicle Collisions</a>.
-       It contains records for <i>every reported</i> incident in the NYC area. Records are available from July 2012 till today. For each record there there is also specified, where the collision took place, the cause of the collision, injuries, fatalities and more.
+       It contains records for <i>every reported</i> incident in the NYC area. Records are available from July 2012 till today. For each record there is also specified, where the collision took place, the cause of the collision, injuries, fatalities and more.
     </p>
-    <p>The dataset consists of more that:</p>
+    <p>The dataset consists of more than:</p>
     <div class="center huge" ><span id="collisionhero" >769054</span> collision records</div>
-    
+
     <p>
       The secondary dataset used is an extraction of weather conditions for the NYC area. This was pulled from <a href="https://www.wunderground.com/" target="_blank">Weather Underground</a> using their csv service for hourly updates. For each hour, there are measurements of the temperature, visibility, windspeed as well as the overall weather conditions such as Rain, Snow, Clear etc. You can see our scrape from this service <a href="https://cdn.rawgit.com/masve/saav-deliveries/master/project/datasets/weather_data_nyc_kjfk_clean2.csv.zip">here</a>.
     </p>
-    <p>This means that we have more that:</p>
+    <p>This means that we have more than:</p>
     <div class="center huge"><span id="weatherhourhero">32448</span> hours of weather data</div>
     <script>
       "use strict";
@@ -109,15 +109,15 @@
           } else {
              this.start = {val:start};
               this.stop = {val:stop};
-            
+
           }
           this.target = $(elementId);
-          
+
           this.renderAnimation = this.renderAnimation.bind(this);
-          
+
           const monitor = scrollMonitor.create(document.querySelector(elementId));
           monitor.enterViewport(this.renderAnimation);
-          
+
         }
         renderAnimation() {
           $(this.start).animate(this.stop, {
@@ -127,24 +127,24 @@
                 this.target.text(Math.round(e));
               }
           });
-          
+
         }
         //32448
-        
+
       }
       document.addEventListener('DOMContentLoaded', new AnimateNumber('#collisionhero', 769054));
       document.addEventListener('DOMContentLoaded', new AnimateNumber('#weatherhourhero', 32448));
-      
+
     </script>
     <h2>Explainer Notebook</h2>
-    <p>If you want to know, how we extracted all of the information from the two datasets. You can take a look backstage, in our <a href="http://nbviewer.jupyter.org/github/masve/saav-deliveries/blob/master/project/Explainer.ipynb">explainer notebook</a>. But be warned this is advanced stuff, that not all will understand.</p>
+    <p>If you want to know, how we extracted all of the information from the two datasets. You can take a look backstage, in our <a href="http://nbviewer.jupyter.org/github/masve/saav-deliveries/blob/master/project/Explainer.ipynb">explainer notebook</a>.</p>
     <a target="_blank" href="//nbviewer.jupyter.org/github/masve/saav-deliveries/blob/master/project/Explainer.ipynb"><img src="images/backstage.jpg" class="center shadow" style="max-width:300px" /></a>
   </section>
 
   <section class="main-content">
     <h2>Explore Your Daily Communute</h2>
 
-    <p>NYC is a big city. A lot of traffic means a high chance for a collision to occur. Over 500 incidents are reported everyday. Therefore, we are providing an opportunity for you to discover the amount of vehicle collisions that has happened throughout the city in the period 2012-2015. Find out where if you can take a safer route to work!</p>
+    <p>NYC is a big city. A lot of traffic means a high chance for a collision to occur. Over 500 incidents are reported everyday. Therefore, we are providing an opportunity for you to discover the amount of vehicle collisions that has happened throughout the city in the period 2012-2015. See if you can find the safer commute. Go discover!</p>
       <p>The size of each point indicates the accumulated amount of incidents that have happened for that
         intersection. The color <span style="color:red">red</span> shows if there is any fatalities. Click on a
         point to get the numeric values.</p>
@@ -262,7 +262,7 @@
       'use strict';
 
       document.addEventListener(
-        "DOMContentLoaded", 
+        "DOMContentLoaded",
         new BarChart(
           'svg#top10intersections',
           'datasets/pb/intersection_top_10.csv',
@@ -366,9 +366,6 @@
     <blockquote class="twitter-tweet tw-align-center" data-lang="en">
       <p lang="en" dir="ltr">After 2:30 p.m and you&#39;re on the road, we will arrest you <a href="https://twitter.com/NYPDChiefofDept">@NYPDChiefofDept</a>        says</p>&mdash; NYPD NEWS (@NYPDnews) <a href="https://twitter.com/NYPDnews/status/690955566529773568">January 23, 2016</a></blockquote>
     <script async src="//platform.twitter.com/widgets.js" charset="utf-8"></script>
-    <p class="small">
-      Has anyone else caught a cold during spring-time, where it is getting warmer but not warm enough to not wear a jacket?
-    </p>
 
     <p>
       Okay, now that we have confirmed that the frequency of collisions is higher for same conditions relative to Mostly Cloudy.
@@ -396,7 +393,7 @@
       <p><strong><span id="title">Title</span></strong></p>
       <p>Amount:&nbsp;<span id="val"></span></p>
     </div>
-    
+
     <p>
       As it is clear in the chart above. Accidents happening due to a slippery pavement, were as predicted indeed more frequent at light rain and snow.
       This shows that some accidents are sensitive to the weather. However this was the general data. There might be more information hidden here.
@@ -431,20 +428,20 @@
     </p>
     <div class="img-switch-container">
       <img src="images/slipperyHeatmap.png" class="shadow img-switch-primary" alt="Heatmap of slippery pavement accidents"/>
-      <img src="images/slipperyMap.png" class="shadow img-switch-secondary"/>     
+      <img src="images/slipperyMap.png" class="shadow img-switch-secondary"/>
     </div>
     <p>
       As we see in the above heatmap, the spead is very broad. This is infact very similar to what the overall insident spread.
       However looking a the intersections, we can find some interiesting discoveries.
     </p>
     <svg id="slipperyintersection" class="center" style="display:block; width:100%"></svg>
-    
+
     <script>
       'use strict';
-      
+
       function getCrossName(r) {
         if (r['ON STREET NAME'] && r['CROSS STREET NAME']) {
-          return [r['ON STREET NAME'],r['CROSS STREET NAME']].join('/'); 
+          return [r['ON STREET NAME'],r['CROSS STREET NAME']].join('/');
         }
         return r['LOCATION'];
       }
@@ -460,7 +457,7 @@
         })
       );
     </script>
-    
+
   </section>
 
   <!--<section class="main-content">
