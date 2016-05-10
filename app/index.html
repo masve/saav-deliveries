@@ -359,10 +359,16 @@
                   we found out which so you can be more aware in traffic during one of these?</p>
 
                   <p>By combining the Motor Vehicle Collisions dataset with weather data from
-                    <a href="wunderground.com">Weather Underground</a>
+                    <a href="//wunderground.com" target="_blank">Weather Underground</a>
                     we are able to find out which weather condition on average produces the most collisions per hour.
-                    The data data has been normalized with the most common weather condition, Mostly Cloudy.</p>
+                    The data data has been normalized with the most common weather condition, <strong>Mostly Cloudy</strong>.</p>
+                    
                     <svg id="weatherfreq" class="center" style="display:block; width:100%"></svg>
+                    
+                    <div id="weatherfreqtooltip" class="hidden tooltip" style="width:300px">
+                      <p><strong><span id="title">Title</span></strong></p>
+                      <p>Value:&nbsp;<span id="val"></span>%</p>
+                    </div>
 
                     <script>
                     'use strict';
@@ -374,14 +380,15 @@
                         this.xScale = d3.scale.ordinal();
                         this.yScale = d3.scale.linear();
                         svg.style.width = "100%";
-                        this.paddingLeft = (svg.clientWidth / 5);
+                        this.paddingLeft = (svg.clientWidth / 6);
                         this.paddingTop = 30;
-                        this.height = 330;
+                        this.height = 430;
                         this.width = svg.clientWidth;
                         this.bars = this.svg.append('g');
                         this.yAxis = this.svg.append('g');
                         this.xAxis = this.svg.append('g');
                         this.xLabels = [];
+                        this.tooltip = d3.select('div#weatherfreqtooltip');
 
                         this.data = null;
 
@@ -397,7 +404,7 @@
                         this.data = data;
                         // X scale
                         this.xScale = this.xScale.domain(d3.range(_.size(data)))
-                        .rangeRoundBands([0, 300], 0.05);
+                        .rangeRoundBands([0, 400], 0.2);
 
 
                         // Y scale
@@ -409,10 +416,12 @@
 
                         this.renderBars();
                         this.renderAxis();
+                        this.renderLine();
                       }
                       renderBars() {
 
                         const max = d3.max(d3.values(this.data));
+                        const size = d3.values(this.data).length;
 
                         this.bars
                         .selectAll('rect')
@@ -426,12 +435,12 @@
                           'y': (d,i) => (this.xScale(i) + this.paddingTop),
                           'width': 0
                         })
-                        // .on('mouseover', this.renderTooltip.bind(this))
-                        // .on('mouseout', this.hideTooltip.bind(this))
+                        .on('mouseover', this.renderTooltip.bind(this))
+                        .on('mouseout', this.hideTooltip.bind(this))
                         // .on('click', this.sendToMaps.bind(this))
-                        // .transition()
-                        // .duration(2000)
-                        // .delay((d, i) => ((i / this.data.length * 1000) + 10000))
+                        .transition()
+                        .duration(2000)
+                        .delay((d, i) => ((i / size * 1000) + 10000))
                         .attr({
                           'width': d => (Math.abs(this.yScale(0) - this.yScale(d)))
                         })
@@ -457,17 +466,39 @@
                         .attr({
                           'dx': '.8em'
                         });
-                        // debugger;
+                        
+                      }
+                      renderLine() {
                         this.svg.append('line')
                         .attr({
-                          'y1': this.yScale.range()[0]+this.paddingTop,
-                          'y2': this.yScale.range()[1]-this.paddingTop,
+                          'y1': this.yScale.range()[0] + this.paddingTop,
+                          'y2': this.yScale.range()[1] - this.paddingTop,
                           'x1': this.paddingLeft + (Math.abs(this.yScale(0) - this.yScale(this.data['Mostly Cloudy']))),
                           'x2': this.paddingLeft + (Math.abs(this.yScale(0) - this.yScale(this.data['Mostly Cloudy']))),
                           'stroke': 'grey',
                           'stroke-width': '1',
                           'stroke-dasharray': '10, 10'
                         });
+                      }
+                      renderTooltip(aWeatherPoint, i) {
+                        
+                        this.tooltip
+                        .classed('hidden', false)
+                        .transition()
+                        .style('left', `${d3.event.pageX}px`)
+                        .style('top', `${d3.event.pageY}px`)
+                        .style('opacity', 1)
+                        .duration(100);
+
+                        this.tooltip.select('#title').text(this.xLabels[i]);
+                        this.tooltip.select('#val').text(Math.round(aWeatherPoint * 100) / 100);
+                        
+                      }
+                      hideTooltip() {
+                        this.tooltip
+                        .transition()
+                        .duration(150)
+                        .style('opacity', 0);
                       }
                     }
 
@@ -514,6 +545,11 @@
                     </p>
 
                     <svg id="slipperypavement" class="center" style="display:block; width:100%"></svg>
+                    
+                    <div id="splipperypavementtooltip" class="hidden tooltip" style="width:300px">
+                      <p><strong><span id="title">Title</span></strong></p>
+                      <p>Amount:&nbsp;<span id="val"></span></p>
+                    </div>
 
                     <script>
                     'use strict';
@@ -525,14 +561,15 @@
                         this.xScale = d3.scale.ordinal();
                         this.yScale = d3.scale.linear();
                         svg.style.width = "100%";
-                        this.paddingLeft = (svg.clientWidth / 5);
+                        this.paddingLeft = (svg.clientWidth / 6);
                         this.paddingTop = 30;
-                        this.height = 330;
+                        this.height = 430;
                         this.width = svg.clientWidth;
                         this.bars = this.svg.append('g');
                         this.yAxis = this.svg.append('g');
                         this.xAxis = this.svg.append('g');
                         this.xLabels = [];
+                        this.tooltip = d3.select('#splipperypavementtooltip');
 
                         this.data = null;
 
@@ -547,14 +584,13 @@
                       onDataLoaded(data) {
                         this.data = data;
                         // X scale
-                        this.xScale = this.xScale.domain(d3.range(_.size(data)))
-                        .rangeRoundBands([0, 300], 0.05);
+                        this.xScale = this.xScale.domain(d3.range(_.size(data))).rangeRoundBands([0, 400], 0.05);
 
 
                         // Y scale
                         this.yScale = this.yScale
-                        .domain([0, d3.max(d3.values(this.data))])
-                        .range([0, this.width - (2*this.paddingLeft) - 20]);
+                                          .domain([0, d3.max(d3.values(this.data))])
+                                          .range([0, this.width - (2*this.paddingLeft) - 20]);
 
                         this.xLabels = d3.keys(this.data);
 
@@ -564,6 +600,7 @@
                       renderBars() {
 
                         const max = d3.max(d3.values(this.data));
+                        const size = d3.values(this.data).length;
 
                         this.bars
                         .selectAll('rect')
@@ -577,12 +614,12 @@
                           'y': (d,i) => (this.xScale(i) + this.paddingTop),
                           'width': 0
                         })
-                        // .on('mouseover', this.renderTooltip.bind(this))
-                        // .on('mouseout', this.hideTooltip.bind(this))
+                        .on('mouseover', this.renderTooltip.bind(this))
+                        .on('mouseout', this.hideTooltip.bind(this))
                         // .on('click', this.sendToMaps.bind(this))
-                        // .transition()
-                        // .duration(2000)
-                        // .delay((d, i) => ((i / this.data.length * 1000) + 10000))
+                        .transition()
+                        .duration(2000)
+                        .delay((d, i) => ((i / size * 1000) + 10000))
                         .attr({
                           'width': d => (Math.abs(this.yScale(0) - this.yScale(d)))
                         })
@@ -608,6 +645,26 @@
                         .attr({
                           'dx': '.8em'
                         });
+                      }
+                      renderTooltip(aSlip, i) {
+                        
+                        this.tooltip
+                        .classed('hidden', false)
+                        .transition()
+                        .style('left', `${d3.event.pageX}px`)
+                        .style('top', `${d3.event.pageY}px`)
+                        .style('opacity', 1)
+                        .duration(100);
+
+                        this.tooltip.select('#title').text(this.xLabels[i]);
+                        this.tooltip.select('#val').text(aSlip);
+                        
+                      }
+                      hideTooltip() {
+                        this.tooltip
+                        .transition()
+                        .duration(150)
+                        .style('opacity', 0);
                       }
                     }
 
