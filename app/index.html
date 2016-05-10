@@ -51,8 +51,8 @@
     <h1 class="project-name">Social Data Analysis and Visualization 2016</h1>
     <h2 class="project-tagline">Use the buttons to navigate the assignments</h2>
     <a href="https://github.com/masve/saav-deliveries" target="_blank" class="btn">View on GitHub</a>
-    <a href="/assigment2.html" class="btn">Assignment 2</a>
-    <a href="/" class="btn">Project Assignment A &amp; B</a>
+    <a href="/saav-deliveries/assigment2.html" class="btn">Assignment 2</a>
+    <a href="/saav-deliveries" class="btn">Project Assignment A &amp; B</a>
   </section>
 
   <section id="intro" class="main-content">
@@ -74,12 +74,13 @@
     <h1>Project Assignment A</h1>
 
     <p>Here we have a small introduction video, that shows the idea behind of data analysis.</p>
-    <iframe src="http://www.youtube.com/embed/s6K-tIxNXtA" width="100%" height="400px"></iframe>
+    <iframe src="//www.youtube.com/embed/s6K-tIxNXtA" width="100%" height="400px"></iframe>
 
   </section>
 
   <section class="main-content">
     <h1>Project Assigment B</h1>
+
       <p>As explained in the video above, the following page will look into vehicle collisions in NYC. Additionally, we will try to explore where, how and why collisions happen.
       </p>
       <img src="images/crashnyc.jpg" class="center shadow"/>
@@ -121,7 +122,7 @@
         }
         renderAnimation() {
           $(this.start).animate(this.stop, {
-              duration: 7000,
+              duration: 5000,
               easing: 'easeInOutQuart',
               step: (e) => {
                 this.target.text(Math.round(e));
@@ -436,6 +437,21 @@
     </p>
     <svg id="slipperyintersection" class="center" style="display:block; width:100%"></svg>
 
+    
+    <p>As shown above we have some intersections, that are perticular prone to accidents, with slippery pavements.</p>
+    <p>But why do people have accidents here? Let's take a look at the intersections thought the wonders of Street view:</p>
+    
+    <h4 class="texttt">RICHMOND HILL ROAD/OLD MILL ROAD</h4>
+    <div class="img-switch-container">
+      <img src="images/streetview/Richmond_Hill_Rd.png" class="shadow img-switch-primary">
+      <img src="images/streetview/Richmond_Hill_Rd_map.png" class="shadow img-switch-secondary">
+    </div>
+    <p>As we can see on the image above. The top intersection is just by the church of St. Andrew. This can be no of coincidence!</p>
+    <p>As it should be visible from the image, this intersection is down hill, and with a sharp turn. We belive that this is why there are so many accidents here.
+      Lokking further up the road, it is clear that the city counsil have tried to take some actions to increase the safety. However, this seems not to be sufficient.
+      We would recoment that the speed limit was lowered.
+    </p>
+
     <script>
       'use strict';
 
@@ -453,7 +469,12 @@
           parseFun: (r => ({'location': r['LOCATION'], 'value': +r['COUNT'], 'cross': getCrossName(r)})),
           labels: (r => r.cross),
           value: (r => r.value),
-          cutAt: 10
+          cutAt: 10,
+          onClick: (r) => {
+              const [lat, lon] = _.trim(r.location, ['(', ')']).split(',');
+              const url = `http://maps.google.com/maps?z=12&t=t&q=loc:${lat.trim()}+${lon.trim()}`;
+              window.open(url, '_blank').focus();
+          }
         })
       );
     </script>
