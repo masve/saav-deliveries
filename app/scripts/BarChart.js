@@ -4,7 +4,7 @@ class BarChart {
     constructor(svgId, dataPath, opt) {
 
         const svg = document.querySelector(svgId);
-
+        this.monitorElm = svg;
         this.svg = d3.select(svgId);
         this.isJson = dataPath.endsWith('.json');
 
@@ -67,11 +67,22 @@ class BarChart {
 
         this.xLabels = this.isJson ? d3.keys(this.data) : this.data.map(this.getLabel);
 
-        this.renderBars();
-        this.renderAxis();
-        if (this.line) this.renderLine();
+        if (this.monitorElm) {
+            const m = scrollMonitor.create(this.monitorElm);
+            m.enterViewport(() => {
+                
+                if (this.hasRendered) return;
+                
+                this.renderBars();
+                this.renderAxis();
+                if (this.line) this.renderLine();
+                
+            });
+        }
+
     }
     renderBars() {
+        this.hasRendered = true;
 
         const max = d3.max(d3.values(this.data).map(this.getValue));
         const size = _.size(this.data);
@@ -94,7 +105,7 @@ class BarChart {
             .on('click', this.onClick)
             .transition()
             .duration(2000)
-            .delay((d, i) => ((i / size * 1000) + 10000))
+            .delay((d, i) => ((i / size * 1000)))
             .attr({
                 'width': d => (Math.abs(this.yScale(0) - this.yScale(this.getValue(d))))
             })
@@ -136,7 +147,6 @@ class BarChart {
                 'stroke-dasharray': '10, 10'
             })
             .transition()
-            .delay(10000)
             .duration(2000)
             .attr({
                 'y1': this.yScale.range()[0] + this.paddingTop,
