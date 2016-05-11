@@ -39,8 +39,8 @@ class ClusterVisualisation {
         this.monitorElm.style.height = `${this.height}px`;
         this.monitorElm.style.width = '100%';
         this.width = this.monitorElm.clientWidth;
-        
-        
+
+
         this.scale = opt.scale || 75000;
         this.scale = this.width * 90;
         this.center = opt.center && _.isArray(opt.center) ? opt.center : [-73.97768078566659, 40.70550253832363];
@@ -50,7 +50,7 @@ class ClusterVisualisation {
             .center(this.center)
             .translate([this.width / 2, this.height / 2])
 
-         this.predictionSwitcher = new PredictionSwitcher(2);
+        this.predictionSwitcher = new PredictionSwitcher(2);
 
         // Bind this to all the functions to keep the ref.
         this.onDataLoaded = this.onDataLoaded.bind(this);
@@ -110,12 +110,12 @@ class ClusterVisualisation {
                     this.clusters
                         .selectAll('path')
                         .remove();
-                        
+
                     this.enterCluster();
                 }
             })
-            
-            
+
+
     }
     enterCluster() {
         const features = topojson.feature(this.selectedTopology, d3.values(this.selectedTopology.objects)[0]).features;
@@ -168,11 +168,13 @@ class ClusterVisualisation {
             .append('button')
             .style({
                 'visibility': 'hidden',
-                'opacity': '0'
+                'opacity': '0',
+                'flex-grow': '1'
             })
+            .classed('btn btncolor', true)
             .on('click', this.onClick)
             .on('touch', this.onClick)
-            .text((t) => (`Show cluster for k=${t.arcs.length}`))
+            .text((t) => (`K=${t.arcs.length}`))
 
 
         this.buttonContainer
@@ -185,6 +187,7 @@ class ClusterVisualisation {
             .style('opacity', '1.0');
     }
     onClick(topolegy) {
+        if (this.selectedTopology === topolegy) return;
         this.selectedTopology = topolegy;
         this.predictionSwitcher.updatePrediction(topolegy.arcs.length);
         this.renderClusters();
@@ -234,36 +237,25 @@ class Districts {
 
 class PredictionSwitcher {
     constructor(initialK) {
-        
+
         this.predictionResults = {
-            2: 'BLa bla bla',
-            5: 'hehehe',
-            10: 'vnuhjrnuvnuj',
-            20: 'rfnjfnj',
-            30: 'frnjfrnjfrfnjrf',
-            50: 'rfmkffemkfmkfrjrfjnnjffff'
+            2: { val: 0.026108 },
+            5: { val: 0.056988 },
+            10: { val: 0.103698 },
+            20: { val: 0.179962 },
+            30: { val: 0.244022 },
+            50: { val: 0.357127 }
         }
-        
+        this.current = this.predictionResults[initialK];
+        this.target = $('#predictiontext');
+
         this.updatePrediction = this.updatePrediction.bind(this);
-        
-        this.target = d3.select('div#predictiontext');
-        this.target
-            .append('p')
-            .text(this.predictionResults[initialK])    
+
+        this.updatePrediction(initialK);
     }
     updatePrediction(k) {
-        this.target
-            .selectAll('p')
-            .transition()
-            .duration(500)
-            .style('opacity', '0')
-            
-        this.target
-            .selectAll('p')
-            .transition()
-            .duration(500)
-            .delay(500)
-            .style('opacity', '1')
-            .text(this.predictionResults[k])
+        const t = this.predictionResults[k]
+        this.target.text(t.val);
+        this.current = t;
     }
 }
