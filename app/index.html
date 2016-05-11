@@ -20,16 +20,19 @@
   <script type="text/javascript" src="bower_components/d3/d3.min.js"></script>
   <script type="text/javascript" src="bower_components/lodash/lodash.js"></script>
   <script type="text/javascript" src="bower_components/jquery/dist/jquery.min.js"></script>
+  <script type="text/javascript" src="bower_components/jquery-ui/jquery-ui.min.js"></script>
   <script type="text/javascript" src="bower_components/topojson/topojson.min.js"></script>
   <script type="text/javascript" src="bower_components/leaflet/dist/leaflet.js"></script>
+  <script type="text/javascript" src="bower_components/scrollmonitor/scrollMonitor.js"></script>
 
   <!-- CDNs -->
 
   <!-- our scripts -->
   <script type="text/javascript" src="scripts/knn.js"></script>
+  <script type="text/javascript" src="scripts/BarChart.js" async></script>
 
   <script>
-  //Check for ES 6 support, and alert user if his browser does not support it.
+    //Check for ES 6 support, and alert user if his browser does not support it.
   (function(document) {
     "use strict";
     try {
@@ -48,13 +51,13 @@
     <h1 class="project-name">Social Data Analysis and Visualization 2016</h1>
     <h2 class="project-tagline">Use the buttons to navigate the assignments</h2>
     <a href="https://github.com/masve/saav-deliveries" target="_blank" class="btn">View on GitHub</a>
-    <a href="/assigment2.html" class="btn">Assignment 2</a>
-    <a href="/" class="btn">Project Assignment A &amp; B</a>
+    <a href="/saav-deliveries/assigment2.html" class="btn">Assignment 2</a>
+    <a href="/saav-deliveries" class="btn">Project Assignment A &amp; B</a>
   </section>
 
   <section id="intro" class="main-content">
     <p>
-      This page is to represent the work related to assignements for course Social Data Analysis and Visualization.
+      This page is to represent the work related to assignments for course Social Data Analysis and Visualization.
     </p>
     <p>
       These exercises has been performed by DTU students:
@@ -71,14 +74,78 @@
     <h1>Project Assignment A</h1>
 
     <p>Here we have a small introduction video, that shows the idea behind of data analysis.</p>
-    <iframe src="http://www.youtube.com/embed/s6K-tIxNXtA" width="100%" height="400px"></iframe>
+    <iframe src="//www.youtube.com/embed/s6K-tIxNXtA" width="100%" height="400px"></iframe>
 
   </section>
 
+  <section class="main-content">
+    <h1>Project Assigment B</h1>
+
+      <p>As explained in the video above, the following page will look into vehicle collisions in NYC. Additionally, we will try to explore where, how and why collisions happen.
+      </p>
+      <img src="images/crashnyc.jpg" class="center shadow"/>
+      <p>One of our hypothesis is that when; the weather in NYC is bad (e.g. Snowy), there are more collisions. We will investigate if this actually is true, or not. Additionally, we want to investigate if there is any particular places in NYC are affected by bad weather compared to others.</p>
+
+      <img src="images/snownyc.jpg" class="center shadow"/>
+    <h2>The Cold Hard Truth (Data)</h2>
+    <p>
+      Our main dataset is the <a target="_blank" href="//data.cityofnewyork.us/Public-Safety/NYPD-Motor-Vehicle-Collisions/h9gi-nx95">NYPD Motor Vehicle Collisions</a>.
+       It contains records for <i>every reported</i> incident in the NYC area. Records are available from July 2012 till today. For each record there is also specified, where the collision took place, the cause of the collision, injuries, fatalities and more.
+    </p>
+    <p>The dataset consists of more than;</p>
+    <div class="center huge" ><span id="collisionhero" >769054</span> collision records</div>
+
+    <p>
+      The secondary dataset used is an extraction of weather conditions for the NYC area. This was pulled from <a href="https://www.wunderground.com/" target="_blank">Weather Underground</a> using their csv service for hourly updates. For each hour, there are measurements of the temperature, visibility, windspeed as well as the overall weather conditions such as Rain, Snow, Clear etc. You can see our scrape from this service <a href="https://cdn.rawgit.com/masve/saav-deliveries/master/project/datasets/weather_data_nyc_kjfk_clean2.csv.zip">here</a>.
+    </p>
+    <p>This means that we have more than;</p>
+    <div class="center huge"><span id="weatherhourhero">32448</span> hours of weather data</div>
+    <script>
+      "use strict";
+      class AnimateNumber {
+        constructor(elementId, start, stop) {
+          if (stop == undefined) {
+            this.stop = {val:start};
+            this.start = {val:0};
+          } else {
+             this.start = {val:start};
+              this.stop = {val:stop};
+
+          }
+          this.target = $(elementId);
+
+          this.renderAnimation = this.renderAnimation.bind(this);
+
+          const monitor = scrollMonitor.create(document.querySelector(elementId));
+          monitor.enterViewport(this.renderAnimation);
+
+        }
+        renderAnimation() {
+          $(this.start).animate(this.stop, {
+              duration: 5000,
+              easing: 'easeInOutQuart',
+              step: (e) => {
+                this.target.text(Math.round(e));
+              }
+          });
+
+        }
+        //32448
+
+      }
+      document.addEventListener('DOMContentLoaded', new AnimateNumber('#collisionhero', 769054));
+      document.addEventListener('DOMContentLoaded', new AnimateNumber('#weatherhourhero', 32448));
+
+    </script>
+    <h2>Explainer Notebook</h2>
+    <p>If you want to know, how we extracted all of the information from the two datasets. You can take a look backstage, in our <a href="http://nbviewer.jupyter.org/github/masve/saav-deliveries/blob/master/project/Explainer.ipynb">explainer notebook</a>.</p>
+    <a target="_blank" href="//nbviewer.jupyter.org/github/masve/saav-deliveries/blob/master/project/Explainer.ipynb"><img src="images/backstage.jpg" class="center shadow" style="max-width:300px" /></a>
+  </section>
 
   <section class="main-content">
     <h2>Explore Your Daily Communute</h2>
-    <p>NYC is a big city. A lot of traffic means a high chance for a collision to occur. Over 500 incidents are reported everyday. Therefore, we are providing an opportunity for you to discover the amount of vehicle collisions that has happened throughout the city in the period 2012-2015. Find out where if you can take a safer route to work!</p>
+
+    <p>NYC is a big city. A lot of traffic means a high chance for a collision to occur. Over 500 incidents are reported everyday. Therefore, we are providing an opportunity for you to discover the amount of vehicle collisions that has happened throughout the city in the period 2012-2015. See if you can find the safer commute. Go discover!</p>
       <p>The size of each point indicates the accumulated amount of incidents that have happened for that
         intersection. The color <span style="color:red">red</span> shows if there is any fatalities. Click on a
         point to get the numeric values.</p>
@@ -171,509 +238,265 @@
 
             document.addEventListener('DOMContentLoaded', new Intersection('intersections'));
           })();
-          </script>
+    </script>
 
-        </section>
+  </section>
 
-        <section class="main-content">
+  <section class="main-content">
 
-          <h2>A Closer Look</h2>
-          <p>This is all good. Looking at the worst offenders regarding the number of collisions, can we
-            find out why there are worse than the others? Is there any underlying reason for this?
-          </p>
+    <h2>A Closer Look</h2>
+    <p>This is all good. Looking at the worst offenders regarding the number of collisions, can we find out why there are worse
+      than the others? Is there any underlying reason for this?
+    </p>
 
-          <p>Let's begin by locating the top 10 intersections with the most collisions.</p>
+    <p>Let's begin by locating the top 10 intersections with the most collisions (Click a bar to view the intersections).</p>
 
-          <svg id="top10intersections" class="center" style="display:block; width:100%"></svg>
-          <div id="top10intersectionstooltip" class="hidden tooltip" style="width:400px">
-            <p><strong><span id="title">Title</span></strong></p>
-            <p>Location:&nbsp;<span id="location">100</span></p>
-            <p>Collisions:&nbsp;<span id="col"></span></p>
-            <p><i>Click to view</i></p>
-          </div>
+    <svg id="top10intersections" class="center" style="display:block; width:100%"></svg>
+    <div id="top10intersectionstooltip" class="hidden tooltip" style="width:400px">
+      <p><strong><span id="title">Title</span></strong></p>
+      <p>Location:&nbsp;<span id="location">100</span></p>
+      <p>Collisions:&nbsp;<span id="col"></span></p>
+      <p><i>Click to view</i></p>
+    </div>
 
-          <script>
-          'use strict';
+    <script>
+      'use strict';
 
-          class Top10 {
-            constructor(svg) {
-              this.svg = d3.select(svg);
-              this.cvsPath = 'datasets/pb/intersection_top_10.csv';
-              this.xScale = d3.scale.ordinal();
-              this.yScale = d3.scale.linear();
-              svg.style.width = "100%";
-              this.paddingLeft = (svg.clientWidth / 5);
-              this.paddingTop = 30;
-              this.height = 330;
-              this.width = svg.clientWidth;
-              this.bars = this.svg.append('g');
-              this.yAxis = this.svg.append('g');
-              this.xAxis = this.svg.append('g');
-              this.xLabels = [];
-              this.tooltip = d3.select('#top10intersectionstooltip')
-
-              this.data = null;
-
-              svg.style.height = this.height + 100;
-              svg.style['padding-left'] = this.paddingLeft;
-
-              d3.csv(
-                this.cvsPath,
-                (r) => ({collisions: +r['COLLISIONS'], name: `${r['ON STREET NAME']} / ${r['CROSS STREET NAME']}`, location: r['LOCATION']}),
-                this.onDataLoaded.bind(this)
-              );
-            }
-            onDataLoaded(data) {
-              this.data = data;
-              // X scale
-              this.xScale = this.xScale.domain(d3.range(data.length))
-              .rangeRoundBands([0, 300], 0.05);
-
-              // Y scale
-              this.yScale = this.yScale
-              .domain([0, d3.max(this.data, d => d.collisions)])
-              .range([0, this.width - (2*this.paddingLeft) - 20]);
-
-              this.xLabels = data.map(d => d.name);
-
-              this.render();
-            }
-            render() {
-
-              const max = d3.max(this.data, d => d.collisions);
-
-              this.bars
-              .selectAll('rect')
-              .data(this.data)
-              .enter()
-              .append('rect')
-              .attr({
-                'x': (d, i) => (this.paddingLeft),
-                'height': this.xScale.rangeBand(),
-                'fill': 'cornflowerblue',
-                'y': (d,i) => (this.xScale(i) + this.paddingTop),
-                'width': 0
-              })
-              .on('mouseover', this.renderTooltip.bind(this))
-              .on('mouseout', this.hideTooltip.bind(this))
-              .on('click', this.sendToMaps.bind(this))
-              .transition()
-              .duration(2000)
-              .delay((d, i) => ((i / this.data.length * 1000) + 10000))
-              .attr({
-                'width': d => (Math.abs(this.yScale(0) - this.yScale(d.collisions)))
-              })
-
-
-              this.renderAxis();
-            }
-            renderTooltip(aCollision) {
-
-              this.tooltip
-              .classed('hidden', false)
-              .transition()
-              .style('left', `${d3.event.pageX}px`)
-              .style('top', `${d3.event.pageY}px`)
-              .style('opacity', 1)
-              .duration(100);
-
-              this.tooltip.select('#title').text(aCollision.name);
-              this.tooltip.select('#col').text(aCollision.collisions);
-              this.tooltip.select("#location").text(aCollision.location);
-            }
-            hideTooltip() {
-              this.tooltip
-              .transition()
-              .duration(150)
-              .style('opacity', 0);
-            }
-            renderAxis() {
-              // Define axes
-
-              let xAxis = d3.svg.axis().scale(this.xScale).orient('left').tickFormat((d) => this.xLabels[d]).tickValues(d3.range(10));
-              let yAxis = d3.svg.axis().scale(this.yScale).orient('bottom').ticks(11);
-
-              // Add y axis to histogram
-              this.xAxis.attr({
-                'class': 'axis',
-                'transform': `translate(${this.paddingLeft}, ${this.paddingTop})`
-              }).call(xAxis);
-
-              this.yAxis.attr({
-                'class': 'axis',
-                'transform': `translate(${this.paddingLeft}, ${this.height})`
-              })
-              .call(yAxis)
-              .selectAll("text")
-              .style("text-anchor", "end")
-              .attr({
-                'dx': '.8em'
-              });
-
-            }
-            sendToMaps(aCollision) {
+      document.addEventListener(
+        "DOMContentLoaded",
+        new BarChart(
+          'svg#top10intersections',
+          'datasets/pb/intersection_top_10.csv',
+          {
+            value: (r => r.collisions),
+            tooltip: {
+              id: '#top10intersectionstooltip',
+              render: (tooltip, aCollision) => {
+                tooltip.select('#title').text(aCollision.name);
+                tooltip.select('#col').text(aCollision.collisions);
+                tooltip.select("#location").text(aCollision.location);
+              }
+            },
+            onClick: (aCollision) => {
               const [lat, lon] = _.trim(aCollision.location, ['(', ')']).split(',');
-              const url = `http://maps.google.com/maps?z=12&t=t&q=loc:${lat.trim()}+${lon.trim()}`
+              const url = `http://maps.google.com/maps?z=12&t=t&q=loc:${lat.trim()}+${lon.trim()}`;
               window.open(url, '_blank').focus();
-            }
+            },
+            labels: (r => r.name),
+            paddingLeft: 5,
+            parseFun: ((r) => ({collisions: +r['COLLISIONS'], name: `${r['ON STREET NAME']} / ${r['CROSS STREET NAME']}`, location: r['LOCATION']}))
           }
+        )
+      );
+    </script>
 
+    <p>By hovering over each bar in the top 10 bar chart. We can find that the intersection Tillary Street / Flatbush Avenue
+      Extension is the <i>most dangerous</i> intesection - by some margin - based on the 585 collisions happening.</p>
 
+    <p>For now, we can only guess, but clicking on the <span class="texttt">Tillary Street / Flatbush Avenue Extension</span> bar, or looking below one could assume that the intersection is the perfect storm. The intersection is right before
+      a highway access/exit ramp and extends into Manhattan by the Manhattan Bridge.</p>
 
-
-          document.addEventListener("DOMContentLoaded", new Top10(document.querySelector('svg#top10intersections')));
-          </script>
-
-          <p>By hovering over each bar in the top 10 bar chart. We can find that the intersection
-            Tillary Street / Flatbush Avenue Extension is the <i>most dangerous</i> intesection - by some margin - based
-            on the 585 collisions happening.</p>
-
-            <p>For now, we can only guess, but clicking on the Tillary Street / Flatbush Avenue Extension bar, or
-              looking below one could assume that the intersection is the perfect storm. The intersection is
-              right before a highway access/exit ramp and extends into Manhattan by the Manhattan Bridge.</p>
-
-              <!-- <h4>TILLARY STREET / FLATBUSH AVENUE EXTENSION</h4>
+    <!-- <h4>TILLARY STREET / FLATBUSH AVENUE EXTENSION</h4>
               <img alt="Flatbush Ave" src="images/streetview/Flatbush_Ave.png" />
               <h4>EAST 59 STREET / 2 AVENUE</h4>
               <img alt="Flatbush Ave" src="images/streetview/EAST59STREET.png" /> -->
 
-              <h4>TILLARY STREET / FLATBUSH AVENUE EXTENSION</h4>
-              <div id="Flatbush" class="img-switch-container">
-                <img alt="Flatbush Ave" data-img="primary" src="images/streetview/Flatbush_Ave.png" class="img-switch-primary shadow"/>
-                <img alt="Flatbush Ave" data-img="secondary" class="shadow img-switch-secondary" src="images/streetview/Flatbush_Ave_map.png"/>
-              </div>
-              <!-- <h4>EAST 59 STREET / 2 AVENUE</h4>
+    <h4>TILLARY STREET / FLATBUSH AVENUE EXTENSION</h4>
+    <div id="Flatbush" class="img-switch-container">
+      <img alt="Flatbush Ave" data-img="primary" src="images/streetview/Flatbush_Ave.png" class="img-switch-primary shadow" />
+      <img alt="Flatbush Ave" data-img="secondary" class="shadow img-switch-secondary" src="images/streetview/Flatbush_Ave_map.png"/>
+    </div>
+    <!-- <h4>EAST 59 STREET / 2 AVENUE</h4>
               <img alt="Flatbush Ave" src="images/streetview/EAST59STREET.png"/> -->
 
-              <p>What we see is in the top 10. Is that most of the intersections have a few things in common; they are next to
-                a highway access/exit ramp or one block from one.</p>
-              </section>
-              <section class="main-content">
+    <p>What we see is in the top 10. Is that most of the intersections have a few things in common; they are next to a highway
+      access/exit ramp or one block from one.</p>
+    <p>This means that there are a right thouht put of cars, every day. Resulting in the high amount of car collisions.</p>
+  </section>
 
-              </section>
+  <section class="main-content">
+    <h2>Traffic and Weather in New York City</h2>
+    <p>We all assume that weather has a big impact on the traffic anywhere. Collisions are far more likely to happen in bad
+      weather. So what is bad weather really? Is there any condition that is whose than others? And if so can we found out
+      which so you can be more aware in traffic during one of these?</p>
 
-              <section class="main-content">
-                <h2>Traffic and Weather in New York City</h2>
-                <p>We all assume that weather has a big impact on the traffic anywhere. Collisions are far more likely to happen
-                  in bad weather. So what is bad weather really? Is there any condition that is whose than others? And if so can
-                  we found out which so you can be more aware in traffic during one of these?</p>
+    <p>By combining the Motor Vehicle Collisions dataset with weather data from
+      <a href="//wunderground.com" target="_blank">Weather Underground</a> we are able to find out which weather condition
+      on average produces the most collisions per hour. The data data has been normalized with the most common weather condition,
+      <strong>Mostly Cloudy</strong>.</p>
 
-                  <p>By combining the Motor Vehicle Collisions dataset with weather data from
-                    <a href="//wunderground.com" target="_blank">Weather Underground</a>
-                    we are able to find out which weather condition on average produces the most collisions per hour.
-                    The data data has been normalized with the most common weather condition, <strong>Mostly Cloudy</strong>.</p>
-                    
-                    <svg id="weatherfreq" class="center" style="display:block; width:100%"></svg>
-                    
-                    <div id="weatherfreqtooltip" class="hidden tooltip" style="width:300px">
-                      <p><strong><span id="title">Title</span></strong></p>
-                      <p>Value:&nbsp;<span id="val"></span>%</p>
-                    </div>
+    <svg id="weatherfreq" class="center" style="display:block; width:100%"></svg>
 
-                    <script>
-                    'use strict';
+    <div id="weatherfreqtooltip" class="hidden tooltip" style="width:300px">
+      <p><strong><span id="title">Title</span></strong></p>
+      <p>Value:&nbsp;<span id="val"></span>%</p>
+    </div>
 
-                    class WeatherFreq {
-                      constructor(svg) {
-                        this.svg = d3.select(svg);
-                        this.jsonPath = 'datasets/pb/freq_weather.json';
-                        this.xScale = d3.scale.ordinal();
-                        this.yScale = d3.scale.linear();
-                        svg.style.width = "100%";
-                        this.paddingLeft = (svg.clientWidth / 6);
-                        this.paddingTop = 30;
-                        this.height = 430;
-                        this.width = svg.clientWidth;
-                        this.bars = this.svg.append('g');
-                        this.yAxis = this.svg.append('g');
-                        this.xAxis = this.svg.append('g');
-                        this.xLabels = [];
-                        this.tooltip = d3.select('div#weatherfreqtooltip');
+    <script>
+      'use strict';
 
-                        this.data = null;
+      document.addEventListener("DOMContentLoaded", new BarChart('svg#weatherfreq','datasets/pb/freq_weather.json', {
+        value: (r => r),
+        tooltip: {
+          id: 'div#weatherfreqtooltip',
+          render: (tooltip, weatherPoint, name) => {
+            tooltip.select('#title').text(name);
+            tooltip.select('#val').text(Math.round(weatherPoint * 100) / 100);
+          },
+        },
+        line: { x: ((data) => data['Mostly Cloudy'])}
+      }));
+    </script>
 
-                        svg.style.height = this.height + 30;
-                        svg.style['padding-left'] = this.paddingLeft;
+    <p>
+      From the visualization we see a clear uptick in the collision frequency <i>rainy</i> and <i>snowy</i> conditions. Up
+      to 60%, more collisions compared to Mostly Cloudy conditions. In completely Clear weather seems to hover around 40%
+      less. It does however also raises some questions. Why are the conditions Blowing Snow and Heavy Snow so far down the
+      list?
+    </p>
 
-                        d3.json(
-                          this.jsonPath,
-                          this.onDataLoaded.bind(this)
-                        )
-                      }
-                      onDataLoaded(data) {
-                        this.data = data;
-                        // X scale
-                        this.xScale = this.xScale.domain(d3.range(_.size(data)))
-                        .rangeRoundBands([0, 400], 0.2);
+    <p>
+      In early <a href="https://en.wikipedia.org/wiki/January_2015_North_American_blizzard" target="_blank">2015</a> and <a href="https://en.wikipedia.org/wiki/January_2016_North_American_blizzard" target="_blank">2016</a>, NYC experienced two blizzards. In both cases, NYPD issued <b>Travel Bans</b> meaning that only emergency
+      vehicles were allowed on the roads. This could be a tell in why we in the very bad weather we do not see the uptick
+      in collision frequency in very bad weather.
+    </p>
+    <blockquote class="twitter-tweet tw-align-center" data-lang="en">
+      <p lang="en" dir="ltr">At 11pm tonight, streets will only be available to emergency vehicles. <a href="https://twitter.com/hashtag/SafeNYC?src=hash">#SafeNYC</a></p>&mdash;
+      NYPD NEWS (@NYPDnews) <a href="https://twitter.com/NYPDnews/status/559779586603769857">January 26, 2015</a></blockquote>
+    <script async src="//platform.twitter.com/widgets.js" charset="utf-8"></script>
+    <blockquote class="twitter-tweet tw-align-center" data-lang="en">
+      <p lang="en" dir="ltr">After 2:30 p.m and you&#39;re on the road, we will arrest you <a href="https://twitter.com/NYPDChiefofDept">@NYPDChiefofDept</a>        says</p>&mdash; NYPD NEWS (@NYPDnews) <a href="https://twitter.com/NYPDnews/status/690955566529773568">January 23, 2016</a></blockquote>
+    <script async src="//platform.twitter.com/widgets.js" charset="utf-8"></script>
 
+    <p>
+      Okay, now that we have confirmed that the frequency of collisions is higher for same conditions relative to Mostly Cloudy.
+      Can we find any causes in the Motor Vehicle Collisions dataset that might have been affected by the weather conditions?
 
-                        // Y scale
-                        this.yScale = this.yScale
-                        .domain([0, d3.max(d3.values(this.data))])
-                        .range([0, this.width - (2*this.paddingLeft) - 20]);
+      <ul class="texttt">
+        <li>
+          Accidents caused by Pavement Slippery: 8426
+        </li>
+        <li>
+          Accidents caused by Glare: 1491
+        </li>
+        <li>
+          Accidents caused by Pavement Defective: 889
+        </li>
+      </ul>
 
-                        this.xLabels = d3.keys(this.data);
+      There seems to be a lot of collisions caused by slippery pavement. Let's look at the weather conditions for those collisions
+      and see if they match what we have already found.
+    </p>
 
-                        this.renderBars();
-                        this.renderAxis();
-                        this.renderLine();
-                      }
-                      renderBars() {
+    <svg id="slipperypavement" class="center" style="display:block; width:100%"></svg>
 
-                        const max = d3.max(d3.values(this.data));
-                        const size = d3.values(this.data).length;
+    <div id="splipperypavementtooltip" class="hidden tooltip" style="width:300px">
+      <p><strong><span id="title">Title</span></strong></p>
+      <p>Amount:&nbsp;<span id="val"></span></p>
+    </div>
 
-                        this.bars
-                        .selectAll('rect')
-                        .data(d3.values(this.data))
-                        .enter()
-                        .append('rect')
-                        .attr({
-                          'x': (d, i) => (this.paddingLeft),
-                          'height': this.xScale.rangeBand(),
-                          'fill': 'cornflowerblue',
-                          'y': (d,i) => (this.xScale(i) + this.paddingTop),
-                          'width': 0
-                        })
-                        .on('mouseover', this.renderTooltip.bind(this))
-                        .on('mouseout', this.hideTooltip.bind(this))
-                        // .on('click', this.sendToMaps.bind(this))
-                        .transition()
-                        .duration(2000)
-                        .delay((d, i) => ((i / size * 1000) + 10000))
-                        .attr({
-                          'width': d => (Math.abs(this.yScale(0) - this.yScale(d)))
-                        })
-                      }
-                      renderAxis() {
-                        // Define axes
-                        let xAxis = d3.svg.axis().scale(this.xScale).orient('left').tickFormat((d) => this.xLabels[d]);
-                        let yAxis = d3.svg.axis().scale(this.yScale).orient('bottom').ticks(11);
+    <p>
+      As it is clear in the chart above. Accidents happening due to a slippery pavement, were as predicted indeed more frequent at light rain and snow.
+      This shows that some accidents are sensitive to the weather. However this was the general data. There might be more information hidden here.
+      For instance, is there some peticular intersections in NYC that are overly sensitive to this condition?
+    </p>
 
-                        // Add y axis to histogram
-                        this.xAxis.attr({
-                          'class': 'axis',
-                          'transform': `translate(${this.paddingLeft}, ${this.paddingTop})`
-                        }).call(xAxis);
+    <script>
+      'use strict';
 
-                        this.yAxis.attr({
-                          'class': 'axis',
-                          'transform': `translate(${this.paddingLeft}, ${this.height})`
-                        })
-                        .call(yAxis)
-                        .selectAll("text")
-                        .style("text-anchor", "end")
-                        .attr({
-                          'dx': '.8em'
-                        });
-                        
-                      }
-                      renderLine() {
-                        this.svg.append('line')
-                        .attr({
-                          'y1': this.yScale.range()[0] + this.paddingTop,
-                          'y2': this.yScale.range()[1] - this.paddingTop,
-                          'x1': this.paddingLeft + (Math.abs(this.yScale(0) - this.yScale(this.data['Mostly Cloudy']))),
-                          'x2': this.paddingLeft + (Math.abs(this.yScale(0) - this.yScale(this.data['Mostly Cloudy']))),
-                          'stroke': 'grey',
-                          'stroke-width': '1',
-                          'stroke-dasharray': '10, 10'
-                        });
-                      }
-                      renderTooltip(aWeatherPoint, i) {
-                        
-                        this.tooltip
-                        .classed('hidden', false)
-                        .transition()
-                        .style('left', `${d3.event.pageX}px`)
-                        .style('top', `${d3.event.pageY}px`)
-                        .style('opacity', 1)
-                        .duration(100);
+      document.addEventListener(
+        "DOMContentLoaded",
+          new BarChart('svg#slipperypavement','datasets/pb/slippery_pavement.json', {
+          value: (r => r),
+          tooltip: {
+            id: '#splipperypavementtooltip',
+            render: (tooltip, aSlip, name) => {
+              tooltip.select('#title').text(name);
+              tooltip.select('#val').text(aSlip);
+            }
+          }
+        })
+      );
+    </script>
 
-                        this.tooltip.select('#title').text(this.xLabels[i]);
-                        this.tooltip.select('#val').text(Math.round(aWeatherPoint * 100) / 100);
-                        
-                      }
-                      hideTooltip() {
-                        this.tooltip
-                        .transition()
-                        .duration(150)
-                        .style('opacity', 0);
-                      }
-                    }
+  </section>
 
-                    document.addEventListener("DOMContentLoaded", new WeatherFreq(document.querySelector('svg#weatherfreq')));
-                    </script>
-
-                    <p>
-                      From the visualization we see a clear uptick in the collision frequency <i>rainy</i> and <i>snowy</i> conditions.
-                      Up to 60%, more collisions compared to Mostly Cloudy conditions. In completely Clear weather seems to hover around 40% less.
-                      It does however also raises some questions. Why are the conditions Blowing Snow and Heavy Snow so far down the list?
-                    </p>
-
-                    <p>
-                      In early 2015 and 2016, NYC experienced two blizzards. In both cases, NYPD issued Travel Bans meaning that only emergency
-                      vehicles were allowed on the roads. This could be a tell in why we in the very bad weather we do not see the uptick
-                      in collision frequency in very bad weather.
-                    </p>
-                    <blockquote class="twitter-tweet tw-align-center" data-lang="en"><p lang="en" dir="ltr">At 11pm tonight, streets will only be available to emergency vehicles. <a href="https://twitter.com/hashtag/SafeNYC?src=hash">#SafeNYC</a></p>&mdash; NYPD NEWS (@NYPDnews) <a href="https://twitter.com/NYPDnews/status/559779586603769857">January 26, 2015</a></blockquote>
-                    <script async src="//platform.twitter.com/widgets.js" charset="utf-8"></script>
-                    <blockquote class="twitter-tweet tw-align-center" data-lang="en"><p lang="en" dir="ltr">After 2:30 p.m and you&#39;re on the road, we will arrest you <a href="https://twitter.com/NYPDChiefofDept">@NYPDChiefofDept</a> says</p>&mdash; NYPD NEWS (@NYPDnews) <a href="https://twitter.com/NYPDnews/status/690955566529773568">January 23, 2016</a></blockquote>
-                    <script async src="//platform.twitter.com/widgets.js" charset="utf-8"></script>
-                    <p class="small">
-                      Has anyone else caught a cold during spring-time, where it is getting warmer but not warm enough to not wear a jacket?
-                    </p>
-
-                    <p>
-                      Okay, now that we have confirmed that the frequency of collisions is higher for same conditions relative to Mostly Cloudy.
-                      Can we find any causes in the Motor Vehicle Collisions dataset that might have been affected by the weather conditions?
-
-                      <ul style='font-family: Courier;'>
-                        <li>
-                          Accidents caused by Pavement Slippery: 8426
-                        </li>
-                        <li>
-                          Accidents caused by Glare: 1491
-                        </li>
-                        <li>
-                          Accidents caused by Pavement Defective: 889
-                        </li>
-                      </ul>
-
-                      There seems to be a lot of collisions caused by slippery pavement. Let's look at the weather conditions for those collisions
-                      and see if they match what we have already found.
-                    </p>
-
-                    <svg id="slipperypavement" class="center" style="display:block; width:100%"></svg>
-                    
-                    <div id="splipperypavementtooltip" class="hidden tooltip" style="width:300px">
-                      <p><strong><span id="title">Title</span></strong></p>
-                      <p>Amount:&nbsp;<span id="val"></span></p>
-                    </div>
-
-                    <script>
-                    'use strict';
-
-                    class SplipperyPavement {
-                      constructor(svg) {
-                        this.svg = d3.select(svg);
-                        this.jsonPath = 'datasets/pb/slippery_pavement.json';
-                        this.xScale = d3.scale.ordinal();
-                        this.yScale = d3.scale.linear();
-                        svg.style.width = "100%";
-                        this.paddingLeft = (svg.clientWidth / 6);
-                        this.paddingTop = 30;
-                        this.height = 430;
-                        this.width = svg.clientWidth;
-                        this.bars = this.svg.append('g');
-                        this.yAxis = this.svg.append('g');
-                        this.xAxis = this.svg.append('g');
-                        this.xLabels = [];
-                        this.tooltip = d3.select('#splipperypavementtooltip');
-
-                        this.data = null;
-
-                        svg.style.height = this.height + 30;
-                        svg.style['padding-left'] = this.paddingLeft;
-
-                        d3.json(
-                          this.jsonPath,
-                          this.onDataLoaded.bind(this)
-                        )
-                      }
-                      onDataLoaded(data) {
-                        this.data = data;
-                        // X scale
-                        this.xScale = this.xScale.domain(d3.range(_.size(data))).rangeRoundBands([0, 400], 0.05);
+  <section class="main-content">
+    <h2>Weather Sensitive Intersections</h2>
+    <p>
+      If we look at the slippery pavement cause for collisions. We can finde som interesting information.
+      Looking at the frequency of accidents, we found perticular sensitive intersection.
+    </p>
+    <div class="img-switch-container">
+      <img src="images/slipperyHeatmap.png" class="shadow img-switch-primary" alt="Heatmap of slippery pavement accidents"/>
+      <img src="images/slipperyMap.png" class="shadow img-switch-secondary"/>
+    </div>
+    <p>
+      As we see in the above heatmap, the spead is very broad. This is infact very similar to what the overall insident spread.
+      However looking a the intersections, we can find some interiesting discoveries.
+    </p>
+    <svg id="slipperyintersection" class="center" style="display:block; width:100%"></svg>
 
 
-                        // Y scale
-                        this.yScale = this.yScale
-                                          .domain([0, d3.max(d3.values(this.data))])
-                                          .range([0, this.width - (2*this.paddingLeft) - 20]);
+    <p>As shown above we have some intersections, that are perticular prone to accidents, with slippery pavements.</p>
+    <p>But why do people have accidents here? Let's take a look at the intersections thought the wonders of Street view:</p>
+    
+    <h4>RICHMOND HILL ROAD / OLD MILL ROAD</h4>
 
-                        this.xLabels = d3.keys(this.data);
+    <div class="img-switch-container">
+      <img src="images/streetview/Richmond_Hill_Rd.png" class="shadow img-switch-primary">
+      <img src="images/streetview/Richmond_Hill_Rd_map.png" class="shadow img-switch-secondary">
+    </div>
+    <p>As we can see on the image above. The top intersection is just by the graveyard at the church of St. Andrew. This can be no of coincidence!</p>
+    <p>As it should be visible from the image, this intersection is down hill, and with a sharp turn. We belive that this is why there are so many accidents here.
+      Lokking further up the road, it is clear that the city counsil have tried to take some actions to increase the safety. However, this seems not to be sufficient.
+      We would recoment that the speed limit was lowered.
+    </p>
+    
+    <h4>HEATH AVENUE / WEST KINGSBRIDGE ROAD</h4>
+    <div class="img-switch-container">
+      <img src="images/streetview/W_Kingsbridge_Rd.png" class="shadow img-switch-primary"/>
+      <img src="images/streetview/W_Kingsbridge_Rd_Map.png" class="shadow img-switch-secondary"/>
+    </div>
+    <p>
+      The next intersection one the list, is located in Bronx, not Staten Island. Here again the oncomming trafic is lead down a steep hill.
+      Leading onto a small but significant turn. Here the driver not be able to see the light before hand, as of this turn. And when visible he might be unable to stop as of the slope.
+      Additionally we can see that the pavement here is made of concrete, meaning that it is going to be extra slippery even in light rain or snow.
+     </p>
+    <script>
+      'use strict';
 
-                        this.renderBars();
-                        this.renderAxis();
-                      }
-                      renderBars() {
+      function getCrossName(r) {
+        if (r['ON STREET NAME'] && r['CROSS STREET NAME']) {
+          return [r['ON STREET NAME'],r['CROSS STREET NAME']].join('/');
+        }
+        return r['LOCATION'];
+      }
 
-                        const max = d3.max(d3.values(this.data));
-                        const size = d3.values(this.data).length;
 
-                        this.bars
-                        .selectAll('rect')
-                        .data(d3.values(this.data))
-                        .enter()
-                        .append('rect')
-                        .attr({
-                          'x': (d, i) => (this.paddingLeft),
-                          'height': this.xScale.rangeBand(),
-                          'fill': 'cornflowerblue',
-                          'y': (d,i) => (this.xScale(i) + this.paddingTop),
-                          'width': 0
-                        })
-                        .on('mouseover', this.renderTooltip.bind(this))
-                        .on('mouseout', this.hideTooltip.bind(this))
-                        // .on('click', this.sendToMaps.bind(this))
-                        .transition()
-                        .duration(2000)
-                        .delay((d, i) => ((i / size * 1000) + 10000))
-                        .attr({
-                          'width': d => (Math.abs(this.yScale(0) - this.yScale(d)))
-                        })
-                      }
-                      renderAxis() {
-                        // Define axes
-                        let xAxis = d3.svg.axis().scale(this.xScale).orient('left').tickFormat((d) => this.xLabels[d]);
-                        let yAxis = d3.svg.axis().scale(this.yScale).orient('bottom').ticks(11);
+      document.addEventListener(
+        "DOMContentLoaded",
+         new BarChart('svg#slipperyintersection', 'datasets/slippery.csv', {
+          parseFun: (r => ({'location': r['LOCATION'], 'value': +r['COUNT'], 'cross': getCrossName(r)})),
+          labels: (r => r.cross),
+          value: (r => r.value),
+          cutAt: 10,
+          onClick: (r) => {
+              const [lat, lon] = _.trim(r.location, ['(', ')']).split(',');
+              const url = `http://maps.google.com/maps?z=12&t=t&q=loc:${lat.trim()}+${lon.trim()}`;
+              window.open(url, '_blank').focus();
+          }
+        })
+      );
+    </script>
 
-                        // Add y axis to histogram
-                        this.xAxis.attr({
-                          'class': 'axis',
-                          'transform': `translate(${this.paddingLeft}, ${this.paddingTop})`
-                        }).call(xAxis);
+  </section>
+  
+  <section class="main-content">
+    <h2>Predictions bla bla bla </h2>
+  </section>
 
-                        this.yAxis.attr({
-                          'class': 'axis',
-                          'transform': `translate(${this.paddingLeft}, ${this.height})`
-                        })
-                        .call(yAxis)
-                        .selectAll("text")
-                        .style("text-anchor", "end")
-                        .attr({
-                          'dx': '.8em'
-                        });
-                      }
-                      renderTooltip(aSlip, i) {
-                        
-                        this.tooltip
-                        .classed('hidden', false)
-                        .transition()
-                        .style('left', `${d3.event.pageX}px`)
-                        .style('top', `${d3.event.pageY}px`)
-                        .style('opacity', 1)
-                        .duration(100);
-
-                        this.tooltip.select('#title').text(this.xLabels[i]);
-                        this.tooltip.select('#val').text(aSlip);
-                        
-                      }
-                      hideTooltip() {
-                        this.tooltip
-                        .transition()
-                        .duration(150)
-                        .style('opacity', 0);
-                      }
-                    }
-
-                    document.addEventListener("DOMContentLoaded", new SplipperyPavement(document.querySelector('svg#slipperypavement')));
-                    </script>
-
-                  </section>
-
-                  <!--<section class="main-content">
+  <!--<section class="main-content">
                   <h2>Distribution By Postal District</h2>
                   <svg id="projectMap"></svg>
                   <div id="tooltip" class="hidden tooltip">
@@ -693,16 +516,16 @@
 
           </section>-->
 
-        </section>
+  </section>
 
-        <section id="info" class="main-content">
-          <footer class="site-footer">
-            <span class="site-footer-owner">For DTU course <a href="http://www.kurser.dtu.dk/courses/02806/default.aspx?menulanguage=en-GB">Social Data Analysis and Visualization</a> 2016 in relation to assignments described by <a href="https://github.com/suneman/socialdataanalysis2016/wiki/Assignments">suneman</a>.</span>
-            <span class="site-footer-credits">This page was generated by <a href="https://pages.github.com">GitHub Pages</a> using the <a href="https://github.com/jasonlong/cayman-theme">Cayman theme</a> by <a href="https://twitter.com/jasonlong">Jason Long</a>.</span>
-          </footer>
-        </section>
-        <script>
-        $(function() {
+  <section id="info" class="main-content">
+    <footer class="site-footer">
+      <span class="site-footer-owner">For DTU course <a href="http://www.kurser.dtu.dk/courses/02806/default.aspx?menulanguage=en-GB">Social Data Analysis and Visualization</a> 2016 in relation to assignments described by <a href="https://github.com/suneman/socialdataanalysis2016/wiki/Assignments">suneman</a>.</span>
+      <span class="site-footer-credits">This page was generated by <a href="https://pages.github.com">GitHub Pages</a> using the <a href="https://github.com/jasonlong/cayman-theme">Cayman theme</a> by <a href="https://twitter.com/jasonlong">Jason Long</a>.</span>
+    </footer>
+  </section>
+  <script>
+    $(function() {
           $('a[href*="#"]:not([href="#"])').click(function() {
             if (location.pathname.replace(/^\//, '') == this.pathname.replace(/^\//, '') && location.hostname == this.hostname) {
               var target = $(this.hash);
@@ -716,7 +539,7 @@
             }
           });
         });
-        </script>
-      </body>
+  </script>
+</body>
 
-      </html>
+</html>
