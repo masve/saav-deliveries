@@ -15,6 +15,8 @@
 
   <link rel="stylesheet" href="bower_components/leaflet/dist/leaflet.css" />
 
+  <link rel="shortcut icon" type="image/png" href="images/favicon.ico"/>
+
 
   <!-- Bower components -->
   <script type="text/javascript" src="bower_components/d3/d3.min.js"></script>
@@ -30,15 +32,16 @@
   <!-- our scripts -->
   <script type="text/javascript" src="scripts/knn.js"></script>
   <script type="text/javascript" src="scripts/BarChart.js" async></script>
+  <script type="text/javascript" src="scripts/ClusterVisualisation.js" async></script>
 
   <script>
     //Check for ES 6 support, and alert user if his browser does not support it.
   (function(document) {
     "use strict";
     try {
-      eval("var foo = (x)=>x+1");
+      eval("let foo = (x)=>x+1");
     } catch (e) {
-      alert('This page uses modern javascript, that your browser does not support.\nPlease use a modern browser to display this properly (e.i. Chrome or Firefox).')
+      alert('This page uses modern javascript, that your browser does not support.\nPlease use a modern browser to display this properly (i.e. Chrome or Firefox).')
     }
   })();
   </script>
@@ -143,14 +146,14 @@
   </section>
 
   <section class="main-content">
-    <h2>Explore Your Daily Communute</h2>
+    <h2>Explore Your Daily Commute</h2>
 
     <p>NYC is a big city. A lot of traffic means a high chance for a collision to occur. Over 500 incidents are reported everyday. Therefore, we are providing an opportunity for you to discover the amount of vehicle collisions that has happened throughout the city in the period 2012-2015. See if you can find the safer commute. Go discover!</p>
       <p>The size of each point indicates the accumulated amount of incidents that have happened for that
         intersection. The color <span style="color:red">red</span> shows if there is any fatalities. Click on a
         point to get the numeric values.</p>
         <div class="map" id="intersections"></div>
-        <p class="small">Note that all intersections with less that 10 collisions and without facilities have been omitted to increase performance.</p>
+        <p class="small">Note that all intersections with less that 10 collisions and without fatalities have been omitted to increase performance.</p>
         <script>
         (function(d) {
           "use strict";
@@ -356,7 +359,7 @@
     </p>
 
     <p>
-      In early 2015 and 2016, NYC experienced two blizzards. In both cases, NYPD issued <b>Travel Bans</b> meaning that only emergency
+      In early <a href="https://en.wikipedia.org/wiki/January_2015_North_American_blizzard" target="_blank">2015</a> and <a href="https://en.wikipedia.org/wiki/January_2016_North_American_blizzard" target="_blank">2016</a>, NYC experienced two blizzards. In both cases, NYPD issued <b>Travel Bans</b> meaning that only emergency
       vehicles were allowed on the roads. This could be a tell in why we in the very bad weather we do not see the uptick
       in collision frequency in very bad weather.
     </p>
@@ -424,7 +427,7 @@
   <section class="main-content">
     <h2>Weather Sensitive Intersections</h2>
     <p>
-      If we look at the slippery pavement cause for collisions. We can finde som interesting information.
+      If we look at the slippery pavement cause for collisions. We can find som interesting information.
       Looking at the frequency of accidents, we found perticular sensitive intersection.
     </p>
     <div class="img-switch-container">
@@ -432,26 +435,37 @@
       <img src="images/slipperyMap.png" class="shadow img-switch-secondary"/>
     </div>
     <p>
-      As we see in the above heatmap, the spead is very broad. This is infact very similar to what the overall insident spread.
-      However looking a the intersections, we can find some interiesting discoveries.
+      As we see in the above heat map, the spread is very broad. This is in fact very similar to what the overall incident spread.
+      However looking a the intersections, we can find some interesting discoveries.
     </p>
     <svg id="slipperyintersection" class="center" style="display:block; width:100%"></svg>
 
-    
-    <p>As shown above we have some intersections, that are perticular prone to accidents, with slippery pavements.</p>
+
+    <p>As shown above we have some intersections, that are particular prone to accidents, with slippery pavements.</p>
     <p>But why do people have accidents here? Let's take a look at the intersections thought the wonders of Street view:</p>
-    
-    <h4 class="texttt">RICHMOND HILL ROAD/OLD MILL ROAD</h4>
+
+    <h4>RICHMOND HILL ROAD / OLD MILL ROAD</h4>
+
     <div class="img-switch-container">
       <img src="images/streetview/Richmond_Hill_Rd.png" class="shadow img-switch-primary">
       <img src="images/streetview/Richmond_Hill_Rd_map.png" class="shadow img-switch-secondary">
     </div>
-    <p>As we can see on the image above. The top intersection is just by the church of St. Andrew. This can be no of coincidence!</p>
+    <p>As we can see on the image above. The top intersection is just by the graveyard at the church of St. Andrew. This can be no of coincidence!</p>
     <p>As it should be visible from the image, this intersection is down hill, and with a sharp turn. We belive that this is why there are so many accidents here.
-      Lokking further up the road, it is clear that the city counsil have tried to take some actions to increase the safety. However, this seems not to be sufficient.
-      We would recoment that the speed limit was lowered.
+      Looking further up the road, it is clear that the city council have tried to take some actions to increase the safety. However, this seems not to be sufficient.
+      We would recommend that the speed limit was lowered.
     </p>
 
+    <h4>HEATH AVENUE / WEST KINGSBRIDGE ROAD</h4>
+    <div class="img-switch-container">
+      <img src="images/streetview/W_Kingsbridge_Rd.png" class="shadow img-switch-primary"/>
+      <img src="images/streetview/W_Kingsbridge_Rd_Map.png" class="shadow img-switch-secondary"/>
+    </div>
+    <p>
+      The next intersection one the list, is located in the Bronx, not Staten Island. Here again, the oncoming traffic is lead down a steep hill.
+      Leading into a small but significant turn. Here the driver is not able to see the light beforehand, as of this turn. And when visible he might be unable to stop as of the slope.
+      Additionally, we can see that the pavement here is made of concrete, meaning that it is going to be extra slippery even in light rain or snow.
+     </p>
     <script>
       'use strict';
 
@@ -481,6 +495,23 @@
 
   </section>
 
+  <section class="main-content">
+    <h2>Predicting accidents</h2>
+    <p>Something something</p>
+    
+    <svg id="clusters" class="center"/>
+    <div  class="huge center"><span id="predictiontext" style="min-width:300px; display:inline-block;"></span> <span style="width:75%">prediction score</span></div>
+    <div id="clusterbuttons" style="display:flex;flex-direction:row;align-items:stretch;"></div>
+    
+    <script>
+      'use strict'
+      document.addEventListener(
+        "DOMContnetLoaded",
+        new ClusterVisualisation('svg#clusters', '#clusterbuttons')
+      )
+    </script>
+  </section>
+
   <!--<section class="main-content">
                   <h2>Distribution By Postal District</h2>
                   <svg id="projectMap"></svg>
@@ -505,8 +536,8 @@
 
   <section id="info" class="main-content">
     <footer class="site-footer">
-      <span class="site-footer-owner">For DTU course <a href="http://www.kurser.dtu.dk/courses/02806/default.aspx?menulanguage=en-GB">Social Data Analysis and Visualization</a> 2016 in relation to assignments described by <a href="https://github.com/suneman/socialdataanalysis2016/wiki/Assignments">suneman</a>.</span>
-      <span class="site-footer-credits">This page was generated by <a href="https://pages.github.com">GitHub Pages</a> using the <a href="https://github.com/jasonlong/cayman-theme">Cayman theme</a> by <a href="https://twitter.com/jasonlong">Jason Long</a>.</span>
+      <span class="site-footer-owner">For DTU course <a href="//www.kurser.dtu.dk/courses/02806/default.aspx?menulanguage=en-GB">Social Data Analysis and Visualization</a> 2016 in relation to assignments described by <a href="//github.com/suneman/socialdataanalysis2016/wiki/Assignments">suneman</a>.</span>
+      <span class="site-footer-credits">This page was generated by <a href="//pages.github.com">GitHub Pages</a> using the <a href="//github.com/jasonlong/cayman-theme">Cayman theme</a> by <a href="//twitter.com/jasonlong">Jason Long</a>.</span>
     </footer>
   </section>
   <script>
