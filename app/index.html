@@ -504,25 +504,25 @@
     </p>
     <p>
       To do this, we have applied some machine learning techniques, to try to predict, where collisions will take place.
-      So based on the hour of the day, the weather conditaion as well as an approciamted location.
+      So based on the hour of the day, the weather condition as well as an approximated location.
       We can predict the specific postal area, with upto <b>35% precision</b>. 
     </p>
     <p>
-      This means, that if you know the current weather condition in NYC (just try to look out side), as well as the current hour (just look at the clock on your computer or phone), we can say where a collisions might happen with a 35% precision.
+      This means, that if you know the current weather condition in NYC (just try to look outside), as well as the current hour (just look at the clock on your computer or phone), we can say where collisions might happen with a 35% precision.
     </p>
     <p>
       By applying a <a href="//en.wikipedia.org/wiki/K-means_clustering" target="_blank">K-Mean</a> clustering of the insidents. As explained in detail in the <a href="//nbviewer.jupyter.org/github/masve/saav-deliveries/blob/master/project/Explainer.ipynb" target="_blank">explainer notebook</a>.
-      We were able to train a our model, so that we can make these predictions, with such high accuary.    
+      We were able to train our model, so that we can make these predictions, with such high accuracy.    
     </p>
     
     <p>
-      Below, we have a visualisation, the differnet clusters that we used in our analysis. Here you can see for yourself, how the differnet amount of clusters affect the precision of the model.
+      Below, we have a visualization, the different clusters that we used in our analysis. Here you can see for yourself, how the different amount of clusters affect the precision of the model.
     </p>
     
     <svg id="clusters" class="center"/>
     <div  class="huge center"><span id="predictiontext" style="min-width:300px; display:inline-block;"></span> <span style="width:75%">prediction score</span></div>
     <div id="clusterbuttons" style="display:flex;flex-direction:row;align-items:stretch;"></div>
-    
+    <p>Note that the shown custers, is a convex of clustred collisions, hence the gaps in the visulation.</p>
     <script>
       'use strict'
       document.addEventListener(
