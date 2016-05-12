@@ -31,7 +31,8 @@
 
   <!-- our scripts -->
   <script type="text/javascript" src="scripts/knn.js"></script>
-  <script type="text/javascript" src="scripts/BarChart.js" async></script>
+  <script type="text/javascript" src="scripts/BarChart.js"></script>
+  <script type="text/javascript" src="scripts/BarChartOffset.js"></script>
   <script type="text/javascript" src="scripts/ClusterVisualisation.js" async></script>
 
   <script>
@@ -82,6 +83,25 @@
   </section>
 
   <section class="main-content">
+
+    <svg id="test" class="center" style="display:block; width:100%"></svg>
+    <script>
+      'use strict';
+
+      document.addEventListener("DOMContentLoaded", new BarChartOffset('svg#test','datasets/pb/freq_weather2.json', {
+        value: (r => r),
+        tooltip: {
+          id: 'div#test',
+          render: (tooltip, weatherPoint, name) => {
+            tooltip.select('#title').text(name);
+            tooltip.select('#val').text(Math.round(weatherPoint * 100) / 100);
+          },
+        },
+        reference: 'Mostly Cloudy'
+        // line: { x: ((data) => data['Mostly Cloudy'])}
+      }));
+    </script>
+
     <h1>Project Assigment B</h1>
 
       <p>As explained in the video above, the following page will look into vehicle collisions in NYC. Additionally, we will try to explore where, how and why collisions happen.
