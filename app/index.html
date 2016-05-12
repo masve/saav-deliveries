@@ -162,7 +162,8 @@
             constructor(target) {
               this.maxZoomLevel = 18;
               this.zoomLevel = 12;
-              this.accessToken = 'pk.eyJ1IjoiY2xlbW1lIiwiYSI6ImNpbjdhNGR4MTAwMW11c2x6aGlsZXJ2dHoifQ.zKSRPItYOGDGxSUuXr_McQ';
+              //this.accessToken = 'pk.eyJ1IjoiY2xlbW1lIiwiYSI6ImNpbjdhNGR4MTAwMW11c2x6aGlsZXJ2dHoifQ.zKSRPItYOGDGxSUuXr_McQ';
+              this.accessToken = 'pk.eyJ1IjoibWFzdmUiLCJhIjoiY2lvMnltaHAwMDEwanc5bTJ5amdyYmY1MiJ9.WaIOlqk2iXXYLPpw3r5Yrg';
               this.projectionId = 'clemme.pngigh8e';
               this.intersections = [];
               this.scale = d3.scale.linear();
@@ -186,7 +187,8 @@
             }
             addMapLayer() {
               // Add the map layer to the map (if omitted the map will only be gray box)
-              L.tileLayer('https://api.tiles.mapbox.com/v4/{id}/{z}/{x}/{y}.png?access_token={accessToken}', {
+              // https://api.mapbox.com/styles/v1/masve/cio2yoco9003kc7m7zh9t3gtd/tiles/{z}/{x}/{y}?access_token=pk.eyJ1IjoibWFzdmUiLCJhIjoiY2lvMnltaHAwMDEwanc5bTJ5amdyYmY1MiJ9.WaIOlqk2iXXYLPpw3r5Yrg
+              L.tileLayer('https://api.mapbox.com/styles/v1/masve/cio2yoco9003kc7m7zh9t3gtd/tiles/{z}/{x}/{y}?access_token={accessToken}', {
                 attribution: 'Map data &copy; <a href="http://openstreetmap.org">OpenStreetMap</a> contributors, <a href="http://creativecommons.org/licenses/by-sa/2.0/">CC-BY-SA</a>, Imagery © <a href="http://mapbox.com">Mapbox</a>',
                 maxZoom: this.maxZoomLevel,
                 id: this.projectionId,
