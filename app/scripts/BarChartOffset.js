@@ -64,12 +64,10 @@ class BarChartOffset {
     }
     onDataLoaded(data) {
         if (this.cutAt) {
-            this.data = data.slice(0, this.cutAt);
+            this.data = this.normalize(data.slice(0, this.cutAt), this.reference);
         } else {
-            this.data = data;
+            this.data = this.normalize(data, this.reference);
         }
-
-        this.data = this.normalize(this.reference);
 
         // X scale
         this.xScale = this.xScale.domain(d3.range(_.size(this.data))).rangeRoundBands([0, this.height - this.paddingTop], 0.05);
@@ -103,13 +101,13 @@ class BarChartOffset {
         }
 
     }
-    normalize(feature) {
+    normalize(data, feature) {
       // reference = ratios["Mostly Cloudy"]
       // for k in ratios:
       //   ratios[k] = (ratios[k]/reference)*100
       debugger;
-      const reference = this.data[feature]
-      return _.mapValues(this.data, d => (d/reference*100))
+      const reference = data[feature];
+      return _.mapValues(data, d => (d/reference*100))
       // return this.data.map(d => (d/reference*100))
     }
     renderBars() {
