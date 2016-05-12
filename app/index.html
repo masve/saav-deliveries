@@ -498,31 +498,31 @@
   </section>
 
   <section class="main-content">
-    <h2>Predicting accidents</h2>
+    <h2>Predicting Accidents</h2>
     <p>Looking at the historical data, is great as it can tell us a lot if interesting facts.
       However could we also use it to say something about the future?
     </p>
     <p>
       To do this, we have applied some machine learning techniques, to try to predict, where collisions will take place.
       So based on the hour of the day, the weather condition as well as an approximated location.
-      We can predict the specific postal area, with upto <b>35% precision</b>. 
+      We can predict the specific postal area, with upto <b>35% precision</b>.
     </p>
     <p>
       This means, that if you know the current weather condition in NYC (just try to look outside), as well as the current hour (just look at the clock on your computer or phone), we can say where collisions might happen with a 35% precision.
     </p>
     <p>
       By applying a <a href="//en.wikipedia.org/wiki/K-means_clustering" target="_blank">K-Mean</a> clustering of the insidents. As explained in detail in the <a href="//nbviewer.jupyter.org/github/masve/saav-deliveries/blob/master/project/Explainer.ipynb" target="_blank">explainer notebook</a>.
-      We were able to train our model, so that we can make these predictions, with such high accuracy.    
+      We were able to train our model, so that we can make these predictions, with such high accuracy.
     </p>
-    
+
     <p>
       Below, we have a visualization, the different clusters that we used in our analysis. Here you can see for yourself, how the different amount of clusters affect the precision of the model.
     </p>
-    
+
     <svg id="clusters" class="center"/>
     <div  class="huge center"><span id="predictiontext" style="min-width:300px; display:inline-block;"></span> <span style="width:75%">prediction score</span></div>
     <div id="clusterbuttons" style="display:flex;flex-direction:row;align-items:stretch;"></div>
-    <p>Note that the shown custers, is a convex of clustred collisions, hence the gaps in the visulation.</p>
+    <p>Note that the shown clusters, is a convex of clustred collisions, hence the gaps in the visulation.</p>
     <script>
       'use strict'
       document.addEventListener(
