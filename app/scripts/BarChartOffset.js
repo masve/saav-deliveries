@@ -105,10 +105,9 @@ class BarChartOffset {
       // reference = ratios["Mostly Cloudy"]
       // for k in ratios:
       //   ratios[k] = (ratios[k]/reference)*100
-      debugger;
-      const reference = data[feature];
-      return _.mapValues(data, d => (d/reference*100))
-      // return this.data.map(d => (d/reference*100))
+      
+      const reference = this.data[feature]
+      return _.mapValues(this.data, d => (d/reference*100) - 100)
     }
     renderBars() {
         this.hasRendered = true;
