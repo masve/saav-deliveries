@@ -109,8 +109,7 @@ class BarChartOffset {
       //   ratios[k] = (ratios[k]/reference)*100
       debugger;
       const reference = this.data[feature]
-      return _.mapValues(this.data, d => (d/reference*100))
-      // return this.data.map(d => (d/reference*100))
+      return _.mapValues(this.data, d => (d/reference*100) - 100)
     }
     renderBars() {
         this.hasRendered = true;
