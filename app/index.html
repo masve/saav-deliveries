@@ -339,26 +339,25 @@
 
     <p>By combining the Motor Vehicle Collisions dataset with weather data from
       <a href="//wunderground.com" target="_blank">Weather Underground</a> we are able to find out which weather condition
-      on average produces the most collisions per hour. The data data has been normalized with the most common weather condition,
-      <strong>Mostly Cloudy</strong>.</p>
+      on average produces the most collisions per hour. The data has been normalized with the most common weather condition,
+      <strong>Mostly Cloudy</strong>. However you can change this yourself in the below dropdown, to better understand our data.</p>
 
+    <form class="center" style="margin-top:30px;">
+      <select id="categories" style="width:40%">
+      </select>
+    </form>
+    
     <svg id="weatherfreq" class="center" style="display:block; width:100%"></svg>
-
+    
     <div id="weatherfreqtooltip" class="hidden tooltip" style="width:300px">
       <p><strong><span id="title">Title</span></strong></p>
       <p><span id="val"></span>% difference from <span id="target"></span></p>
     </div>
     
-    <svg id="test" class="center" style="display:block; width:100%"></svg>
-    <form class="center">
-      <select id="categories" style="width:40%">
-      </select>
-    </form>
-    
     <script>
       'use strict';
 
-      document.addEventListener("DOMContentLoaded", new BarChartOffset('svg#test','datasets/pb/freq_weather2.json', {
+      document.addEventListener("DOMContentLoaded", new BarChartOffset('svg#weatherfreq','datasets/pb/freq_weather2.json', {
         value: (r => r),
         tooltip: {
           id: 'div#weatherfreqtooltip',
@@ -370,27 +369,11 @@
         },
         dropdown: {
           selector: 'select#categories',
-          default: 'Overcast'
+          default: 'Mostly Cloudy'
         }
       }));
     </script>
 
-
-    <script>
-      'use strict';
-
-      document.addEventListener("DOMContentLoaded", new BarChart('svg#weatherfreq','datasets/pb/freq_weather.json', {
-        value: (r => r),
-        tooltip: {
-          id: 'div#weatherfreqtooltip',
-          render: (tooltip, weatherPoint, name) => {
-            tooltip.select('#title').text(name);
-            tooltip.select('#val').text(Math.round(weatherPoint * 100) / 100);
-          },
-        },
-        line: { x: ((data) => data['Mostly Cloudy'])}
-      }));
-    </script>
 
     <p>
       From the visualization we see a clear uptick in the collision frequency <i>rainy</i> and <i>snowy</i> conditions. Up
