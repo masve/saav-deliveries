@@ -525,6 +525,23 @@
         })
       );
     </script>
+    
+    <h3>Clustering to find sensitive spots</h3>
+    <p>Let's try to apply a different approach, for finding these sensitive intersections.</p>
+    <p>
+      As intersections sometimes can be located very close together. How do you then determine what intersections, the collisions happened in?
+      Therefore, we will apply a clustering method, in order locate small groups of intersections, that might be extra sensitive.   
+    </p>
+    <p>
+      A perticular good method creating these things of clusters, is the <a target="_blank" href="https://en.wikipedia.org/wiki/DBSCAN">Density-based spatial clustering of applications with noise</a> (DBSCAN). As we can cluster intersections by distrance, and remove noise (intersections with small amounts of collisions).
+    </p>
+    <p>We have made this cluster analysis for all conditions. And picked some of the interesting clustering. These are:</p>
+    <ul>
+      <li>Rain</li>
+      <li>Light Snow</li>
+      <li>Fog</li>
+      <li>Heavy Rain</li>
+    </ul>
 
   </section>
 
