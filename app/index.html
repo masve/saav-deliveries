@@ -33,6 +33,7 @@
   <script type="text/javascript" src="scripts/knn.js"></script>
   <script type="text/javascript" src="scripts/BarChart.js"></script>
   <script type="text/javascript" src="scripts/BarChartOffset.js"></script>
+  <script type="text/javascript" src="scripts/ClusterDendrogram.js"></script>
   <script type="text/javascript" src="scripts/ClusterVisualisation.js" async></script>
 
   <script>
@@ -542,7 +543,18 @@
       <li>Fog</li>
       <li>Heavy Rain</li>
     </ul>
-
+    
+    <svg id="dbscancluster" width="100%"/>
+    
+    <script>
+      'use strict';
+      
+      document.addEventListener(
+        "DOMContentLoaded",
+        new ClusterDendrogram('svg#dbscancluster', {})
+      );
+    </script>
+    
   </section>
 
   <section class="main-content">
