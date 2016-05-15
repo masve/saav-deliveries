@@ -102,7 +102,7 @@ class ClusterDendrogram {
             .append('g')
             .attr({
                 'class': 'node',
-                'transform': (d => `rotate(${d.x - 90})translate(${d.y})`)
+                'transform': d => `rotate(${d.x - 90})translate(${d.y})`
             })
 
         this.nodes
@@ -134,8 +134,7 @@ class ClusterDendrogram {
             })
             .style({
                 'text-anchor': d => d.children ? 'end' : 'start',
-                'font-size': 13,
-                'font-weight': 'blod'
+                'font-size': 13
             })
             .text(d => d.children ? d.name : '')
 
