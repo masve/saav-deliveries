@@ -156,7 +156,7 @@
     <a target="_blank" href="//nbviewer.jupyter.org/github/masve/saav-deliveries/blob/master/project/Explainer.ipynb"><img src="images/backstage.jpg" class="center shadow" style="max-width:300px" /></a>
   </section>
 
-  <section class="main-content">
+  <section id="collisionmap" class="main-content">
     <h2>Explore Your Daily Commute</h2>
 
     <p>NYC is a big city. A lot of traffic means a high chance for a collision to occur. Over 500 incidents are reported everyday.
@@ -310,7 +310,7 @@
     <p>By hovering over each bar in the top 10 bar chart. We can find that the intersection Tillary Street / Flatbush Avenue
       Extension is the <i>most dangerous</i> intesection - by some margin - based on the 585 collisions happening.</p>
 
-    <p>For now, we can only guess, but clicking on the <span class="texttt">Tillary Street / Flatbush Avenue Extension</span>      bar, or looking below one could assume that the intersection is the perfect storm. The intersection is right before
+    <p>For now, we can only guess, but clicking on the <span class="texttt">Tillary Street & Flatbush Avenue Extension</span>      bar, or looking below one could assume that the intersection is the perfect storm. The intersection is right before
       a highway access/exit ramp and extends into Manhattan by the Manhattan Bridge.</p>
 
     <!-- <h4>TILLARY STREET / FLATBUSH AVENUE EXTENSION</h4>
@@ -318,7 +318,7 @@
               <h4>EAST 59 STREET / 2 AVENUE</h4>
               <img alt="Flatbush Ave" src="images/streetview/EAST59STREET.png" /> -->
 
-    <h4>TILLARY STREET / FLATBUSH AVENUE EXTENSION</h4>
+    <h4>TILLARY STREET & FLATBUSH AVENUE EXTENSION</h4>
     <div id="Flatbush" class="img-switch-container">
       <img alt="Flatbush Ave" data-img="primary" src="images/streetview/Flatbush_Ave.png" class="img-switch-primary shadow" />
       <img alt="Flatbush Ave" data-img="secondary" class="shadow img-switch-secondary" src="images/streetview/Flatbush_Ave_map.png"
@@ -475,7 +475,7 @@
     <p>As shown above we have some intersections, that are particular prone to accidents, with slippery pavements.</p>
     <p>But why do people have accidents here? Let's take a look at the intersections thought the wonders of Street view:</p>
 
-    <h4>RICHMOND HILL ROAD / OLD MILL ROAD</h4>
+    <h4>RICHMOND HILL ROAD & OLD MILL ROAD</h4>
 
     <div class="img-switch-container">
       <img src="images/streetview/Richmond_Hill_Rd.png" class="shadow img-switch-primary">
@@ -489,7 +489,7 @@
       limit was lowered.
     </p>
 
-    <h4>HEATH AVENUE / WEST KINGSBRIDGE ROAD</h4>
+    <h4>HEATH AVENUE & WEST KINGSBRIDGE ROAD</h4>
     <div class="img-switch-container">
       <img src="images/streetview/W_Kingsbridge_Rd.png" class="shadow img-switch-primary" />
       <img src="images/streetview/W_Kingsbridge_Rd_Map.png" class="shadow img-switch-secondary" />
@@ -527,7 +527,7 @@
       );
     </script>
 
-    <h3>Clustering to find sensitive spots</h3>
+    <h3>Clustering to Find Sensitive Intersections</h3>
     <p>Let's try to apply a different approach, for finding these sensitive intersections.</p>
     <p>
       As intersections sometimes can be located very close together. How do you then determine what intersections, the collisions happened in?
@@ -541,8 +541,9 @@
       <li>Rain</li>
       <li>Light Snow</li>
       <li>Heavy Rain</li>
+      <li>Fog</li>
     </ul>
-
+    
     <form id="clusterform">
       <label><input type="radio" name="mode" value="radialcluster">Radial Cluster</label>
       <label><input type="radio" name="mode" value="cluster" checked>Cluster</label>
@@ -554,6 +555,7 @@
       <p><strong><span id="title">Title</span></strong></p>
       <p id="body"></p>
     </div>
+
 
     <script>
       'use strict';
@@ -634,7 +636,7 @@
     <svg id="clusters" class="center" />
     <div class="huge center"><span id="predictiontext" style="min-width:300px; display:inline-block;"></span> <span style="width:75%">prediction score</span></div>
     <div id="clusterbuttons" style="display:flex;flex-direction:row;align-items:stretch;"></div>
-    <p>Note that the shown clusters, is a convex of clustred collisions, hence the gaps in the visulation.</p>
+    <p>Note that the shown shapes, are the convexes of clusters of collisions, hence the shape gaps in the visualization.</p>
     <script>
       'use strict'
       document.addEventListener(
@@ -642,6 +644,20 @@
         new ClusterVisualisation('svg#clusters', '#clusterbuttons')
       )
     </script>
+  </section>
+  <section class="main-content">
+    <h2>Summary</h2>
+    <ul>
+      <li>Explore NYC collisions with the <a href="#collisionmap">interactive map</a>.</li>
+      <li>Worst intersection: <a href="https://www.google.dk/maps/place/Flatbush+Ave+Ext+%26+Tillary+St,+Brooklyn,+NY+11201,+USA/@40.6986184,-73.9973523,13.84z/data=!4m5!3m4!1s0x89c25a35601a593f:0xdaaff9576476440f!8m2!3d40.6961153!4d-73.9844815">Tillary Street & Flatbush Avenue Extension</a>.</li>
+      <li>Snowy conditions produces the most accidents per hour.</li>
+      <li>Collisions caused by slippery pavement most often happen in light snow and rain. Especially on curved and sloped roads leading to an intersection,
+      <li>
+        &nbsp;and the worst intersection in that regard: <a href="https://www.google.dk/maps/place/Richmond+Hill+Rd+%26+Old+Mill+Rd,+Staten+Island,+NY+10306,+USA/@40.6274304,-74.162443,11.71z/data=!4m5!3m4!1s0x89c24bf32ee37fe7:0x3a0136faaf20abc6!8m2!3d40.5732734!4d-74.1469118">Richmond Hill Rd & Old Mill Rd</a>.</li>
+      </li>
+      <li>DBSCAN CONCLUSION HERE.</li>
+      <li>Accident prediction knowing the area, weather condition, and hour of day.</li>
+    </ul>
   </section>
 
   <!--<section class="main-content">
