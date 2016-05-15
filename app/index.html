@@ -545,13 +545,18 @@
     </ul>
 
     <svg id="dbscancluster" width="100%"/>
+    
+    <form id="clusterform">
+      <label><input type="radio" name="mode" value="radialcluster">Radial Cluster</label>
+      <label><input type="radio" name="mode" value="cluster" checked>Cluster</label>
+    </form>
 
     <script>
       'use strict';
 
       document.addEventListener(
         "DOMContentLoaded",
-        new ClusterDendrogram('svg#dbscancluster', {})
+        new ClusterDendrogram('svg#dbscancluster', 'form#clusterform', {})
       );
     </script>
 
