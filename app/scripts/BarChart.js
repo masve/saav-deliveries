@@ -122,7 +122,7 @@ class BarChart {
             .on('click', this.onClick)
             .transition()
             .duration(2000)
-            .delay((d, i) => ((i / size * 1000)))
+            .delay((d, i) => ((i / size * 1000)) + 1000)
             .attr({
                 'width': d => (Math.abs(this.yScale(0) - this.yScale(this.getValue(d))))
             })
