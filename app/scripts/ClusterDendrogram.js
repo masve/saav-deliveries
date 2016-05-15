@@ -23,7 +23,10 @@ class ClusterDendrogram {
         this.width = opt.width || this.svgElm.clientWidth;
         this.svgElm.style.height = this.height;
         this.transitionDuration = 2000;
-        this.hasRenderedOnce = false
+        this.hasRenderedOnce = false;
+        
+        this.tooltip = opt.tooltip;
+        if (this.tooltip) this.tooltip.elm = d3.select(this.tooltip.id);
 
         this.cluster = d3.layout.cluster().size([this.height, this.width - this.padding]);
         this.diagonal = d3.svg.diagonal().projection(d => [d.y, d.x]);
@@ -37,6 +40,8 @@ class ClusterDendrogram {
         this.render = this.render.bind(this);
         this.onSwitchClicked = this.onSwitchClicked.bind(this);
         this.transitionToRadialCluster = this.transitionToRadialCluster.bind(this);
+        this.renderTooltip = this.renderTooltip.bind(this);
+        this.hideToolTip = this.hideToolTip.bind(this);
 
         this.links = this.svg.append('g').attr('transform', `translate(${this.padding / 2},0)`);
         this.nodes = this.svg.append('g').attr('transform', `translate(${this.padding / 2},0)`);
@@ -91,7 +96,11 @@ class ClusterDendrogram {
                 'r': 4.5,
                 'fill': 'white',
                 'stroke': 'cornflowerblue'
-            });
+            })
+            .on({
+                'mouseover': this.renderTooltip,
+                'mouseout': this.hideToolTip     
+            })
 
         this.nodes
             .append('text')
@@ -101,7 +110,7 @@ class ClusterDendrogram {
                 'text-anchor': d => d.children ? 'end' : 'start',
                 'font-size': 10
             })
-            .text(d => d.name);
+            .text(d => d.children ? d.name : '')
 
     }
     onSwitchClicked(e) {
@@ -133,10 +142,7 @@ class ClusterDendrogram {
             .duration(this.transitionDuration)
             .attr("transform", (d) => `rotate(${d.x - 90})translate(${d.y})`);
 
-        // n.select('circle')
-        //     .transition()
-        //     .duration(this.duration)
-        //     .style('stroke', 'red');
+
     }
     transitionToCluster() {
         const nodes = this.cluster.nodes(this.clusterRoot);
@@ -153,12 +159,32 @@ class ClusterDendrogram {
             .transition()
             .duration(this.transitionDuration)
             .attr('d', this.diagonal);
-            
+
         this.nodes
             .data(nodes)
             .transition()
             .duration(this.transitionDuration)
             .attr('transform', (d => `translate(${d.y},${d.x})`))
+    }
+    renderTooltip(e) {
+        if (!this.tooltip) return;
+        this.tooltip.elm
+            .classed('hidden', false)
+            .transition()
+            .style('left', `${d3.event.pageX}px`)
+            .style('top', `${d3.event.pageY}px`)
+            .style('opacity', 1)
+            .duration(100);
+            
+        this.tooltip.render(this.tooltip.elm, e);
+    }
+    hideToolTip() {
+        if (!this.tooltip) return;
+        this.tooltip
+            .elm
+            .transition()
+            .duration(150)
+            .style('opacity', 0);
     }
 }
 
