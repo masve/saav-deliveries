@@ -127,7 +127,7 @@ class ClusterDendrogram {
             .attr('d', this.radialDiagonal);
 
 
-        const n = this.nodes
+        this.nodes
             .data(nodes)
             .transition()
             .duration(this.transitionDuration)
@@ -156,10 +156,9 @@ class ClusterDendrogram {
             
         this.nodes
             .data(nodes)
-            .transition(this.transitionDuration)
-            .attr({
-                'transform': d => `translate(${d.y},${d.x})`
-            })
+            .transition()
+            .duration(this.transitionDuration)
+            .attr('transform', (d => `translate(${d.y},${d.x})`))
     }
 }
 
