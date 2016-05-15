@@ -534,23 +534,24 @@
       Therefore, we will apply a clustering method, in order locate small groups of intersections, that might be extra sensitive.
     </p>
     <p>
-      A perticular good method creating these things of clusters, is the <a target="_blank" href="https://en.wikipedia.org/wiki/DBSCAN">Density-based spatial clustering of applications with noise</a> (DBSCAN). As we can cluster intersections by distrance, and remove noise (intersections with small amounts of collisions).
+      A perticular good method creating these things of clusters, is the <a target="_blank" href="https://en.wikipedia.org/wiki/DBSCAN">Density-based spatial clustering of applications with noise</a>
+      (DBSCAN). It allows for clustering intersections by distrance, and remove noise (intersections with small amounts of collisions).
     </p>
-    <p>We have made this cluster analysis for all conditions. And picked some of the interesting clustering. These are:</p>
+    <p>We have made this cluster analysis for all weather conditions. Below is a snippet of what we found based on the conditions:</p>
     <ul>
       <li>Rain</li>
       <li>Light Snow</li>
       <li>Heavy Rain</li>
       <li>Fog</li>
     </ul>
-    
+
     <form id="clusterform">
       <label><input type="radio" name="mode" value="radialcluster">Radial Cluster</label>
       <label><input type="radio" name="mode" value="cluster" checked>Cluster</label>
     </form>
-    
+
     <svg id="dbscancluster" width="100%"/>
-    
+
     <div id="clustertooltip" class="hidden tooltip" style="width:300px">
       <p><strong><span id="title">Title</span></strong></p>
       <p id="body"></p>
@@ -559,7 +560,7 @@
 
     <script>
       'use strict';
-      
+
       const LeafTypeEnum = {
         INTERSECTION: 'intersection',
         CLUSTER: 'cluster',
