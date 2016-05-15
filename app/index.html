@@ -559,7 +559,7 @@
 
     <h4>Intersections Sensitive to Heavy Rain</h4>
     <p>
-      The three intersections on 3rd Ave are seem to be very sensitive to heavy rainfall.
+      The three intersections on 3rd Ave, Manhattan seem to be very sensitive to heavy rainfall.
       Looking at the street view (clicking on the intersection node, choosing streetview), it is not hard to see why.
       Especially on 3rd Ave & E 58th St:
 
@@ -574,7 +574,17 @@
 
     <h4>Intersections Sensitive to Snow</h4>
     <p>
+      As we found with collisions caused by slippery pavement sloped roads did have an impact on the collision rate.
+      This intersection Groove St & Hygeia Pl, Staten Island appears to be sensitive to snowy conditions:
 
+      <div class="img-switch-container">
+        <img src="images/streetview/snow_grovest.png" class="shadow img-switch-primary" />
+        <img src="images/streetview/snow_c9.png" class="shadow img-switch-secondary" />
+      </div>
+
+      Again, it should not be hard to come to a conclusion why this intersection is sensitive to snowy conditions.
+      This just further confirms that roads sloped and/or curved roads leading to an intersection
+      seem to produce more accidents under snowy conditions.
     </p>
 
     <script>
@@ -681,7 +691,7 @@
       <li>
         &nbsp;and the worst in that regard: <a href="https://www.google.dk/maps/place/Richmond+Hill+Rd+%26+Old+Mill+Rd,+Staten+Island,+NY+10306,+USA/@40.6274304,-74.162443,11.71z/data=!4m5!3m4!1s0x89c24bf32ee37fe7:0x3a0136faaf20abc6!8m2!3d40.5732734!4d-74.1469118">Richmond Hill Rd & Old Mill Rd</a>.</li>
       </li>
-      <li>DBSCAN CONCLUSION HERE.</li>
+      <li>Used DBSCAN clustering to find intersections sensitive to heavy rain and snowy conditions.</li>
       <li>Accident prediction knowing the area, weather condition, and hour of day.</li>
     </ul>
   </section>
