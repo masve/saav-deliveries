@@ -541,20 +541,64 @@
       <li>Rain</li>
       <li>Light Snow</li>
       <li>Heavy Rain</li>
+      <li>Fog</li>
     </ul>
-    <form id="clusterform" class="center">
-      <label><input type="radio" name="mode" value="radialcluster">&nbsp;Radial Cluster</label>
-      <label><input type="radio" name="mode" value="cluster" checked>&nbsp;Cluster</label>
+    
+    <form id="clusterform">
+      <label><input type="radio" name="mode" value="radialcluster">Radial Cluster</label>
+      <label><input type="radio" name="mode" value="cluster" checked>Cluster</label>
     </form>
-
+    
     <svg id="dbscancluster" width="100%"/>
+    
+    <div id="clustertooltip" class="hidden tooltip" style="width:300px">
+      <p><strong><span id="title">Title</span></strong></p>
+      <p id="body"></p>
+    </div>
+
 
     <script>
       'use strict';
+      
+      const LeafTypeEnum = {
+        INTERSECTION: 'intersection',
+        CLUSTER: 'cluster',
+        ROOT: 'root',
+        CONDITION: 'condition'
+      }
 
       document.addEventListener(
         "DOMContentLoaded",
-        new ClusterDendrogram('svg#dbscancluster', 'form#clusterform', {})
+        new ClusterDendrogram('svg#dbscancluster', 'form#clusterform', {
+          tooltip: {
+            id: '#clustertooltip',
+            render: (tooltip, leaf) => {
+              const title = tooltip.select('#title');
+              const body = tooltip.select('#body');
+              switch (leaf.type) {
+                case LeafTypeEnum.INTERSECTION:
+                  title.text('Intersection');
+                  body.html(`<p>Location: ${leaf.name}</p><p>Collisions: ${leaf.intensity}</p>`)
+                  break;
+                case LeafTypeEnum.CLUSTER:
+                  title.text(`Cluster number: ${leaf.name}`);
+                  body.html(`<p>Intersections: ${leaf.children.length}</p><p>Collisions: ${leaf.intensity}</p>`)
+                  break;
+                case LeafTypeEnum.CONDITION:
+                  title.text('Weather condition');
+                  body.html(`<p>Condition: ${leaf.name}</p><p>Clusters: ${leaf.children.length}</p>`)
+                  break;
+                case LeafTypeEnum.ROOT:
+                  title.text('Root element');
+                  body.html('')
+                  break;
+                default:
+                  title.text('');
+                  body.html('')
+              }
+            }
+          }
+        })
       );
     </script>
 
