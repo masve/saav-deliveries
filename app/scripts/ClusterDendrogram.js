@@ -32,7 +32,7 @@ class ClusterDendrogram {
         this.cluster = d3.layout.cluster().size([this.height, this.width - this.padding]);
         this.diagonal = d3.svg.diagonal().projection(d => [d.y, d.x]);
 
-        this.radialCluster = d3.layout.cluster().size([360, (this.width - this.padding) / 2]).separation((a, b) => (a.parent == b.parent ? 1 : 2) / a.depth);
+        this.radialCluster = d3.layout.cluster().size([360, (this.width - 30) / 2]).separation((a, b) => (a.parent == b.parent ? 1 : 2) / a.depth);
         this.radialDiagonal = d3.svg.diagonal.radial().projection(d => [d.y, d.x / 180 * Math.PI]);
 
         this.clusterRoot = null;
@@ -202,11 +202,15 @@ class ClusterDendrogram {
     renderTooltip(e) {
         if (!this.tooltip) return;
         //if (this.width > )
-        
+        const pageWith = $(window).width();
+        let x = d3.event.pageX;
+        if (d3.event.pageX + 300 > pageWith) {
+            x = pageWith - 315;
+        }
         this.tooltip.elm
             .classed('hidden', false)
             .transition()
-            .style('left', `${d3.event.pageX}px`)
+            .style('left', `${x}px`)
             .style('top', `${d3.event.pageY}px`)
             .style('opacity', 1)
             .duration(100);
