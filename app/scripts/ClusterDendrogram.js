@@ -25,6 +25,7 @@ class ClusterDendrogram {
         this.transitionDuration = 2000;
         this.hasRenderedOnce = false;
         this.easing = opt.easing || 'cubic-in-out';
+        this.onClick = opt.onClick || _.noop;
 
         this.tooltip = opt.tooltip;
         if (this.tooltip) this.tooltip.elm = d3.select(this.tooltip.id);
@@ -44,8 +45,8 @@ class ClusterDendrogram {
         this.renderTooltip = this.renderTooltip.bind(this);
         this.hideToolTip = this.hideToolTip.bind(this);
 
-        this.links = this.svg.append('g').attr('transform', `translate(${this.padding / 2},0)`);
-        this.nodes = this.svg.append('g').attr('transform', `translate(${this.padding / 2},0)`);
+        this.links = this.svg.append('g').attr('transform', `translate(${Math.round(this.width / 2)}, ${Math.round(this.height / 4)})`);
+        this.nodes = this.svg.append('g').attr('transform', `translate(${Math.round(this.width / 2)}, ${Math.round(this.height / 4)})`);
 
         d3.json('datasets/clusters/dbscan_clusters.json', this.onDataLoaded)
     }
@@ -77,15 +78,17 @@ class ClusterDendrogram {
             }
         }
         this.hasRenderedOnce = true;
-        const nodes = this.cluster.nodes(this.clusterRoot);
-        const links = this.cluster.links(nodes);
+        const nodes = this.radialCluster.nodes(this.clusterRoot);
+        const links = this.radialCluster.links(nodes);
+        
+        this.svg.style('height', this.height / 2)
 
         this.links = this.links
             .selectAll('path')
             .data(links)
             .enter()
             .append('path')
-            .attr('d', this.diagonal)
+            .attr('d', this.radialDiagonal)
             .style({
                 'fill': 'none',
                 'stroke': '#95B2E6',
@@ -99,7 +102,7 @@ class ClusterDendrogram {
             .append('g')
             .attr({
                 'class': 'node',
-                'transform': (d => `translate(${d.y},${d.x})`)
+                'transform': d => `rotate(${d.x - 90})translate(${d.y})`
             })
 
         this.nodes
@@ -115,18 +118,23 @@ class ClusterDendrogram {
                 },
                 'stroke': 'cornflowerblue'
             })
+            .classed('hover', (d) => !d.children)
             .on({
                 'mouseover': this.renderTooltip,
-                'mouseout': this.hideToolTip
+                'mouseout': this.hideToolTip,
+                'click': this.onClick
             })
 
         this.nodes
             .append('text')
-            .attr('dx', -12)
-            .attr('dy', 3)
+            .attr({
+                'dx': -12,
+                'dy': 3,
+                'shape-rendering': 'crispEdges'  
+            })
             .style({
                 'text-anchor': d => d.children ? 'end' : 'start',
-                'font-size': 10
+                'font-size': 13
             })
             .text(d => d.children ? d.name : '')
 
