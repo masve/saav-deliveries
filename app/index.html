@@ -347,14 +347,14 @@
       <select id="categories" style="width:40%">
       </select>
     </form>
-    
+
     <svg id="weatherfreq" class="center" style="display:block; width:100%"></svg>
-    
+
     <div id="weatherfreqtooltip" class="hidden tooltip" style="width:300px">
       <p><strong><span id="title">Title</span></strong></p>
       <p><span id="val"></span>% difference from <span id="target"></span></p>
     </div>
-    
+
     <script>
       'use strict';
 
@@ -417,8 +417,8 @@
       There seems to be a lot of collisions caused by slippery pavement. Let's look at the weather conditions for those collisions
       and see if they match what we have already found.
     </p>
-    
-    
+
+
     <svg id="slipperypavement" class="center" style="display:block; width:100%"></svg>
 
     <div id="splipperypavementtooltip" class="hidden tooltip" style="width:300px">
@@ -435,8 +435,8 @@
 
     <script>
       'use strict';
-      
-      
+
+
 
       document.addEventListener(
         "DOMContentLoaded",
@@ -526,12 +526,12 @@
         })
       );
     </script>
-    
+
     <h3>Clustering to find sensitive spots</h3>
     <p>Let's try to apply a different approach, for finding these sensitive intersections.</p>
     <p>
       As intersections sometimes can be located very close together. How do you then determine what intersections, the collisions happened in?
-      Therefore, we will apply a clustering method, in order locate small groups of intersections, that might be extra sensitive.   
+      Therefore, we will apply a clustering method, in order locate small groups of intersections, that might be extra sensitive.
     </p>
     <p>
       A perticular good method creating these things of clusters, is the <a target="_blank" href="https://en.wikipedia.org/wiki/DBSCAN">Density-based spatial clustering of applications with noise</a> (DBSCAN). As we can cluster intersections by distrance, and remove noise (intersections with small amounts of collisions).
@@ -543,29 +543,29 @@
       <li>Fog</li>
       <li>Heavy Rain</li>
     </ul>
-    
+
     <svg id="dbscancluster" width="100%"/>
     
     <form id="clusterform">
       <label><input type="radio" name="mode" value="radialcluster">Radial Cluster</label>
       <label><input type="radio" name="mode" value="cluster" checked>Cluster</label>
     </form>
-    
+
     <script>
       'use strict';
-      
+
       document.addEventListener(
         "DOMContentLoaded",
         new ClusterDendrogram('svg#dbscancluster', 'form#clusterform', {})
       );
     </script>
-    
+
   </section>
 
   <section class="main-content">
-    <h2>Predicting accidents</h2>
+    <h2>Predicting Accidents</h2>
     <p>
-      Looking at the historical data, is great as it can tell us a lot if interesting facts. However could we also use it to say
+      Looking at the historical data is great as it can tell us a lot if interesting facts. However could we also use it to say
       something about <i>the future</i>?
     </p>
     <p>
@@ -579,7 +579,8 @@
       (just look at the clock on your computer or phone), we can say where collisions might happen with a 35% precision.
     </p>
     <p>
-      By applying a <a href="//en.wikipedia.org/wiki/K-means_clustering" target="_blank">K-Mean</a> clustering of the insidents.
+      By applying a <a href="//en.wikipedia.org/wiki/K-means_clustering" target="_blank">K-Mean</a> clustering and Random Forest
+      Classification.
       As explained in detail in the <a href="//nbviewer.jupyter.org/github/masve/saav-deliveries/blob/master/project/Explainer.ipynb"
         target="_blank">explainer notebook</a>. We were able to train our model, so that we can make these predictions, with
       such high accuracy.
