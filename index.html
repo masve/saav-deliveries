@@ -15,7 +15,7 @@
 
   <link rel="stylesheet" href="bower_components/leaflet/dist/leaflet.css" />
 
-  <link rel="shortcut icon" type="image/png" href="images/favicon.ico"/>
+  <link rel="shortcut icon" type="image/png" href="images/favicon.ico" />
 
 
   <!-- Bower components -->
@@ -31,7 +31,9 @@
 
   <!-- our scripts -->
   <script type="text/javascript" src="scripts/knn.js"></script>
-  <script type="text/javascript" src="scripts/BarChart.js" async></script>
+  <script type="text/javascript" src="scripts/BarChart.js"></script>
+  <script type="text/javascript" src="scripts/BarChartOffset.js"></script>
+  <script type="text/javascript" src="scripts/ClusterDendrogram.js"></script>
   <script type="text/javascript" src="scripts/ClusterVisualisation.js" async></script>
 
   <script>
@@ -82,24 +84,33 @@
   </section>
 
   <section class="main-content">
+
     <h1>Project Assigment B</h1>
 
-      <p>As explained in the video above, the following page will look into vehicle collisions in NYC. Additionally, we will try to explore where, how and why collisions happen.
-      </p>
-      <img src="images/crashnyc.jpg" class="center shadow"/>
-      <p>One of our hypothesis is that when; the weather in NYC is bad (e.g. Snowy), there are more collisions. We will investigate if this actually is true, or not. Additionally, we want to investigate if there is any particular places in NYC are affected by bad weather compared to others.</p>
+    <p>As explained in the video above, the following page will look into vehicle collisions in NYC. Additionally, we will try
+      to explore where, how and why collisions happen.
+    </p>
+    <img src="images/crashnyc.jpg" class="center shadow" />
+    <p>One of our hypothesis is that when; the weather in NYC is bad (e.g. Snowy), there are more collisions. We will investigate
+      if this actually is true, or not. Additionally, we want to investigate if there is any particular places in NYC are
+      affected by bad weather compared to others.</p>
 
-      <img src="images/snownyc.jpg" class="center shadow"/>
+    <img src="images/snownyc.jpg" class="center shadow" />
     <h2>The Cold Hard Truth (Data)</h2>
     <p>
       Our main dataset is the <a target="_blank" href="//data.cityofnewyork.us/Public-Safety/NYPD-Motor-Vehicle-Collisions/h9gi-nx95">NYPD Motor Vehicle Collisions</a>.
-       It contains records for <i>every reported</i> incident in the NYC area. Records are available from July 2012 till today. For each record there is also specified, where the collision took place, the cause of the collision, injuries, fatalities and more.
+      It contains records for <i>every reported</i> incident in the NYC area. Records are available from July 2012 till today.
+      For each record there is also specified, where the collision took place, the cause of the collision, injuries, fatalities
+      and more.
     </p>
     <p>The dataset consists of more than;</p>
-    <div class="center huge" ><span id="collisionhero" >769054</span> collision records</div>
+    <div class="center huge"><span id="collisionhero">769054</span> collision records</div>
 
     <p>
-      The secondary dataset used is an extraction of weather conditions for the NYC area. This was pulled from <a href="https://www.wunderground.com/" target="_blank">Weather Underground</a> using their csv service for hourly updates. For each hour, there are measurements of the temperature, visibility, windspeed as well as the overall weather conditions such as Rain, Snow, Clear etc. You can see our scrape from this service <a href="https://cdn.rawgit.com/masve/saav-deliveries/master/project/datasets/weather_data_nyc_kjfk_clean2.csv.zip">here</a>.
+      The secondary dataset used is an extraction of weather conditions for the NYC area. This was pulled from <a href="https://www.wunderground.com/"
+        target="_blank">Weather Underground</a> using their csv service for hourly updates. For each hour, there are measurements
+      of the temperature, visibility, windspeed as well as the overall weather conditions such as Rain, Snow, Clear etc.
+      You can see our scrape from this service <a href="https://cdn.rawgit.com/masve/saav-deliveries/master/project/datasets/weather_data_nyc_kjfk_clean2.csv.zip">here</a>.
     </p>
     <p>This means that we have more than;</p>
     <div class="center huge"><span id="weatherhourhero">32448</span> hours of weather data</div>
@@ -138,24 +149,25 @@
       }
       document.addEventListener('DOMContentLoaded', new AnimateNumber('#collisionhero', 769054));
       document.addEventListener('DOMContentLoaded', new AnimateNumber('#weatherhourhero', 32448));
-
     </script>
     <h2>Explainer Notebook</h2>
-    <p>If you want to know, how we extracted all of the information from the two datasets. You can take a look backstage, in our <a href="http://nbviewer.jupyter.org/github/masve/saav-deliveries/blob/master/project/Explainer.ipynb">explainer notebook</a>.</p>
+    <p>If you want to know, how we extracted all of the information from the two datasets. You can take a look backstage, in
+      our <a href="http://nbviewer.jupyter.org/github/masve/saav-deliveries/blob/master/project/Explainer.ipynb">explainer notebook</a>.</p>
     <a target="_blank" href="//nbviewer.jupyter.org/github/masve/saav-deliveries/blob/master/project/Explainer.ipynb"><img src="images/backstage.jpg" class="center shadow" style="max-width:300px" /></a>
   </section>
 
-  <section class="main-content">
+  <section id="collisionmap" class="main-content">
     <h2>Explore Your Daily Commute</h2>
 
-    <p>NYC is a big city. A lot of traffic means a high chance for a collision to occur. Over 500 incidents are reported everyday. Therefore, we are providing an opportunity for you to discover the amount of vehicle collisions that has happened throughout the city in the period 2012-2015. See if you can find the safer commute. Go discover!</p>
-      <p>The size of each point indicates the accumulated amount of incidents that have happened for that
-        intersection. The color <span style="color:red">red</span> shows if there is any fatalities. Click on a
-        point to get the numeric values.</p>
-        <div class="map" id="intersections"></div>
-        <p class="small">Note that all intersections with less that 10 collisions and without fatalities have been omitted to increase performance.</p>
-        <script>
-        (function(d) {
+    <p>NYC is a big city. A lot of traffic means a high chance for a collision to occur. Over 500 incidents are reported everyday.
+      Therefore, we are providing an opportunity for you to discover the amount of vehicle collisions that has happened throughout
+      the city in the period 2012-2015. See if you can find the safer commute. Go discover!</p>
+    <p>The size of each point indicates the accumulated amount of incidents that have happened for that intersection. The color
+      <span style="color:red">red</span> shows if there is any fatalities. Click on a point to get the numeric values.</p>
+    <div class="map" id="intersections"></div>
+    <p class="small">Note that all intersections with less that 10 collisions and without fatalities have been omitted to increase performance.</p>
+    <script>
+      (function(d) {
           "use strict";
 
           class Intersection {
@@ -298,7 +310,7 @@
     <p>By hovering over each bar in the top 10 bar chart. We can find that the intersection Tillary Street / Flatbush Avenue
       Extension is the <i>most dangerous</i> intesection - by some margin - based on the 585 collisions happening.</p>
 
-    <p>For now, we can only guess, but clicking on the <span class="texttt">Tillary Street / Flatbush Avenue Extension</span> bar, or looking below one could assume that the intersection is the perfect storm. The intersection is right before
+    <p>For now, we can only guess, but clicking on the <span class="texttt">Tillary Street & Flatbush Avenue Extension</span>      bar, or looking below one could assume that the intersection is the perfect storm. The intersection is right before
       a highway access/exit ramp and extends into Manhattan by the Manhattan Bridge.</p>
 
     <!-- <h4>TILLARY STREET / FLATBUSH AVENUE EXTENSION</h4>
@@ -306,10 +318,11 @@
               <h4>EAST 59 STREET / 2 AVENUE</h4>
               <img alt="Flatbush Ave" src="images/streetview/EAST59STREET.png" /> -->
 
-    <h4>TILLARY STREET / FLATBUSH AVENUE EXTENSION</h4>
+    <h4>TILLARY STREET & FLATBUSH AVENUE EXTENSION</h4>
     <div id="Flatbush" class="img-switch-container">
       <img alt="Flatbush Ave" data-img="primary" src="images/streetview/Flatbush_Ave.png" class="img-switch-primary shadow" />
-      <img alt="Flatbush Ave" data-img="secondary" class="shadow img-switch-secondary" src="images/streetview/Flatbush_Ave_map.png"/>
+      <img alt="Flatbush Ave" data-img="secondary" class="shadow img-switch-secondary" src="images/streetview/Flatbush_Ave_map.png"
+      />
     </div>
     <!-- <h4>EAST 59 STREET / 2 AVENUE</h4>
               <img alt="Flatbush Ave" src="images/streetview/EAST59STREET.png"/> -->
@@ -327,31 +340,41 @@
 
     <p>By combining the Motor Vehicle Collisions dataset with weather data from
       <a href="//wunderground.com" target="_blank">Weather Underground</a> we are able to find out which weather condition
-      on average produces the most collisions per hour. The data data has been normalized with the most common weather condition,
-      <strong>Mostly Cloudy</strong>.</p>
+      on average produces the most collisions per hour. The data has been normalized with the most common weather condition,
+      <strong>Mostly Cloudy</strong>. However you can change this yourself in the below dropdown, to better understand our data.</p>
+
+    <form class="center" style="margin-top:30px;">
+      <select id="categories" style="width:40%">
+      </select>
+    </form>
 
     <svg id="weatherfreq" class="center" style="display:block; width:100%"></svg>
 
     <div id="weatherfreqtooltip" class="hidden tooltip" style="width:300px">
       <p><strong><span id="title">Title</span></strong></p>
-      <p>Value:&nbsp;<span id="val"></span>%</p>
+      <p><span id="val"></span>% difference from <span id="target"></span></p>
     </div>
 
     <script>
       'use strict';
 
-      document.addEventListener("DOMContentLoaded", new BarChart('svg#weatherfreq','datasets/pb/freq_weather.json', {
+      document.addEventListener("DOMContentLoaded", new BarChartOffset('svg#weatherfreq','datasets/pb/freq_weather2.json', {
         value: (r => r),
         tooltip: {
           id: 'div#weatherfreqtooltip',
-          render: (tooltip, weatherPoint, name) => {
+          render: (tooltip, weatherPoint, name, i, target) => {
             tooltip.select('#title').text(name);
             tooltip.select('#val').text(Math.round(weatherPoint * 100) / 100);
+            tooltip.select('#target').text(target);
           },
         },
-        line: { x: ((data) => data['Mostly Cloudy'])}
+        dropdown: {
+          selector: 'select#categories',
+          default: 'Mostly Cloudy'
+        }
       }));
     </script>
+
 
     <p>
       From the visualization we see a clear uptick in the collision frequency <i>rainy</i> and <i>snowy</i> conditions. Up
@@ -361,9 +384,11 @@
     </p>
 
     <p>
-      In early <a href="https://en.wikipedia.org/wiki/January_2015_North_American_blizzard" target="_blank">2015</a> and <a href="https://en.wikipedia.org/wiki/January_2016_North_American_blizzard" target="_blank">2016</a>, NYC experienced two blizzards. In both cases, NYPD issued <b>Travel Bans</b> meaning that only emergency
-      vehicles were allowed on the roads. This could be a tell in why we in the very bad weather we do not see the uptick
-      in collision frequency in very bad weather.
+      In early <a href="https://en.wikipedia.org/wiki/January_2015_North_American_blizzard" target="_blank">2015</a> and
+      <a href="https://en.wikipedia.org/wiki/January_2016_North_American_blizzard" target="_blank">2016</a>, NYC experienced
+      two blizzards. In both cases, NYPD issued <b>Travel Bans</b> meaning that only emergency vehicles were allowed on the
+      roads. This could be a tell in why we in the very bad weather we do not see the uptick in collision frequency in very
+      bad weather.
     </p>
     <blockquote class="twitter-tweet tw-align-center" data-lang="en">
       <p lang="en" dir="ltr">At 11pm tonight, streets will only be available to emergency vehicles. <a href="https://twitter.com/hashtag/SafeNYC?src=hash">#SafeNYC</a></p>&mdash;
@@ -393,6 +418,7 @@
       and see if they match what we have already found.
     </p>
 
+
     <svg id="slipperypavement" class="center" style="display:block; width:100%"></svg>
 
     <div id="splipperypavementtooltip" class="hidden tooltip" style="width:300px">
@@ -401,13 +427,16 @@
     </div>
 
     <p>
-      As it is clear in the chart above. Accidents happening due to a slippery pavement, were as predicted indeed more frequent at light rain and snow.
-      This shows that some accidents are sensitive to the weather. However this was the general data. There might be more information hidden here.
-      For instance, is there some peticular intersections in NYC that are overly sensitive to this condition?
+      As it is clear in the chart above. Accidents happening due to a slippery pavement, were as predicted indeed more frequent
+      at light rain and snow. This shows that some accidents are sensitive to the weather. However this was the general data.
+      There might be more information hidden here. For instance, is there some peticular intersections in NYC that are overly
+      sensitive to this condition?
     </p>
 
     <script>
       'use strict';
+
+
 
       document.addEventListener(
         "DOMContentLoaded",
@@ -429,12 +458,12 @@
   <section class="main-content">
     <h2>Weather Sensitive Intersections</h2>
     <p>
-      If we look at the slippery pavement cause for collisions. We can find som interesting information.
-      Looking at the frequency of accidents, we found perticular sensitive intersection.
+      If we look at the slippery pavement cause for collisions. We can find som interesting information. Looking at the frequency
+      of accidents, we found perticular sensitive intersection.
     </p>
     <div class="img-switch-container">
-      <img src="images/slipperyHeatmap.png" class="shadow img-switch-primary" alt="Heatmap of slippery pavement accidents"/>
-      <img src="images/slipperyMap.png" class="shadow img-switch-secondary"/>
+      <img src="images/slipperyHeatmap.png" class="shadow img-switch-primary" alt="Heatmap of slippery pavement accidents" />
+      <img src="images/slipperyMap.png" class="shadow img-switch-secondary" />
     </div>
     <p>
       As we see in the above heat map, the spread is very broad. This is in fact very similar to what the overall incident spread.
@@ -446,28 +475,31 @@
     <p>As shown above we have some intersections, that are particular prone to accidents, with slippery pavements.</p>
     <p>But why do people have accidents here? Let's take a look at the intersections thought the wonders of Street view:</p>
 
-    <h4>RICHMOND HILL ROAD / OLD MILL ROAD</h4>
+    <h4>RICHMOND HILL ROAD & OLD MILL ROAD</h4>
 
     <div class="img-switch-container">
       <img src="images/streetview/Richmond_Hill_Rd.png" class="shadow img-switch-primary">
       <img src="images/streetview/Richmond_Hill_Rd_map.png" class="shadow img-switch-secondary">
     </div>
-    <p>As we can see on the image above. The top intersection is just by the graveyard at the church of St. Andrew. This can be no of coincidence!</p>
-    <p>As it should be visible from the image, this intersection is down hill, and with a sharp turn. We belive that this is why there are so many accidents here.
-      Looking further up the road, it is clear that the city council have tried to take some actions to increase the safety. However, this seems not to be sufficient.
-      We would recommend that the speed limit was lowered.
+    <p>As we can see on the image above. The top intersection is just by the graveyard at the church of St. Andrew. This can
+      be no of coincidence!</p>
+    <p>As it should be visible from the image, this intersection is down hill, and with a sharp turn. We belive that this is
+      why there are so many accidents here. Looking further up the road, it is clear that the city council have tried to
+      take some actions to increase the safety. However, this seems not to be sufficient. We would recommend that the speed
+      limit was lowered.
     </p>
 
-    <h4>HEATH AVENUE / WEST KINGSBRIDGE ROAD</h4>
+    <h4>HEATH AVENUE & WEST KINGSBRIDGE ROAD</h4>
     <div class="img-switch-container">
-      <img src="images/streetview/W_Kingsbridge_Rd.png" class="shadow img-switch-primary"/>
-      <img src="images/streetview/W_Kingsbridge_Rd_Map.png" class="shadow img-switch-secondary"/>
+      <img src="images/streetview/W_Kingsbridge_Rd.png" class="shadow img-switch-primary" />
+      <img src="images/streetview/W_Kingsbridge_Rd_Map.png" class="shadow img-switch-secondary" />
     </div>
     <p>
-      The next intersection one the list, is located in the Bronx, not Staten Island. Here again, the oncoming traffic is lead down a steep hill.
-      Leading into a small but significant turn. Here the driver is not able to see the light beforehand, as of this turn. And when visible he might be unable to stop as of the slope.
-      Additionally, we can see that the pavement here is made of concrete, meaning that it is going to be extra slippery even in light rain or snow.
-     </p>
+      The next intersection one the list, is located in the Bronx, not Staten Island. Here again, the oncoming traffic is lead
+      down a steep hill. Leading into a small but significant turn. Here the driver is not able to see the light beforehand,
+      as of this turn. And when visible he might be unable to stop as of the slope. Additionally, we can see that the pavement
+      here is made of concrete, meaning that it is going to be extra slippery even in light rain or snow.
+    </p>
     <script>
       'use strict';
 
@@ -495,16 +527,152 @@
       );
     </script>
 
+    <h3>Clustering to Find Sensitive Intersections</h3>
+    <p>Let's try to apply a different approach, for finding these sensitive intersections.</p>
+    <p>
+      As intersections sometimes can be located very close together. How do you then determine what intersections, the collisions happened in?
+      Therefore, we will apply a clustering method, in order locate small groups of intersections, that might be extra sensitive.
+    </p>
+    <p>
+      A perticular good method creating these things of clusters, is the <a target="_blank" href="https://en.wikipedia.org/wiki/DBSCAN">Density-based spatial clustering of applications with noise</a>
+      (DBSCAN). It allows for clustering intersections by distrance, and remove noise (intersections with small amounts of collisions).
+    </p>
+    <p>We have made this cluster analysis for all weather conditions. Below is a snippet of what we found based on the conditions:</p>
+    <ul>
+      <li>Rain</li>
+      <li>Light Snow</li>
+      <li>Heavy Rain</li>
+      <li>Fog</li>
+    </ul>
+
+    <form id="clusterform" class="center">
+      <label><input type="radio" name="mode" value="radialcluster" checked>&nbsp;Radial Cluster</label>&nbsp;
+      <label><input type="radio" name="mode" value="cluster">&nbsp;Cluster</label>
+    </form>
+
+    <svg id="dbscancluster" width="100%"/>
+
+    <div id="clustertooltip" class="hidden tooltip" style="width:300px">
+      <p><strong><span id="title">Title</span></strong></p>
+      <p id="body"></p>
+    </div>
+
+    <h4>Intersections Sensitive to Heavy Rain</h4>
+    <p>
+      The three intersections on 3rd Ave, Manhattan seem to be very sensitive to heavy rainfall.
+      Looking at the street view (clicking on the intersection node, choosing streetview), it is not hard to see why.
+      Especially on 3rd Ave & E 58th St:
+
+      <div class="img-switch-container">
+        <img src="images/streetview/heavyrain_3ave58st.png" class="shadow img-switch-primary" />
+        <img src="images/streetview/heavyrain_c6.png" class="shadow img-switch-secondary" />
+      </div>
+
+      The intersection has a bunch of steel road plates embedded in the intersection and the streets leading to it.
+      These plates would get very slippery in wet conditions and it could be the reason so many accidents happen there.
+    </p>
+
+    <h4>Intersections Sensitive to Snow</h4>
+    <p>
+      As we found with collisions caused by slippery pavement sloped roads did have an impact on the collision rate.
+      This intersection Groove St & Hygeia Pl, Staten Island appears to be sensitive to snowy conditions:
+
+      <div class="img-switch-container">
+        <img src="images/streetview/snow_grovest.png" class="shadow img-switch-primary" />
+        <img src="images/streetview/snow_c9.png" class="shadow img-switch-secondary" />
+      </div>
+
+      Again, it should not be hard to come to a conclusion why this intersection is sensitive to snowy conditions.
+      This just further confirms that roads sloped and/or curved roads leading to an intersection
+      seem to produce more accidents under snowy conditions.
+    </p>
+
+    <script>
+      'use strict';
+
+      const LeafTypeEnum = {
+        INTERSECTION: 'intersection',
+        CLUSTER: 'cluster',
+        ROOT: 'root',
+        CONDITION: 'condition'
+      }
+
+      document.addEventListener(
+        "DOMContentLoaded",
+        new ClusterDendrogram('svg#dbscancluster', 'form#clusterform', {
+          onClick: (leaf) => {
+            if (leaf.type !== LeafTypeEnum.INTERSECTION) return;
+            const [lat, lon] = leaf.name.split(',')
+            const url = `http://maps.google.com/maps?z=12&t=t&q=loc:${lat.trim()}+${lon.trim()}`;
+            window.open(url, '_blank').focus();
+          },
+          tooltip: {
+            id: '#clustertooltip',
+            render: (tooltip, leaf) => {
+              const title = tooltip.select('#title');
+              const body = tooltip.select('#body');
+              switch (leaf.type) {
+                case LeafTypeEnum.INTERSECTION:
+                  title.text('Intersection');
+                  body.html(`<p>Location: ${leaf.name}</p><p>Collisions: ${leaf.intensity}</p><p><i>Click to view</i></p>`)
+                  break;
+                case LeafTypeEnum.CLUSTER:
+                  title.text(`Cluster number: ${leaf.name}`);
+                  body.html(`<p>Intersections: ${leaf.children.length}</p><p>Collisions: ${leaf.intensity}</p>`)
+                  break;
+                case LeafTypeEnum.CONDITION:
+                  title.text('Weather condition');
+                  body.html(`<p>Condition: ${leaf.name}</p><p>Clusters: ${leaf.children.length}</p>`)
+                  break;
+                case LeafTypeEnum.ROOT:
+                  title.text('Root element');
+                  body.html('')
+                  break;
+                default:
+                  title.text('');
+                  body.html('')
+              }
+            }
+          }
+        })
+      );
+    </script>
+
   </section>
 
   <section class="main-content">
-    <h2>Predicting accidents</h2>
-    <p>Something something</p>
-    
-    <svg id="clusters" class="center"/>
-    <div  class="huge center"><span id="predictiontext" style="min-width:300px; display:inline-block;"></span> <span style="width:75%">prediction score</span></div>
+    <h2>Predicting Accidents</h2>
+    <p>
+      Looking at the historical data is great as it can tell us a lot if interesting facts. However could we also use it to say
+      something about <i>the future</i>?
+    </p>
+    <p>
+      Looking into the future is hard. However it is not completly impossible, thanks to machine learning. Therefore we have applied
+      some machine learning techniques to our data. In order to try to predict, where collisions will happen. So given a
+      hour of day, a weather condition as well as an approximated location. We can predict the specific postal area, with
+      upto <b>35% precision</b>.
+    </p>
+    <p>
+      This means, that if you know the current weather condition in NYC (just try to look outside), as well as the current hour
+      (just look at the clock on your computer or phone), we can say where collisions might happen with a 35% precision.
+    </p>
+    <p>
+      By applying a <a href="//en.wikipedia.org/wiki/K-means_clustering" target="_blank">K-Mean</a> clustering and Random Forest
+      Classification.
+      As explained in detail in the <a href="//nbviewer.jupyter.org/github/masve/saav-deliveries/blob/master/project/Explainer.ipynb"
+        target="_blank">explainer notebook</a>. We were able to train our model, so that we can make these predictions, with
+      such high accuracy.
+    </p>
+
+    <p>
+      Below, we have a visualization, the different clusters that we used in our analysis. Here you can see for yourself, how the
+      different amount of clusters affect the precision of the model.
+    </p>
+
+    <svg id="clusters" class="center" />
+    <div class="huge center"><span id="predictiontext" style="min-width:300px; display:inline-block;"></span> <span style="width:75%">prediction score</span></div>
     <div id="clusterbuttons" style="display:flex;flex-direction:row;align-items:stretch;"></div>
-    
+    <p>Note that the shown shapes, are the convexes of clusters of collisions, hence the shape gaps in the visualization.</p>
     <script>
       'use strict'
       document.addEventListener(
@@ -512,6 +680,20 @@
         new ClusterVisualisation('svg#clusters', '#clusterbuttons')
       )
     </script>
+  </section>
+  <section class="main-content">
+    <h2>Summary</h2>
+    <ul>
+      <li>Explore NYC collisions with the <a href="#collisionmap">interactive map</a>.</li>
+      <li>Worst intersection: <a href="https://www.google.dk/maps/place/Flatbush+Ave+Ext+%26+Tillary+St,+Brooklyn,+NY+11201,+USA/@40.6986184,-73.9973523,13.84z/data=!4m5!3m4!1s0x89c25a35601a593f:0xdaaff9576476440f!8m2!3d40.6961153!4d-73.9844815">Tillary Street & Flatbush Avenue Extension</a>.</li>
+      <li>Snowy conditions produces the most accidents per hour.</li>
+      <li>Collisions caused by slippery pavement most often happen in light snow and rain. Especially on curved and sloped roads leading to an intersection,
+      <li>
+        &nbsp;and the worst in that regard: <a href="https://www.google.dk/maps/place/Richmond+Hill+Rd+%26+Old+Mill+Rd,+Staten+Island,+NY+10306,+USA/@40.6274304,-74.162443,11.71z/data=!4m5!3m4!1s0x89c24bf32ee37fe7:0x3a0136faaf20abc6!8m2!3d40.5732734!4d-74.1469118">Richmond Hill Rd & Old Mill Rd</a>.</li>
+      </li>
+      <li>Used DBSCAN clustering to find intersections sensitive to heavy rain and snowy conditions.</li>
+      <li>Accident prediction knowing the area, weather condition, and hour of day.</li>
+    </ul>
   </section>
 
   <!--<section class="main-content">

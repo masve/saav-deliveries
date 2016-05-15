@@ -125,3 +125,7 @@ rect:hover {
 .texttt {
   font-family: 'Courier New', Courier, 'Lucida Sans Typewriter', 'Lucida Typewriter', monospace;
 }
+
+.node > circle.hover:hover {
+  fill: cornflowerblue;
+}
