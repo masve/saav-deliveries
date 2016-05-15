@@ -24,7 +24,8 @@ class ClusterDendrogram {
         this.svgElm.style.height = this.height;
         this.transitionDuration = 2000;
         this.hasRenderedOnce = false;
-        
+        this.easing = opt.easing || 'cubic-in-out';
+
         this.tooltip = opt.tooltip;
         if (this.tooltip) this.tooltip.elm = d3.select(this.tooltip.id);
 
@@ -50,8 +51,19 @@ class ClusterDendrogram {
     }
     onDataLoaded(root) {
         this.clusterRoot = root;
+        this.addScales();
         this.render();
         this.treeTypeSelector.selectAll('input').on('change', this.onSwitchClicked);
+    }
+    addScales() {
+        this.clusterRoot.children.forEach(cluster => {
+            const domain = [
+                d3.min(cluster.children, d => d.intensity),
+                d3.max(cluster.children, d => d.intensity)
+            ]
+            cluster.colorScale = d3.scale.linear().domain(domain).range([100, 256]);
+            cluster.sizeScale = d3.scale.linear().domain(domain).range([4.5, 9.5]);
+        })
     }
     render() {
         if (this.hasRenderedOnce) {
@@ -93,18 +105,24 @@ class ClusterDendrogram {
         this.nodes
             .append('circle')
             .attr({
-                'r': 4.5,
-                'fill': 'white',
+                'r': d => {
+                    if (!d.parent || !d.parent.sizeScale) return 4.5;
+                    return d.parent.sizeScale(d.intensity)
+                },
+                'fill': d => {
+                    if (!d.parent || !d.parent.colorScale) return 'white';
+                    return `rgb(100,100,${Math.round(d.parent.colorScale(d.intensity))})`
+                },
                 'stroke': 'cornflowerblue'
             })
             .on({
                 'mouseover': this.renderTooltip,
-                'mouseout': this.hideToolTip     
+                'mouseout': this.hideToolTip
             })
 
         this.nodes
             .append('text')
-            .attr('dx', d => d.children ? -8 : 8)
+            .attr('dx', -12)
             .attr('dy', 3)
             .style({
                 'text-anchor': d => d.children ? 'end' : 'start',
@@ -118,6 +136,11 @@ class ClusterDendrogram {
         this.render();
     }
     transitionToRadialCluster() {
+        this.svg
+            .transition()
+            .ease(this.easing)
+            .duration(this.transitionDuration)
+            .style('height', this.height / 2)
 
         const nodes = this.radialCluster.nodes(this.clusterRoot);
         const links = this.radialCluster.links(nodes);
@@ -125,20 +148,21 @@ class ClusterDendrogram {
         this.svg
             .selectAll('g')
             .transition()
+            .ease(this.easing)
             .duration(this.transitionDuration)
-            .attr('transform', `translate(${Math.round(this.width / 2)}, ${Math.round(this.height / 2)})`);
+            .attr('transform', `translate(${Math.round(this.width / 2)}, ${Math.round(this.height / 4)})`);
 
         this.links
             .data(links)
             .transition()
+            .ease(this.easing)
             .duration(this.transitionDuration)
-            //.style('stroke', '#8da0cb')
             .attr('d', this.radialDiagonal);
-
 
         this.nodes
             .data(nodes)
             .transition()
+            .ease(this.easing)
             .duration(this.transitionDuration)
             .attr("transform", (d) => `rotate(${d.x - 90})translate(${d.y})`);
 
@@ -149,25 +173,36 @@ class ClusterDendrogram {
         const links = this.cluster.links(nodes);
 
         this.svg
+            .transition()
+            .ease(this.easing)
+            .duration(this.transitionDuration)
+            .style('height', this.height)
+
+        this.svg
             .selectAll('g')
             .transition()
+            .ease(this.easing)
             .duration(this.transitionDuration)
             .attr('transform', `translate(${this.padding / 2},0)`);
 
         this.links
             .data(links)
             .transition()
+            .ease(this.easing)
             .duration(this.transitionDuration)
             .attr('d', this.diagonal);
 
         this.nodes
             .data(nodes)
             .transition()
+            .ease(this.easing)
             .duration(this.transitionDuration)
             .attr('transform', (d => `translate(${d.y},${d.x})`))
     }
     renderTooltip(e) {
         if (!this.tooltip) return;
+        //if (this.width > )
+        
         this.tooltip.elm
             .classed('hidden', false)
             .transition()
@@ -175,7 +210,7 @@ class ClusterDendrogram {
             .style('top', `${d3.event.pageY}px`)
             .style('opacity', 1)
             .duration(100);
-            
+
         this.tooltip.render(this.tooltip.elm, e);
     }
     hideToolTip() {
